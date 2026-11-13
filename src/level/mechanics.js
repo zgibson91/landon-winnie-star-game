@@ -291,12 +291,13 @@ export class SwapOrb {
     // "to": "light" | "dark" makes a sun orb / moon orb that always picks that side; without it the orb flips sides.
     this.scene = scene; this.x = o.x * TILE + TILE / 2; this.y = o.y * TILE + TILE / 2; this.inside = false; this.t = Math.random() * 5;
     this.to = o.to || null;
+    this.rx = o.wide ? 40 : 34; this.ry = o.wide ? 64 : 50; // "wide": easier to touch mid-jump (orb hops)
     this.spr = scene.add.sprite(this.x, this.y, 'swaporb', this.to === 'dark' ? 1 : 0).setScale(inv).setDepth(36);
   }
   update(dt) {
     this.t += dt; this.spr.y = this.y + Math.sin(this.t * 2.5) * 4; this.spr.rotation += dt * 0.6;
     const p = this.scene.player; if (p.dead) { this.inside = false; return; }
-    const hit = Math.abs(p.x - this.x) < 40 && Math.abs(p.body.y - this.spr.y) < 64; // generous: orbs should be easy to touch
+    const hit = Math.abs(p.x - this.x) < this.rx && Math.abs(p.body.y - this.spr.y) < this.ry;
     if (hit && !this.inside) { if (this.to) this.scene.phase.set(this.to === 'dark'); else this.scene.phase.toggle(); this.scene.fx.burst(this.x, this.y, 0xffffff, 14); this.scene.tweens.add({ targets: this.spr, scale: inv * 1.4, duration: 100, yoyo: true }); }
     this.inside = hit;
   }
