@@ -110,28 +110,45 @@ export class Loop {
 
 // ---------------- Moving platform ----------------
 export class Mover {
+  // {t:"mover", x, y, w, dx, dy, period, offset, style, bob, id, wait}
+  // "wait": true keeps it parked until a switch calls start(); after that it glides back and forth forever.
   constructor(scene, o) {
     this.scene = scene; this.o = o;
     this.w = (o.w || 3) * TILE;
     this.x0 = o.x * TILE; this.y0 = o.y * TILE;
     this.dx = (o.dx || 0) * TILE; this.dy = (o.dy || 0) * TILE;
     this.period = o.period || 4; this.offset = o.offset || 0;
+    this.active = !o.wait; this.t = 0;
     this.vis = new Capsule(scene, `cap-${o.style || 'sunspot'}`, this.x0, this.y0, this.w);
     this.zone = solidBody(scene, this.x0, this.y0, this.w, 20, o.oneWay !== false);
     this.zone.owner = this;
     this.bob = o.bob || 0;
+    if (o.wait) {
+      this.light = scene.add.image(this.x0 + this.w / 2, this.y0 + 12, 'lamp', 0).setScale(inv * 1.2).setDepth(22);
+    }
+    if (o.id) scene.movers[o.id] = this;
+  }
+  start() {
+    if (this.active) return;
+    this.active = true; this.t = 0; this.offset = 0;
+    if (this.light) this.light.setFrame(1);
+    Audio.sfx('gate');
   }
   pos(t) {
-    const k = 0.5 - 0.5 * Math.cos((t + this.offset) / this.period * Math.PI * 2);
+    const tt = this.active ? t + this.offset : 0;
+    const k = 0.5 - 0.5 * Math.cos(tt / this.period * Math.PI * 2);
     return { x: this.x0 + this.dx * k, y: this.y0 + this.dy * k + Math.sin((t + this.offset) * 2) * this.bob };
   }
   update(dt) {
     const s = this.scene;
-    const now = this.pos(s.hz), next = this.pos(s.hz + dt * s.hzRate);
+    const step = dt * s.hzRate;
+    const now = this.pos(this.t), next = this.pos(this.t + step);
+    if (this.active || this.bob) this.t += step;
     const b = this.zone.body;
     b.velocity.x = (next.x - now.x) / dt; b.velocity.y = (next.y - now.y) / dt;
     if (Math.abs(b.x - now.x) > 2 || Math.abs(b.y - now.y) > 2) { b.x = now.x; b.y = now.y; }
     this.vis.set(b.x, b.y - 4, this.w);
+    if (this.light) this.light.setPosition(b.x + this.w / 2, b.y + 12);
   }
 }
 
@@ -364,6 +381,7 @@ export class Door {
     this.scene.shake(0.006, 300);
     this.scene.tweens.add({ targets: this.spr, alpha: 0, scaleY: 0, duration: 600, delay: 250, ease: 'Back.easeIn' });
     this.zone.body.enable = false;
+    if (this.scene.beams) this.scene.beams.dirty(); // light can pass now
   }
   update() {}
 }

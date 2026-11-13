@@ -1,0 +1,596 @@
+{
+ "timeout": 300,
+ "steps": [
+  {
+   "note": "settle",
+   "dir": 0,
+   "until": "L.levelTime > 1.5 && !L.busyModal",
+   "ms": 20000
+  },
+  {
+   "note": "to the edge",
+   "dir": 1,
+   "x": 6.2,
+   "ms": 5000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 6.7) < 0.25",
+   "ms": 2000,
+   "stay": 6.2
+  },
+  {
+   "note": "sun block 1",
+   "dir": 1,
+   "jump": 450,
+   "x": 9.2,
+   "ms": 3000
+  },
+  {
+   "stay": 9.5,
+   "until": "P.grounded && Math.abs(P.x/48 - 10.0) < 0.25",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 10.5,
+   "ms": 3000
+  },
+  {
+   "note": "through moon orb",
+   "dir": 1,
+   "jump": 450,
+   "x": 14.2,
+   "ms": 3000
+  },
+  {
+   "stay": 14.5,
+   "until": "P.grounded && Math.abs(P.x/48 - 15.0) < 0.25",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 15.5,
+   "ms": 3000
+  },
+  {
+   "note": "through sun orb",
+   "dir": 1,
+   "jump": 450,
+   "x": 19.2,
+   "ms": 3000
+  },
+  {
+   "stay": 19.5,
+   "until": "P.grounded && Math.abs(P.x/48 - 20.0) < 0.25",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 20.5,
+   "ms": 3000
+  },
+  {
+   "note": "through moon orb",
+   "dir": 1,
+   "jump": 450,
+   "x": 24.2,
+   "ms": 3000
+  },
+  {
+   "stay": 24.5,
+   "until": "P.grounded && Math.abs(P.x/48 - 25.0) < 0.25",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 25.5,
+   "ms": 3000
+  },
+  {
+   "note": "through sun orb",
+   "dir": 1,
+   "jump": 450,
+   "x": 29.2,
+   "ms": 3000
+  },
+  {
+   "stay": 29.5,
+   "until": "P.grounded && Math.abs(P.x/48 - 30.0) < 0.25",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 30.5,
+   "ms": 3000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "to the switch",
+   "dir": 1,
+   "x": 44.6,
+   "ms": 10000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 45.1) < 0.25",
+   "ms": 2000,
+   "stay": 44.6
+  },
+  {
+   "note": "pounce swap switch",
+   "dir": 0,
+   "winnie": true,
+   "until": "L.phase.dark",
+   "ms": 4000
+  },
+  {
+   "note": "cross the moon bridge",
+   "dir": 1,
+   "x": 59.2,
+   "ms": 8000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 59.7) < 0.25",
+   "ms": 2000,
+   "stay": 59.2
+  },
+  {
+   "note": "through the sun orb",
+   "dir": 0,
+   "jump": 450,
+   "until": "!L.phase.dark",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "cross the sun bridge",
+   "dir": 1,
+   "x": 82.8,
+   "ms": 10000
+  },
+  {
+   "note": "clock edge",
+   "dir": 1,
+   "x": 87.2,
+   "ms": 5000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 87.7) < 0.25 && L.phase.clocks[0].t > 2.6 - 0.55 && L.phase.dark",
+   "ms": 9000,
+   "stay": 87.2
+  },
+  {
+   "note": "clock 89",
+   "dir": 1,
+   "jump": 450,
+   "x": 88.8,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "on 89",
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "clock hop 89->93",
+   "dir": 0,
+   "until": "L.phase.clocks[0].t > 2.6 - 0.55 && L.phase.dark === false",
+   "ms": 8000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "x": 92.8,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "on 93",
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "clock hop 93->97",
+   "dir": 0,
+   "until": "L.phase.clocks[0].t > 2.6 - 0.55 && L.phase.dark === true",
+   "ms": 8000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "x": 96.8,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "on 97",
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "clock hop 97->101",
+   "dir": 0,
+   "until": "L.phase.clocks[0].t > 2.6 - 0.55 && L.phase.dark === false",
+   "ms": 8000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "x": 100.8,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "on 101",
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "clock hop 101->105",
+   "dir": 0,
+   "until": "L.phase.clocks[0].t > 2.6 - 0.55 && L.phase.dark === true",
+   "ms": 8000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "x": 104.8,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "on 105",
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "clock hop 105->109",
+   "dir": 0,
+   "until": "L.phase.clocks[0].t > 2.6 - 0.55 && L.phase.dark === false",
+   "ms": 8000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "x": 108.8,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "on 109",
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "clock hop 109->113",
+   "dir": 0,
+   "until": "L.phase.clocks[0].t > 2.6 - 0.55 && L.phase.dark === true",
+   "ms": 8000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "x": 112.8,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "on 113",
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "clock hop 113->117",
+   "dir": 0,
+   "until": "L.phase.clocks[0].t > 2.6 - 0.55 && L.phase.dark === false",
+   "ms": 8000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "x": 116.8,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "on 117",
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "clock hop 117->121",
+   "dir": 0,
+   "until": "L.phase.clocks[0].t > 2.6 - 0.55 && L.phase.dark === true",
+   "ms": 8000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "x": 120.8,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 121.9,
+   "ms": 3000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "through the sun orb to the steps",
+   "dir": 1,
+   "x": 134.4,
+   "ms": 8000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 134.9) < 0.25 && !L.phase.dark",
+   "ms": 3000,
+   "stay": 134.4
+  },
+  {
+   "note": "step 1",
+   "dir": 1,
+   "jump": 450,
+   "x": 135.9,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "step 2",
+   "dir": 1,
+   "jump": 450,
+   "x": 138.9,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "step 3",
+   "dir": 1,
+   "jump": 450,
+   "x": 141.9,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "to ledge",
+   "dir": 1,
+   "jump": 450,
+   "x": 144.9,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.vx) < 1",
+   "ms": 3000
+  },
+  {
+   "note": "pounce cage switch",
+   "dir": 0,
+   "winnie": true,
+   "until": "L.phase.dark",
+   "ms": 5000
+  },
+  {
+   "note": "over the switch block",
+   "dir": 1,
+   "jump": 450,
+   "x": 148.4,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "grab shard",
+   "dir": 1,
+   "until": "L.runShards[1]",
+   "ms": 4000
+  },
+  {
+   "dir": 1,
+   "x": 153.9,
+   "ms": 4000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 154.4) < 0.25",
+   "ms": 2000,
+   "stay": 153.9
+  },
+  {
+   "note": "night eyes",
+   "dir": 0,
+   "winnie": true,
+   "ms": 4000
+  },
+  {
+   "note": "drop down",
+   "dir": 1,
+   "x": 155.6,
+   "ms": 4000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 4000
+  },
+  {
+   "note": "approach walker",
+   "dir": 1,
+   "until": "!L.walkers[0].alive || L.walkers[0].x < P.x - 40 || (L.walkers[0].x > P.x && L.walkers[0].x - P.x < 120)",
+   "ms": 12000
+  },
+  {
+   "note": "jump over walker",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "to the finale",
+   "dir": 1,
+   "x": 170.6,
+   "ms": 10000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 171.1) < 0.25",
+   "ms": 2000,
+   "stay": 170.6
+  },
+  {
+   "note": "moon orb 172",
+   "dir": 1,
+   "jump": 450,
+   "x": 173.2,
+   "ms": 3000
+  },
+  {
+   "stay": 173.5,
+   "until": "P.grounded && Math.abs(P.x/48 - 174.0) < 0.25",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 174.5,
+   "ms": 3000
+  },
+  {
+   "note": "sun orb 176",
+   "dir": 1,
+   "jump": 450,
+   "x": 178.2,
+   "ms": 3000
+  },
+  {
+   "stay": 178.5,
+   "until": "P.grounded && Math.abs(P.x/48 - 179.0) < 0.25",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 179.5,
+   "ms": 3000
+  },
+  {
+   "note": "moon orb 181",
+   "dir": 1,
+   "jump": 450,
+   "x": 183.2,
+   "ms": 3000
+  },
+  {
+   "stay": 183.5,
+   "until": "P.grounded && Math.abs(P.x/48 - 184.0) < 0.25",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 184.5,
+   "ms": 3000
+  },
+  {
+   "note": "sun orb 186",
+   "dir": 1,
+   "jump": 450,
+   "x": 188.2,
+   "ms": 3000
+  },
+  {
+   "stay": 188.5,
+   "until": "P.grounded && Math.abs(P.x/48 - 189.0) < 0.25",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 189.5,
+   "ms": 3000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "gate",
+   "dir": 1,
+   "until": "L.finished",
+   "ms": 10000
+  }
+ ]
+}

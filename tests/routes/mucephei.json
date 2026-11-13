@@ -1,0 +1,413 @@
+{
+ "timeout": 300,
+ "steps": [
+  {
+   "note": "settle",
+   "dir": 0,
+   "until": "L.levelTime > 1.5 && !L.busyModal",
+   "ms": 20000
+  },
+  {
+   "dir": 1,
+   "x": 10.4,
+   "ms": 5000
+  },
+  {
+   "note": "over spikes",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "under the mirror",
+   "dir": 1,
+   "x": 19.0,
+   "ms": 5000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 19.5) < 0.25",
+   "ms": 2000,
+   "stay": 19.0
+  },
+  {
+   "note": "bonk mirror",
+   "dir": 0,
+   "jump": 450,
+   "until": "L.doors.d1.open",
+   "ms": 4000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 21.6,
+   "ms": 3000
+  },
+  {
+   "note": "over spike",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "approach walker",
+   "dir": 1,
+   "until": "!L.walkers[0].alive || L.walkers[0].x < P.x - 40 || (L.walkers[0].x > P.x && L.walkers[0].x - P.x < 120)",
+   "ms": 12000
+  },
+  {
+   "note": "jump over walker",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "to the cat door",
+   "dir": 1,
+   "x": 52.3,
+   "ms": 15000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 52.8) < 0.25",
+   "ms": 2000,
+   "stay": 52.3
+  },
+  {
+   "note": "squeeze",
+   "dir": 0,
+   "winnie": true,
+   "until": "L.doors.d2.open",
+   "ms": 6000
+  },
+  {
+   "note": "to the crystal pit",
+   "dir": 1,
+   "x": 58.8,
+   "ms": 6000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 59.3) < 0.25 && mv(0).x < 61.4",
+   "ms": 8000,
+   "stay": 58.8
+  },
+  {
+   "note": "onto crystal 0",
+   "dir": 1,
+   "jump": 450,
+   "x": 61.2,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "ride",
+   "ride": 0,
+   "rideAt": 2.4,
+   "until": "mv(0).x > 63.6",
+   "ms": 8000
+  },
+  {
+   "note": "to crystal 1",
+   "dir": 1,
+   "jump": 450,
+   "x": 67.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "ride": 1,
+   "rideAt": 1.5,
+   "until": "mv(2).x > 71.7 && mv(1).y > 9.5",
+   "ms": 8000
+  },
+  {
+   "note": "to crystal 2",
+   "dir": 1,
+   "jump": 450,
+   "x": 71.6,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "ride": 2,
+   "rideAt": 2.5,
+   "until": "mv(2).x > 71.8",
+   "ms": 8000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 84.3,
+   "ms": 8000
+  },
+  {
+   "note": "over spikes",
+   "dir": 1,
+   "jump": 600,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "under mirrors",
+   "dir": 1,
+   "x": 93.9,
+   "ms": 5000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 94.4) < 0.25",
+   "ms": 2000,
+   "stay": 93.9
+  },
+  {
+   "note": "pounce top mirror",
+   "dir": 0,
+   "winnie": true,
+   "ms": 4000
+  },
+  {
+   "note": "bonk low mirror",
+   "dir": 0,
+   "jump": 300,
+   "until": "L.doors.d3.open",
+   "ms": 4000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 98.4,
+   "ms": 4000
+  },
+  {
+   "note": "over spikes",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "approach walker",
+   "dir": 1,
+   "until": "!L.walkers[1].alive || L.walkers[1].x < P.x - 40 || (L.walkers[1].x > P.x && L.walkers[1].x - P.x < 120)",
+   "ms": 12000
+  },
+  {
+   "note": "jump over walker",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "to the climb",
+   "dir": 1,
+   "x": 128.6,
+   "ms": 15000
+  },
+  {
+   "note": "platform 1",
+   "dir": 1,
+   "jump": 450,
+   "x": 132.6,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.vx) < 1",
+   "ms": 3000
+  },
+  {
+   "note": "night eyes",
+   "dir": 0,
+   "winnie": true,
+   "ms": 4000
+  },
+  {
+   "note": "up to crystal",
+   "dir": 1,
+   "jump": 450,
+   "x": 133.6,
+   "ms": 3000
+  },
+  {
+   "ride": 3,
+   "until": "P.grounded && Math.abs(P.x/48 - mv(3).cx) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "up to H1",
+   "dir": 1,
+   "jump": 600,
+   "x": 136.4,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "up to H2",
+   "dir": 1,
+   "jump": 600,
+   "x": 139.6,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "until": "L.runShards[1]",
+   "x": 140.8,
+   "ms": 3000
+  },
+  {
+   "note": "hop down to platform 144",
+   "dir": 1,
+   "jump": 250,
+   "x": 144.4,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 145.6,
+   "ms": 3000
+  },
+  {
+   "note": "to platform 150",
+   "dir": 1,
+   "jump": 450,
+   "x": 150.4,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 152.4,
+   "ms": 3000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 155.4,
+   "ms": 4000
+  },
+  {
+   "note": "over spike",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "to the last spike",
+   "dir": 1,
+   "x": 168.4,
+   "ms": 12000
+  },
+  {
+   "note": "over spike",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "under the last mirror",
+   "dir": 1,
+   "x": 172.6,
+   "ms": 6000
+  },
+  {
+   "note": "walk under the mirror",
+   "dir": 1,
+   "x": 173.6,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.vx) < 1",
+   "ms": 3000
+  },
+  {
+   "note": "bonk mirror",
+   "dir": 0,
+   "jump": 300,
+   "until": "L.beams.mirrors[L.beams.mirrors.length-1].kind === '\\\\'",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "to cat door",
+   "dir": 1,
+   "x": 178.6,
+   "ms": 5000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 179.1) < 0.25",
+   "ms": 2000,
+   "stay": 178.6
+  },
+  {
+   "note": "squeeze",
+   "dir": 0,
+   "winnie": true,
+   "until": "L.doors.d5.open",
+   "ms": 8000
+  },
+  {
+   "note": "gate",
+   "dir": 1,
+   "until": "L.finished",
+   "ms": 12000
+  }
+ ]
+}

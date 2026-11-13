@@ -10,6 +10,7 @@ import { Winnie } from '../level/Winnie.js';
 import { FX } from '../level/fx.js';
 import * as O from '../level/objects.js';
 import { HubPortal, HubDoor, CatBed } from '../level/hubObjects.js';
+import * as M from '../level/mechanics.js';
 import { makeText } from '../ui/ui.js';
 import { STAR_BY_ID } from '../data/stars.js';
 
@@ -42,6 +43,9 @@ export class LevelScene extends Phaser.Scene {
     this.runShards = [false, false, false];
     this.objs = []; this.doors = {}; this.pounceTargets = []; this.walkers = []; this.hidden = []; this.revealables = [];
     this.portals = []; this.hubDoors = []; this.interact = null;
+    this.movers = {}; this.beams = null; this.squeezes = [];
+    Audio.setMusicTone && Audio.setMusicTone(false);
+    this.phase = this.lv.rows.some(r => /[LD]/.test(r)) ? new M.PhaseSystem(this) : null;
 
     buildTileset(this, this.themeName);
     await buildThemeObjects(this, this.themeName);
@@ -67,6 +71,7 @@ export class LevelScene extends Phaser.Scene {
     this.physics.add.collider(this.player.body, this.layer);
     this.physics.add.collider(this.player.body, this.platforms, (pl, plat) => {
       if (pl.body.touching.down && plat.owner) this.player.ride = plat.owner.zone;
+      if (pl.body.touching.up && plat.owner && plat.owner.bump) plat.owner.bump();
     });
     this.physics.world.setBounds(0, 0, this.lv.W * TILE, this.lv.H * TILE + 400);
     this.physics.world.setBoundsCollision(true, true, false, false);
@@ -148,6 +153,9 @@ export class LevelScene extends Phaser.Scene {
           t.setCollision(false, false, true, false);
         } else if (ch === '^') {
           layer.putTileAt(TILE_IDX.spike, c, r);
+        } else if ((ch === 'L' || ch === 'D') && this.phase) {
+          layer.putTileAt(ch === 'L' ? TILE_IDX.light : TILE_IDX.dark, c, r);
+          this.phase.register(c, r, ch);
         }
       }
     }
@@ -155,6 +163,7 @@ export class LevelScene extends Phaser.Scene {
     // one-way tiles: collide only from above (set after setCollisionBetween so it isn't overwritten)
     layer.forEachTile(t => { if (t.index >= TILE_IDX.oneway && t.index < TILE_IDX.oneway + 4) t.setCollision(false, false, true, false); });
     this.layer = layer; this.map = map;
+    if (this.phase) { this.phase.apply(true); this.objs.push(this.phase); }
 
     // plasma pools: animated surface strip + deep fill
     this.plasmaStrips = [];
@@ -204,11 +213,21 @@ export class LevelScene extends Phaser.Scene {
         case 'portal': this.portals.push(add(new HubPortal(this, o))); break;
         case 'hubdoor': this.hubDoors.push(add(new HubDoor(this, o))); break;
         case 'catbed': add(new CatBed(this, o)); break;
+        case 'wind': add(new M.Wind(this, o)); break;
+        case 'lever': { const l = add(new M.Lever(this, o)); this.pounceTargets.push(l); break; }
+        case 'mirror': { const m = add(new M.Mirror(this, o)); this.beamSys().mirrors.push(m); this.pounceTargets.push(m); break; }
+        case 'emitter': this.beamSys().emitters.push(add(new M.Emitter(this, o))); break;
+        case 'receiver': this.beamSys().receivers.push(add(new M.Receiver(this, o))); break;
+        case 'squeeze': this.squeezes.push(add(new M.Squeeze(this, o))); break;
+        case 'swap': this.phase.orbs.push(add(new M.SwapOrb(this, o))); break;
+        case 'swapclock': this.phase.clocks.push({ x0: o.x * TILE, x1: o.x2 * TILE, period: o.period || 3, t: 0 }); break;
         case 'text': add({ update() {}, t: makeText(this, o.x * TILE + TILE / 2, o.y * TILE + TILE / 2, o.text, o.size || 26, { wrap: o.wrap }).setDepth(15) }); break;
         default: console.warn('unknown object', o.t);
       }
     }
   }
+
+  beamSys() { if (!this.beams) { this.beams = new M.BeamSystem(this); this.objs.push(this.beams); } return this.beams; }
 
   makeText(x, y, s, size, opts) { return makeText(this, x, y, s, size, opts); }
 
@@ -325,9 +344,14 @@ export class LevelScene extends Phaser.Scene {
       this.interact = near || null;
       if (near) act = { kind: 'go', target: near };
     }
+    if (!act && Save.hasAbility('squeeze') && !w.busy) {
+      const sq = this.squeezes.find(q => q.near(p));
+      if (sq) act = { kind: 'squeeze', target: sq };
+    }
     if (!act && Save.hasAbility('pounce') && !w.busy) {
       let best = null, bd = Infinity;
       for (const t of this.pounceTargets) {
+        if (t.usable === false || (t.canPounce && !t.canPounce(p))) continue;
         const dx = Math.abs(t.tx - p.x), dy = Math.abs(t.ty - p.bottom);
         if (dx < ABILITY_RANGE.pounce.dx && dy < ABILITY_RANGE.pounce.dy && dx + dy < bd) { bd = dx + dy; best = t; }
       }
@@ -345,6 +369,7 @@ export class LevelScene extends Phaser.Scene {
     if (!a) { w.react('happy'); Audio.sfx('meow', { pitch: 1.2 }); return; }
     if (a.kind === 'go') { a.target.activate(); return; }
     if (w.busy) return;
+    if (a.kind === 'squeeze') { a.target.go(); return; }
     if (a.kind === 'pounce') {
       w.pounce(a.target.tx, a.target.ty, () => a.target.hit());
     } else if (a.kind === 'meow') {
@@ -383,7 +408,7 @@ export class LevelScene extends Phaser.Scene {
   }
 
   setCheckpoint(lantern) {
-    this.cp = { x: lantern.x, y: lantern.y - 40, idx: lantern.idx, section: this.lv.sectionAt(Math.floor(lantern.x / TILE)) };
+    this.cp = { x: lantern.x, y: lantern.y - 40, idx: lantern.idx, section: this.lv.sectionAt(Math.floor(lantern.x / TILE)), dark: this.phase ? this.phase.dark : false };
     this.cpFails = 0; this.hintLevel = 0;
     this.game.events.emit('hint-reset');
   }
@@ -438,6 +463,7 @@ export class LevelScene extends Phaser.Scene {
   respawn() {
     const p = this.player, b = p.body.body;
     b.enable = true; b.setAllowGravity(true);
+    if (this.phase && this.phase.dark !== !!this.cp.dark) { this.phase.dark = !!this.cp.dark; this.phase.apply(true); }
     p.teleport(this.cp.x, this.cp.y);
     p.dead = false; p.invuln = 0.7; p.vx = 0; p.play('idle'); p.squash(0.8, 1.2);
     this.winnie.reset();

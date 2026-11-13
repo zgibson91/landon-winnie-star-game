@@ -13,14 +13,21 @@ const BW = PHYS.bodyW, BH = PHYS.bodyH;
 export function checkLevel(def) {
   const lv = buildLevel(def);
   const { W, H, rows } = lv;
-  // cell kinds: 0 empty, 1 solid, 2 one-way, 3 hazard
+  // cell kinds: 0 empty, 1 solid, 2 one-way, 3 hazard, 4 sun block (solid on the light side), 5 moon block (dark side)
   const grid = Array.from({ length: H }, (_, r) => Array.from({ length: W }, (_, c) => {
     const ch = rows[r][c];
     if (ch === '#') return 1;
     if (ch === '=' || ch === 'H') return 2;
     if (ch === '^' || ch === '~') return 3;
+    if (ch === 'L') return 4;
+    if (ch === 'D') return 5;
     return 0;
   }));
+  let PH = 0; // current side while simulating: 0 = light, 1 = dark
+  const orbs = [];      // {x, y, to}  to: 0, 1 or null (flip)
+  const flippers = [];  // things that let you change side while standing: swap switches (Winnie) and clock zones
+  const squeezes = [];
+  const clocks = [];
   const extraOneWay = []; // {x0, x1, y} in px
   const loops = [];
   const bells = [];
@@ -38,8 +45,25 @@ export function checkLevel(def) {
       extraOneWay.push({ x0: cx - w / 2, x1: cx + w / 2, y: o.y * TILE });
     } else if (o.t === 'loop') loops.push({ x: o.x * TILE + TILE * 1.5, top: o.y * TILE - 90 });
     else if (o.t === 'bell') bells.push({ x: o.x * TILE + TILE / 2, y: o.y * TILE + TILE / 2 + 10, id: o.id });
+    else if (o.t === 'lever') {
+      const L = { x: o.x * TILE + TILE / 2, y: (o.y + 1) * TILE - 40, id: o.id || 'lever' };
+      bells.push(L);
+      if (o.swap) flippers.push({ kind: 'lever', ...L });
+    } else if (o.t === 'mirror') {
+      grid[o.y][o.x] = 1;
+      if (!o.fixed) bells.push({ x: o.x * TILE + TILE / 2, y: o.y * TILE + TILE / 2, id: `mirror@${o.x},${o.y}`, bump: true });
+    } else if (o.t === 'swap') orbs.push({ x: o.x * TILE + TILE / 2, y: o.y * TILE + TILE / 2, to: o.to ? (o.to === 'dark' ? 1 : 0) : null });
+    else if (o.t === 'swapclock') { flippers.push({ kind: 'clock', x0: o.x * TILE, x1: o.x2 * TILE }); clocks.push({ x0: o.x * TILE, x1: o.x2 * TILE }); }
+    else if (o.t === 'squeeze') squeezes.push({ x: o.x * TILE + TILE / 2, y: (o.y + 1) * TILE, id: `squeeze@${o.x}` });
   }
-  const cell = (c, r) => (r < 0 || c < 0 || c >= W) ? 1 : (r >= H ? 0 : grid[r][c]);
+  const cell = (c, r) => {
+    if (r < 0 || c < 0 || c >= W) return 1;
+    if (r >= H) return 0;
+    const k = grid[r][c];
+    if (k === 4) return PH === 0 ? 1 : 0;
+    if (k === 5) return PH === 1 ? 1 : 0;
+    return k;
+  };
   const solidAt = (px, py) => cell(Math.floor(px / TILE), Math.floor(py / TILE)) === 1;
 
   // Collectibles
@@ -62,8 +86,10 @@ export function checkLevel(def) {
   };
 
   // One trajectory: returns landing spot {x, y} or null (died / fell out).
-  function simulate(x, bottom, dir1, t1, dir2, hold) {
+  function simulate(x, bottom, dir1, t1, dir2, hold, ph = 0, flipAt = null) {
     simId++;
+    PH = ph; let flipped = false;
+    const inOrb = orbs.map(() => false);
     let vx = dir1 * PHYS.runSpeed * 0.8, vy = hold > 0 ? -PHYS.jumpV : 0, t = 0, cut = false, jumping = hold > 0;
     for (let step = 0; step < 240; step++) {
       t += DT;
@@ -100,10 +126,17 @@ export function checkLevel(def) {
         }
         for (const p of extraOneWay) if (landed == null && bottom <= p.y + 0.5 && nb >= p.y && x + BW / 2 > p.x0 && x - BW / 2 < p.x1) landed = p.y;
         for (const L of loops) if (bottom <= L.top + 26 && nb >= L.top - 4 && Math.abs(x - L.x) < 46) { vy = -PHYS.bounceV; jumping = false; nb = bottom; }
-        if (landed != null) { bottom = landed; touch(x, bottom); return { x, y: bottom }; }
+        if (landed != null) { bottom = landed; touch(x, bottom); return { x, y: bottom, ph: PH }; }
       }
       bottom = nb;
       touch(x, bottom);
+      // a clock zone can flip the side while Landon is in the air
+      if (flipAt != null && !flipped && t >= flipAt && clocks.some(c => x > c.x0 && x < c.x1)) { PH = 1 - PH; flipped = true; }
+      for (let i = 0; i < orbs.length; i++) {
+        const o = orbs[i], inside = Math.abs(x - o.x) < 34 && Math.abs(bottom - BH / 2 - o.y) < 50;
+        if (inside && !inOrb[i]) PH = o.to == null ? 1 - PH : o.to;
+        inOrb[i] = inside;
+      }
       // hazards
       const hc0 = Math.floor((x - BW / 2 + 7) / TILE), hc1 = Math.floor((x + BW / 2 - 7) / TILE);
       const hr0 = Math.floor((bottom - BH + 7) / TILE), hr1 = Math.floor((bottom - 1) / TILE);
@@ -122,6 +155,7 @@ export function checkLevel(def) {
       return extraOneWay.some(p => Math.abs(p.y - y) < 1 && px >= p.x0 && px <= p.x1);
     };
     const free = (px) => !solidAt(px, y - 4) && !solidAt(px, y - BH + 4) && cell(Math.floor(px / TILE), r - 1) !== 3;
+    if (!onSurf(x - BW / 2 + 2) && !onSurf(x + BW / 2 - 2)) return null; // nothing underfoot (a block vanished)
     let a = x, b = x;
     while (onSurf(a - 4) && free(a - BW / 2 - 4) && onSurf(a - 4)) a -= 4;
     while (onSurf(b + 4) && free(b + BW / 2 + 4)) b += 4;
@@ -133,15 +167,31 @@ export function checkLevel(def) {
   const startX = lv.start.c * TILE + 24, startY = (lv.start.r + 1) * TILE;
   // drop to the floor under the start
   let sy = startY; while (!(cell(lv.start.c, Math.round(sy / TILE)) === 1 || cell(lv.start.c, Math.round(sy / TILE)) === 2) && sy < H * TILE) sy += TILE;
-  queue.push({ x: startX, y: sy });
+  queue.push({ x: startX, y: sy, ph: 0 });
   const visitedStands = [];
   while (queue.length) {
     const s = queue.shift();
-    const [a, b] = standable(s.x, s.y);
-    const key = `${Math.round(a)}|${Math.round(b)}|${s.y}`;
+    const ph = s.ph || 0;
+    PH = ph;
+    const span = standable(s.x, s.y);
+    if (!span) { // nothing solid under both feet (a block vanished, or only a toe is on an edge): fall from here
+      const fk = `fall|${Math.round(s.x)}|${s.y}|${ph}`;
+      if (seen.has(fk)) continue;
+      seen.add(fk);
+      const land = simulate(s.x, s.y + 1, 0, 9, 0, 0, ph);
+      if (land && !(Math.abs(land.y - s.y) < 1 && Math.abs(land.x - s.x) < 1)) queue.push(land);
+      continue;
+    }
+    const [a, b] = span;
+    const key = `${Math.round(a)}|${Math.round(b)}|${s.y}|${ph}`;
     if (seen.has(key)) continue;
     seen.add(key);
-    visitedStands.push({ a, b, y: s.y });
+    visitedStands.push({ a, b, y: s.y, ph });
+    // switch sides from here: a swap switch in Winnie's reach, or a clock zone that flips by itself
+    for (const f of flippers) {
+      const ok = f.kind === 'lever' ? Math.max(0, a - f.x, f.x - b) < 470 && Math.abs(f.y - s.y) < 380 : b > f.x0 && a < f.x1;
+      if (ok) queue.push({ x: s.x, y: s.y, ph: 1 - ph });
+    }
     for (let x = a; x <= b; x += 8) touch(x, s.y);
     const xs = [];
     for (let x = a; x <= b; x += 24) xs.push(x);
@@ -150,8 +200,9 @@ export function checkLevel(def) {
       for (const hold of [0.12, 0.3, 0.6]) {
         for (const d of [-1, 0, 1]) {
           for (const [t1, d2] of [[9, d], [0.3, 0], [0.35, -d]]) {
-            const land = simulate(x, s.y, d, t1, d2, hold);
+            const land = simulate(x, s.y, d, t1, d2, hold, ph);
             if (land) queue.push(land);
+            if (d !== 0 && clocks.some(c => x > c.x0 && x < c.x1)) for (const fa of [0.2, 0.4]) { const l2 = simulate(x, s.y, d, t1, d2, hold, ph, fa); if (l2) queue.push(l2); }
           }
         }
       }
@@ -159,16 +210,17 @@ export function checkLevel(def) {
     // walk off both edges
     for (const [x, d] of [[a, -1], [b, 1]]) {
       for (const [t1, d2] of [[9, d], [0.15, 0], [0.3, 0]]) {
-        const land = simulate(x + d * 6, s.y + 0.1, d, t1, d2, 0);
+        const land = simulate(x + d * 6, s.y + 0.1, d, t1, d2, 0, ph);
         if (land) queue.push(land);
       }
     }
   }
   const missing = targets.filter((t, i) => !hit.has(i));
   // bells: some standable spot within Winnie's pounce range
-  const missingBells = bells.filter(bl => !visitedStands.some(s => Math.max(0, s.a - bl.x, bl.x - s.b) < 470 && Math.abs(bl.y - s.y) < 380));
+  const missingBells = bells.filter(bl => !visitedStands.some(s => Math.max(0, s.a - bl.x, bl.x - s.b) < 470 && Math.abs(bl.y - s.y) < 380))
+    .concat(squeezes.filter(q => !visitedStands.some(s => Math.max(0, s.a - q.x, q.x - s.b) < 170 && Math.abs(q.y - s.y) < 70)));
   const difficulty = targets.map((t, i) => ({ kind: t.kind, c: t.c, r: t.r, hits: hits[i] })).sort((a, b) => a.hits - b.hits);
-  return { targets: targets.length, missing, missingBells, stands: visitedStands.length, difficulty };
+  return { targets: targets.length, missing, missingBells, stands: visitedStands.length, difficulty, visitedStands };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -181,7 +233,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     if (!ok) bad++;
     console.log(`${ok ? 'OK  ' : 'FAIL'} ${id}: ${r.targets - r.missing.length}/${r.targets} targets reachable, ${r.stands} standing spots` +
       (r.missing.length ? `\n     unreachable: ${r.missing.map(t => `${t.kind}@${t.c},${t.r}`).join(' ')}` : '') +
-      (r.missingBells.length ? `\n     bells out of Winnie's reach: ${r.missingBells.map(b => b.id).join(' ')}` : ''));
+      (r.missingBells.length ? `\n     Winnie targets out of reach: ${r.missingBells.map(b => b.id).join(' ')}` : ''));
   }
   process.exit(bad ? 1 : 0);
 }

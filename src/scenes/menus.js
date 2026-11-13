@@ -103,7 +103,7 @@ export class ParentScene extends Menu {
 const ABILITIES = {
   nightEyes: { name: 'Night Eyes', icon: 'sign-eye', pose: 'sit', text: 'Tap the Winnie button. Her glowing eyes show secret platforms and treasure close by!' },
   pounce: { name: 'Pounce', icon: 'sign-paw', pose: 'pounce', text: 'When a bell or switch is close, tap the Winnie button. She leaps over and bats it!' },
-  squeeze: { name: 'Squeeze', icon: 'sign-paw', pose: 'stretch', text: 'Winnie can wiggle through tiny holes and open doors from the other side!' },
+  squeeze: { name: 'Squeeze', icon: 'sign-squeeze', pose: 'stretch', text: 'See a tiny cat door? Tap the Winnie button. She wiggles through and opens things on the other side!' },
   meow: { name: 'Meow', icon: 'sign-pulse', pose: 'meow', text: 'Winnie\'s big meow wakes up sleepy crystals and scares small baddies away!' },
 };
 export class LearnScene extends Menu {

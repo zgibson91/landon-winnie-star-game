@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 
-const LEVELS = ['hub', 'sun', 'betelgeuse'];
+const LEVELS = ['hub', 'sun', 'arcturus', 'betelgeuse', 'mucephei', 'vvcephei'];
 const botSrc = fs.readFileSync(new URL('./bot.js', import.meta.url), 'utf8');
 
 function watchErrors(page) {
@@ -47,7 +47,7 @@ for (const id of LEVELS) {
   });
 }
 
-for (const id of ['sun', 'betelgeuse']) {
+for (const id of ['sun', 'arcturus', 'betelgeuse', 'mucephei', 'vvcephei']) {
   test(`bot beats "${id}" and collects the secret shard`, async ({ page }, info) => {
     test.skip(info.project.name !== 'ipad-1180', 'bot runs once (desktop GPU timing)');
     test.setTimeout(300000);

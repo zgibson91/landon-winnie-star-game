@@ -22,6 +22,7 @@ export class Player {
     this.coyote = 0; this.buffer = 0; this.jumping = false; this.grounded = false; this.wasGrounded = true;
     this.dead = false; this.frozen = false; this.invuln = 0; this.landTimer = 0;
     this.ride = null; this.stepTimer = 0;
+    this.windV = 0; this.windTarget = 0; // stellar wind push (set by Wind zones each frame)
     this.gravityDir = 1;
     this.hitbox = new Phaser.Geom.Rectangle();
     this.anim = '';
@@ -44,7 +45,7 @@ export class Player {
 
   teleport(x, y) {
     this.body.body.reset(x, y);
-    this.vx = 0; this.ride = null;
+    this.vx = 0; this.ride = null; this.windV = 0;
     this.sprite.setPosition(x, this.body.body.bottom);
   }
 
@@ -77,7 +78,11 @@ export class Player {
       rideVx = this.ride.body.velocity.x;
       if (this.ride.body.velocity.y > 0 && b.velocity.y < this.ride.body.velocity.y) b.velocity.y = this.ride.body.velocity.y;
     } else this.ride = null;
-    b.velocity.x = this.vx + rideVx;
+    // wind eases in and out so gusts feel like a push, not a teleport
+    this.windV += (this.windTarget - this.windV) * Math.min(1, dt * (this.windTarget ? 3 : 12)); // fades fast when the gust ends
+    this.windTarget = 0;
+    if ((b.blocked.left && this.windV < 0) || (b.blocked.right && this.windV > 0)) this.windV = 0;
+    b.velocity.x = this.vx + rideVx + this.windV;
 
     // --- jump: coyote time + buffer + variable height ---
     if (this.grounded) { this.coyote = PHYS.coyote; this.jumping = false; } else this.coyote -= dt;

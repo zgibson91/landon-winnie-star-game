@@ -56,6 +56,11 @@ export const ICONS = {
   thermo: `<rect x="40" y="8" width="16" height="52" rx="8" fill="#fff" stroke="${INK}" stroke-width="3"/><circle cx="48" cy="62" r="10" fill="#ff5a4e" stroke="${INK}" stroke-width="3"/><rect x="44" y="30" width="8" height="30" fill="#ff5a4e"/>` +
     `<circle cx="70" cy="16" r="7" fill="#8fc8ff" stroke="${INK}" stroke-width="2.4"/><circle cx="70" cy="36" r="7" fill="#ffd75e" stroke="${INK}" stroke-width="2.4"/><circle cx="70" cy="56" r="7" fill="#ff5a4e" stroke="${INK}" stroke-width="2.4"/>` +
     `<text x="24" y="20" font-size="13" font-weight="900" text-anchor="middle" fill="#e63946" font-family="sans-serif">HOT</text><text x="24" y="62" font-size="12" font-weight="900" text-anchor="middle" fill="#3d7fd6" font-family="sans-serif">cool</text>`,
+  wind: `<path d="M14 26 Q40 20 66 26 Q80 30 74 40" stroke="#6f9fd6" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M20 40 Q50 34 78 40" stroke="#9fd8ff" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M14 54 Q40 48 62 54 Q76 58 70 66" stroke="#6f9fd6" stroke-width="5" fill="none" stroke-linecap="round"/>`,
+  mirror: `<rect x="30" y="14" width="40" height="40" rx="8" fill="#5a2a4a" stroke="${INK}" stroke-width="3"/><path d="M36 48 L64 20" stroke="#e8f4ff" stroke-width="8" stroke-linecap="round"/><path d="M8 34 L50 34 L50 4" stroke="#fff06b" stroke-width="4" fill="none" stroke-dasharray="6 4"/><path d="M40 70 L50 58 L60 70" stroke="#5ec26a" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+  squeeze: `<path d="M30 66 L30 44 Q30 30 48 30 Q66 30 66 44 L66 66 Z" fill="#1a0a16" stroke="${INK}" stroke-width="3"/><g fill="#ff9fb0" stroke="${INK}" stroke-width="1.5"><ellipse cx="48" cy="56" rx="6" ry="5"/><circle cx="40" cy="47" r="3"/><circle cx="46" cy="44" r="3"/><circle cx="51" cy="44" r="3"/><circle cx="56" cy="47" r="3"/></g><path d="M70 48 L86 48 M80 42 L86 48 L80 54" stroke="#5ec26a" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+  swap: `<circle cx="48" cy="37" r="22" fill="#ffd25a" stroke="${INK}" stroke-width="3"/><path d="M48 15 A22 22 0 0 1 48 59 Z" fill="#4a5ad8"/><circle cx="48" cy="37" r="22" fill="none" stroke="${INK}" stroke-width="3"/>`,
+  lever: `<circle cx="48" cy="34" r="20" fill="#ffd75e" stroke="${INK}" stroke-width="3"/><path d="M48 20 L52 30 L62 30 L54 36 L57 46 L48 40 L39 46 L42 36 L34 30 L44 30 Z" fill="#fff6c9" stroke="${INK}" stroke-width="1.6"/><rect x="44" y="54" width="8" height="14" fill="#6d5aa8" stroke="${INK}" stroke-width="2"/>`,
   shard: `<path d="${star5(48, 38, 24, 11)}" fill="#ffe680" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round"/>`,
   up: `<path d="M48 12 L70 40 L56 40 L56 62 L40 62 L40 40 L26 40 Z" fill="#5ec26a" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>`,
   stomp: `<path d="M48 8 L48 30 M40 22 L48 31 L56 22" stroke="#6f9fd6" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 64 Q28 42 48 42 Q68 42 68 64 Z" fill="#ff8a3c" stroke="${INK}" stroke-width="2.6"/><circle cx="42" cy="54" r="2.6" fill="${INK}"/><circle cx="54" cy="54" r="2.6" fill="${INK}"/>`,
@@ -92,6 +97,9 @@ export async function buildProps(scene) {
     svgSheet(scene, 'lantern', 48, 80, [lantern(false), lantern(true)], glow('lg', '#fff2a8', '#ffcf4a')),
     svgSheet(scene, 'bells', 48, 52, [bell('#ff5a4e', 0.8), bell('#ffd75e', 0.9), bell('#8fc8ff', 1)]),
     svgSheet(scene, 'walker-sun', 48, 48, [walker('#ff8a3c', '#ffd75e', 0), walker('#ff8a3c', '#ffd75e', 1)]),
+    svgSheet(scene, 'walker-orange', 48, 48, [walker('#e8862a', '#ffe0a0', 0), walker('#e8862a', '#ffe0a0', 1)]),
+    svgSheet(scene, 'walker-garnet', 48, 48, [walker('#a01e44', '#ff8aa6', 0), walker('#a01e44', '#ff8aa6', 1)]),
+    svgSheet(scene, 'walker-blue', 48, 48, [walker('#5a6ad8', '#c0d4ff', 0), walker('#5a6ad8', '#c0d4ff', 1)]),
     svgSheet(scene, 'walker-red', 48, 48, [walker('#d2364a', '#ff8a5e', 0), walker('#d2364a', '#ff8a5e', 1)]),
     svgImage(scene, 'spark', 16, 16, `<circle cx="8" cy="8" r="7" fill="url(#g)"/>`, glow('g', '#ffffff', '#ffffff')),
     svgImage(scene, 'softglow', 64, 64, `<circle cx="32" cy="32" r="32" fill="url(#g)"/>`, glow('g', '#ffffff', '#ffffff')),

@@ -37,7 +37,10 @@ export const Audio = {
     const comp = c.createDynamicsCompressor();
     comp.threshold.value = -14; comp.knee.value = 10; comp.ratio.value = 4; comp.attack.value = 0.004; comp.release.value = 0.2;
     this.master.connect(comp); comp.connect(c.destination);
-    this.music = c.createGain(); this.music.gain.value = this.musicOn ? 0.55 : 0; this.music.connect(this.master);
+    this.music = c.createGain(); this.music.gain.value = this.musicOn ? 0.55 : 0;
+    // tone filter: VV Cephei's shadow side muffles the music
+    this.musicTone = c.createBiquadFilter(); this.musicTone.type = 'lowpass'; this.musicTone.frequency.value = 18000;
+    this.music.connect(this.musicTone); this.musicTone.connect(this.master);
     this.sfxBus = c.createGain(); this.sfxBus.gain.value = 0.8; this.sfxBus.connect(this.master);
     // Reverb from a generated impulse response.
     this.reverb = c.createConvolver();
@@ -73,6 +76,7 @@ export const Audio = {
   suspend() { if (this.ctx && this.ctx.state === 'running') this.ctx.suspend().catch(() => {}); },
   resume() { if (this.ctx && this.ctx.state !== 'running' && this.started) this.ctx.resume().catch(() => {}); },
   setSound(on) { this.soundOn = on; if (this.master) this.master.gain.setTargetAtTime(on ? 0.9 : 0, this.ctx.currentTime, 0.05); },
+  setMusicTone(dark) { if (this.musicTone) this.musicTone.frequency.setTargetAtTime(dark ? 900 : 18000, this.ctx.currentTime, 0.12); },
   setMusic(on) { this.musicOn = on; if (this.music) this.music.gain.setTargetAtTime(on ? 0.55 : 0, this.ctx.currentTime, 0.05); },
 
   // ---------- instruments ----------
@@ -222,6 +226,8 @@ export const Audio = {
       case 'pulse': this.play('boom', 36, t, 0.5, 0.6 * (opt.v || 1), bus); break;
       case 'pounce': this.noiseHit(t, 0.1, 0.18, 'bandpass', 1500); this.meow(t + 0.02, 1.4, 0.5); break;
       case 'chime': this.play('bell', opt.m || 84, t, 0.2, 0.8, bus); break;
+      case 'wind': { const n = this.noiseHit(t, 0.1, 1.6, 'bandpass', 500, bus, 0.3); n.g.gain.cancelScheduledValues(t); n.g.gain.setValueAtTime(0.0001, t); n.g.gain.linearRampToValueAtTime(0.1, t + 0.4); n.g.gain.exponentialRampToValueAtTime(0.0001, t + 1.6); n.f.frequency.linearRampToValueAtTime(1100, t + 0.8); n.f.frequency.linearRampToValueAtTime(400, t + 1.6); break; }
+      case 'swap': sweep('sine', 300, 900, 0.25, 0.14, 0.4); this.play('bell', 76, t + 0.05, 0.2, 0.6, bus); this.play('bell', 83, t + 0.12, 0.2, 0.5, bus); break;
       default: break;
     }
   },

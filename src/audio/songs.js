@@ -32,6 +32,20 @@ export const SONGS = {
     drums: { kick: 'x.....x...x.....', snare: '....x.......x...', shaker: 'oooooooooooooooo' },
     voices: [{ inst: 'lead', notes: 'B4 - E5 - G5 - F#5 E5 | E5 - - - G5 - A5 - | B5 - - - D6 - B5 - | A5 - - - F#5 - D5 - | B4 - E5 - G5 - B5 - | C6 - B5 - G5 - E5 - | A5 - G5 - E5 - C5 - | D#5 - F#5 - B5 - - -' }],
   },
+  mucephei: {
+    // a twinkly cave song: slow bells over a deep pulse
+    bpm: 96, bass: 'slow', arp: 'wide', arpInst: 'bell', arpOct: 1, arpEvery: 4, padVel: 1.3,
+    chords: ['Em', 'Cmaj7', 'Am7', 'B7', 'Em', 'Cmaj7', 'D', 'B7'],
+    drums: { kick: 'x.......x.......', shaker: '....o.......o...', snare: '........x.......' },
+    voices: [{ inst: 'marimba', notes: 'E5 - G5 - B5 - - - | C6 - B5 - G5 - E5 - | A5 - - - C6 - E6 - | D#6 - - - B5 - . . | E6 - D6 - B5 - G5 - | C6 - - - E6 - G6 - | F#6 - E6 - D6 - A5 - | B5 - - - D#6 - B5 -' }],
+  },
+  vvcephei: {
+    // two stars dancing: a bright waltz-y tune in 4 that sounds cosy when muffled
+    bpm: 112, bass: 'bounce', arp: 'updown', arpInst: 'pluck', arpOct: 1,
+    chords: ['F', 'Am', 'Bb', 'C', 'F', 'Dm', 'Gm7', 'C7'],
+    drums: { kick: 'x.....x.x.......', snare: '....x.......x...', hat: '..x...x...x...x.' },
+    voices: [{ inst: 'lead', notes: 'C5 - F5 - A5 - G5 F5 | E5 - - - A5 - C6 - | D6 - C6 - Bb5 - F5 - | G5 - - - . . . . | A5 - C6 - F6 - E6 D6 | D6 - A5 - F5 - D5 - | G5 - Bb5 - D6 - C6 Bb5 | C6 - - - E5 - G5 -' }],
+  },
   betelgeuse: {
     // 120 bpm: one bar = 2 s = one full star pulse. The "boom" lands on every downbeat.
     bpm: 120, bass: 'drive', arp: 'up', arpInst: 'pluck', arpOct: 1, arpEvery: 2,

@@ -208,12 +208,12 @@ export class UIScene extends Phaser.Scene {
     const kind = a ? a.kind : null;
     if (kind !== this.lastKind) {
       this.lastKind = kind;
-      const map = { eyes: ['sign-eye', 'LOOK'], pounce: ['sign-paw', 'POUNCE'], meow: ['sign-pulse', 'MEOW'], go: ['sign-up', 'GO!'] };
+      const map = { eyes: ['sign-eye', 'LOOK'], pounce: ['sign-paw', 'POUNCE'], squeeze: ['sign-squeeze', 'SQUEEZE'], meow: ['sign-pulse', 'MEOW'], go: ['sign-up', 'GO!'] };
       const m = map[kind];
       this.winnieAbility.setVisible(!!m); this.winnieLabel.setText(m ? m[1] : '');
       if (m) this.winnieAbility.setTexture(m[0]);
       this.btnWinnie.setAlpha(kind ? 1 : 0.5);
-      if (kind === 'pounce' || kind === 'go') this.tweens.add({ targets: this.btnWinnie, scale: 1.15, duration: 120, yoyo: true });
+      if (kind === 'pounce' || kind === 'go' || kind === 'squeeze') this.tweens.add({ targets: this.btnWinnie, scale: 1.15, duration: 120, yoyo: true });
     }
   }
 

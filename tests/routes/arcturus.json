@@ -1,0 +1,436 @@
+{
+ "timeout": 300,
+ "steps": [
+  {
+   "note": "settle",
+   "dir": 0,
+   "until": "L.levelTime > 1.5 && !L.busyModal",
+   "ms": 20000
+  },
+  {
+   "note": "to the first gap",
+   "dir": 1,
+   "x": 17.4,
+   "ms": 8000
+  },
+  {
+   "note": "wait for calm",
+   "dir": 0,
+   "until": "wind(0) === 'idle' && Math.abs(P.vx) < 1 && Math.abs(P.windV) < 5",
+   "ms": 8000
+  },
+  {
+   "note": "jump the gap",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 25.2,
+   "ms": 6000
+  },
+  {
+   "dir": 0,
+   "until": "wind(0) !== 'on'",
+   "ms": 6000
+  },
+  {
+   "note": "onto the block",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "off the block",
+   "dir": 1,
+   "x": 30.4,
+   "ms": 4000
+  },
+  {
+   "note": "approach walker",
+   "dir": 1,
+   "until": "!L.walkers[0].alive || L.walkers[0].x < P.x - 40 || (L.walkers[0].x > P.x && L.walkers[0].x - P.x < 120)",
+   "ms": 12000
+  },
+  {
+   "note": "jump over walker",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "to the isles",
+   "dir": 1,
+   "x": 42.8,
+   "ms": 8000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 43.3) < 0.25 && mv(0).x < 45.6 ",
+   "ms": 9000,
+   "stay": 42.8
+  },
+  {
+   "note": "onto rock 0",
+   "dir": 1,
+   "jump": 450,
+   "x": 45.5,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "ride rock 0",
+   "ride": 0,
+   "rideAt": 3.3,
+   "until": "mv(0).x > 51.6 && mv(1).y > 9.6 && mv(1).vy > 0",
+   "ms": 20000
+  },
+  {
+   "note": "to rock 1",
+   "dir": 1,
+   "jump": 450,
+   "x": 58.6,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "wait for rock 2",
+   "ride": 1,
+   "rideAt": 3.2,
+   "until": "mv(2).x < 64.5 && mv(1).y > 9",
+   "ms": 20000
+  },
+  {
+   "dir": 0,
+   "until": "true",
+   "ms": 100
+  },
+  {
+   "note": "to rock 2",
+   "dir": 1,
+   "jump": 450,
+   "x": 64.6,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "ride rock 2",
+   "ride": 2,
+   "rideAt": 3.3,
+   "until": "mv(2).x > 72.6",
+   "ms": 12000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "to shrine",
+   "dir": 1,
+   "x": 92.8,
+   "ms": 10000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 93.3) < 0.25",
+   "ms": 2000,
+   "stay": 92.8
+  },
+  {
+   "note": "pounce l1",
+   "dir": 0,
+   "winnie": true,
+   "until": "L.doors.d1.open",
+   "ms": 4000
+  },
+  {
+   "note": "to l2",
+   "dir": 1,
+   "x": 101,
+   "ms": 5000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 101.5) < 0.25",
+   "ms": 2000,
+   "stay": 101
+  },
+  {
+   "note": "pounce l2",
+   "dir": 0,
+   "winnie": true,
+   "until": "L.movers.lift1.active",
+   "ms": 4000
+  },
+  {
+   "note": "wait for lift low",
+   "dir": 0,
+   "until": "mv(3).y > 10.6",
+   "ms": 9000
+  },
+  {
+   "note": "onto lift",
+   "dir": 1,
+   "jump": 450,
+   "x": 104.3,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "ride up",
+   "ride": 3,
+   "until": "mv(3).y < 5.3",
+   "ms": 9000
+  },
+  {
+   "note": "to the ledge",
+   "dir": 1,
+   "jump": 300,
+   "x": 108.6,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 111.4,
+   "ms": 3000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 111.9) < 0.25 && P.grounded",
+   "ms": 2000,
+   "stay": 111.4
+  },
+  {
+   "note": "pounce l3",
+   "dir": 0,
+   "winnie": true,
+   "until": "L.doors.d2.open",
+   "ms": 5000
+  },
+  {
+   "note": "down and through the door",
+   "dir": 1,
+   "x": 131.6,
+   "ms": 12000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 132.1) < 0.25 && wind(1) === 'idle'",
+   "ms": 8000,
+   "stay": 131.6
+  },
+  {
+   "note": "step 1",
+   "dir": 1,
+   "jump": 450,
+   "x": 136.4,
+   "ms": 3000
+  },
+  {
+   "until": "P.grounded",
+   "ms": 3000,
+   "stay": 137
+  },
+  {
+   "until": "wind(1) === 'idle'",
+   "ms": 8000,
+   "stay": 137
+  },
+  {
+   "note": "step 2",
+   "dir": 1,
+   "jump": 450,
+   "x": 141.4,
+   "ms": 3000
+  },
+  {
+   "until": "P.grounded",
+   "ms": 3000,
+   "stay": 142
+  },
+  {
+   "until": "wind(1) === 'idle'",
+   "ms": 8000,
+   "stay": 142
+  },
+  {
+   "note": "step 3",
+   "dir": 1,
+   "jump": 450,
+   "x": 146.4,
+   "ms": 3000
+  },
+  {
+   "until": "P.grounded && Math.abs(P.x/48 - 147.5) < 0.3",
+   "ms": 3000,
+   "stay": 147
+  },
+  {
+   "note": "pounce l4 (sky rock)",
+   "dir": 0,
+   "winnie": true,
+   "until": "L.movers.sky.active",
+   "ms": 5000
+  },
+  {
+   "dir": 0,
+   "until": "wind(1) === 'idle'",
+   "ms": 8000
+  },
+  {
+   "note": "step 4",
+   "dir": 1,
+   "jump": 450,
+   "x": 151.4,
+   "ms": 3000
+  },
+  {
+   "until": "P.grounded",
+   "ms": 3000,
+   "stay": 152
+  },
+  {
+   "note": "wait sky rock",
+   "until": "mv(4).x < 154.4 && wind(1) !== 'on'",
+   "ms": 12000,
+   "stay": 152
+  },
+  {
+   "note": "onto sky rock",
+   "dir": 1,
+   "jump": 450,
+   "x": 154.6,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "ride sky rock",
+   "ride": 4,
+   "until": "mv(4).x > 159.6",
+   "ms": 9000
+  },
+  {
+   "note": "to shard ledge",
+   "dir": 1,
+   "jump": 450,
+   "x": 164.6,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "until": "L.runShards[1]",
+   "ms": 3000
+  },
+  {
+   "note": "drop down",
+   "dir": 1,
+   "x": 170,
+   "ms": 6000
+  },
+  {
+   "note": "to sunset",
+   "dir": 1,
+   "x": 171.8,
+   "ms": 6000
+  },
+  {
+   "until": "Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 172.3) < 0.25 && mv(5).x < 174.4",
+   "ms": 9000,
+   "stay": 171.8
+  },
+  {
+   "note": "onto rock 5",
+   "dir": 1,
+   "jump": 450,
+   "x": 174.6,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "ride rock 5",
+   "ride": 5,
+   "until": "mv(5).x > 178.6 && mv(6).x < 185",
+   "ms": 12000
+  },
+  {
+   "ride": 5,
+   "rideAt": 2.6,
+   "until": "Math.abs(P.x / 48 - (mv(5).x + 2.6)) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "to rock 6",
+   "dir": 1,
+   "jump": 450,
+   "x": 184.8,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "ride rock 6",
+   "ride": 6,
+   "until": "mv(6).x > 187.6",
+   "ms": 9000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "stomp walker",
+   "dir": 1,
+   "until": "!L.walkers[L.walkers.length-1].alive || Math.abs(L.walkers[L.walkers.length-1].x - P.x) < 150",
+   "ms": 8000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "gate",
+   "dir": 1,
+   "until": "L.finished",
+   "ms": 8000
+  }
+ ]
+}

@@ -21,6 +21,27 @@ export const THEMES = {
     spike: ['#ffb3c0', '#e0405a'], plasma: ['#ffd3a0', '#ff6a4a', '#b0203a'],
     walker: 'walker-red', fog: 0xff5a4e, ember: 0xff8a6a,
   },
+  arcturus: {
+    music: 'arcturus', sky: ['#ffb36b', '#ff8a4a', '#c8503a'],
+    ground: '#b8642e', speck: '#9a5022', crust: '#ffc36b', crustHi: '#ffe7a8', crustLo: '#e0903f',
+    plat: '#6b3a22', platRim: '#c07040', platHi: '#e8a060',
+    spike: ['#fff0b0', '#ff9a3c'], plasma: ['#fff0b0', '#ffb04a', '#e0602a'],
+    walker: 'walker-orange', fog: 0xffc36b, ember: 0xffe0a0,
+  },
+  mucephei: {
+    music: 'mucephei', sky: ['#1a0716', '#3d0c2a', '#6e1238'],
+    ground: '#3a1430', speck: '#2a0c22', crust: '#d22a52', crustHi: '#ff7a9a', crustLo: '#8e1a3a',
+    plat: '#2a0c22', platRim: '#c0284c', platHi: '#ff8aa6',
+    spike: ['#ffd0dc', '#d22a52'], plasma: ['#ffb0c4', '#d22a52', '#5a0a24'],
+    walker: 'walker-garnet', fog: 0xd22a52, ember: 0xff8aa6,
+  },
+  vvcephei: {
+    music: 'vvcephei', sky: ['#2b1a5a', '#7a3a6a', '#ff8a5a'],
+    ground: '#4a3a6a', speck: '#3a2c58', crust: '#ffb07a', crustHi: '#ffe0c0', crustLo: '#d07a5a',
+    plat: '#2c2450', platRim: '#9fb8ff', platHi: '#e0ecff',
+    spike: ['#e0ecff', '#7a8ad8'], plasma: ['#d0e0ff', '#6a7ae0', '#2a2a7a'],
+    walker: 'walker-blue', fog: 0x9fd8ff, ember: 0xfff0d0,
+  },
   station: {
     music: 'hub', sky: ['#120d33', '#2b1d6b', '#4a2f8f'],
     ground: '#5b3d8f', speck: '#4a3078', crust: '#d99a5b', crustHi: '#f2c48a', crustLo: '#b5773f',
@@ -31,7 +52,7 @@ export const THEMES = {
 };
 
 // Tile indices in the generated tileset.
-export const TILE_IDX = { solidBase: 0, oneway: 16, spike: 20 }; // 0..15 = solid by neighbor mask; 16..19 one-way L/M/R/single
+export const TILE_IDX = { solidBase: 0, oneway: 16, spike: 20, light: 21, dark: 22 }; // 0..15 = solid by neighbor mask; 16..19 one-way L/M/R/single
 
 function rng(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
 
@@ -95,6 +116,29 @@ function drawOneway(ctx, x, y, kind, th) {
   ctx.restore();
 }
 
+// Light-side and shadow-side blocks for VV Cephei (only one kind is solid at a time).
+function drawPhaseBlock(ctx, x, y, dark) {
+  const s = T2, o = 5;
+  const fill = dark ? '#4a5ad8' : '#ffb84a', hi = dark ? '#9fb8ff' : '#fff0a0', lo = dark ? '#2c3490' : '#d8782a';
+  ctx.save();
+  ctx.beginPath(); ctx.roundRect(x + 4, y + 4, s - 8, s - 8, 16);
+  ctx.fillStyle = fill; ctx.fill();
+  ctx.save(); ctx.clip();
+  ctx.fillStyle = lo; ctx.fillRect(x, y + s - 22, s, 22);
+  ctx.fillStyle = hi; ctx.fillRect(x + 12, y + 12, s - 40, 7);
+  ctx.restore();
+  ctx.lineWidth = o; ctx.strokeStyle = INK; ctx.stroke();
+  // emblem: sun or moon
+  ctx.translate(x + s / 2, y + s / 2 + 2);
+  ctx.fillStyle = dark ? '#e0ecff' : '#fff6c9'; ctx.strokeStyle = INK; ctx.lineWidth = 3;
+  if (dark) { ctx.beginPath(); ctx.arc(0, 0, 15, 0.6, Math.PI * 2 - 0.6); ctx.arc(9, 0, 11, Math.PI * 2 - 0.9, 0.9, true); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+  else {
+    for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; ctx.beginPath(); ctx.moveTo(Math.cos(a) * 14, Math.sin(a) * 14); ctx.lineTo(Math.cos(a) * 21, Math.sin(a) * 21); ctx.stroke(); }
+    ctx.beginPath(); ctx.arc(0, 0, 11, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  }
+  ctx.restore();
+}
+
 function drawSpike(ctx, x, y, th) {
   const s = T2;
   const g = ctx.createLinearGradient(0, y + s, 0, y + 30);
@@ -117,6 +161,8 @@ export function buildTileset(scene, name) {
     for (let m = 0; m < 16; m++) drawSolid(ctx, ...at(m), m, th, 1234 + m * 77);
     for (let k = 0; k < 4; k++) drawOneway(ctx, ...at(16 + k), k, th);
     drawSpike(ctx, ...at(20), th);
+    drawPhaseBlock(ctx, ...at(21), false);
+    drawPhaseBlock(ctx, ...at(22), true);
   });
   return key;
 }
@@ -165,6 +211,31 @@ function farLayer(scene, name) {
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
       }
       for (let i = 0; i < 160; i++) { ctx.fillStyle = `rgba(255,220,200,${0.2 + rnd() * 0.5})`; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H * 0.6, 1 + rnd() * 2.5, 0, Math.PI * 2); ctx.fill(); }
+    } else if (name === 'arcturus') {
+      // warm haze with huge slow cloud banks
+      for (let i = 0; i < 26; i++) {
+        const x = rnd() * W, y = H * 0.2 + rnd() * H * 0.7, rx = 180 + rnd() * 260, ry = 40 + rnd() * 60;
+        ctx.fillStyle = `rgba(255,${200 + Math.floor(rnd() * 40)},150,${0.12 + rnd() * 0.12})`;
+        ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.fillStyle = 'rgba(255,240,200,0.35)'; ctx.beginPath(); ctx.arc(W * 0.7, H * 0.25, 120, 0, Math.PI * 2); ctx.fill();
+    } else if (name === 'mucephei') {
+      // dark crystal cavern: glowing gem clusters in the distance
+      for (let i = 0; i < 70; i++) {
+        const x = rnd() * W, y = rnd() * H, h = 30 + rnd() * 120, w = 12 + rnd() * 26;
+        ctx.fillStyle = `rgba(${200 + Math.floor(rnd() * 55)},40,90,${0.15 + rnd() * 0.25})`;
+        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + w, y + h * 0.3); ctx.lineTo(x + w * 0.6, y + h); ctx.lineTo(x - w * 0.4, y + h * 0.7); ctx.closePath(); ctx.fill();
+      }
+      for (let i = 0; i < 120; i++) { ctx.fillStyle = `rgba(255,170,200,${0.2 + rnd() * 0.5})`; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 1 + rnd() * 2, 0, Math.PI * 2); ctx.fill(); }
+    } else if (name === 'vvcephei') {
+      // the big red star on one side, its hot blue partner on the other
+      let g = ctx.createRadialGradient(W * 0.2, H * 0.35, 0, W * 0.2, H * 0.35, 420);
+      g.addColorStop(0, 'rgba(255,170,110,0.75)'); g.addColorStop(1, 'rgba(255,120,90,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(W * 0.2, H * 0.35, 420, 0, Math.PI * 2); ctx.fill();
+      g = ctx.createRadialGradient(W * 0.75, H * 0.25, 0, W * 0.75, H * 0.25, 160);
+      g.addColorStop(0, 'rgba(220,240,255,0.95)'); g.addColorStop(0.4, 'rgba(140,190,255,0.6)'); g.addColorStop(1, 'rgba(120,160,255,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(W * 0.75, H * 0.25, 160, 0, Math.PI * 2); ctx.fill();
+      for (let i = 0; i < 200; i++) { ctx.fillStyle = `rgba(255,255,255,${0.2 + rnd() * 0.6})`; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 0.8 + rnd() * 2, 0, Math.PI * 2); ctx.fill(); }
     } else {
       // night sky for Star Station
       for (let i = 0; i < 380; i++) { ctx.fillStyle = `rgba(255,255,240,${0.3 + rnd() * 0.7})`; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 0.8 + rnd() * 2.6, 0, Math.PI * 2); ctx.fill(); }
@@ -287,6 +358,30 @@ export async function buildThemeObjects(scene, name) {
     const th = THEMES[name];
     return `<rect x="0" y="12" width="96" height="36" fill="${th.plasma[2]}"/><path d="M0 14 Q12 4 24 14 T48 14 T72 14 T96 14 L96 26 L0 26Z" fill="${th.plasma[1]}"/><path d="M0 14 Q12 4 24 14 T48 14 T72 14 T96 14" stroke="${th.plasma[0]}" stroke-width="4" fill="none"/><circle cx="20" cy="34" r="4" fill="${th.plasma[1]}" opacity="0.7"/><circle cx="66" cy="40" r="3" fill="${th.plasma[1]}" opacity="0.7"/>`;
   }));
+  add('cap-rock', 24, 34, capsule('#8a4a26', '#d08048', '#ffc890', 34, null));
+  add('cap-crystal', 24, 26, capsule('#7a1236', '#ff5a86', '#ffd0dc', 26, '#ff8aa6'));
+  add('cap-star', 24, 26, capsule('#4a3a8a', '#ffb07a', '#fff0d0', 26, '#ffd0a0'));
+  // Lever / star switch (pounce target): off, on
+  add('lever', 48, 64, [0, 1].map(i => `<rect x="20" y="30" width="8" height="32" rx="4" fill="#6d5aa8" stroke="${INK}" stroke-width="2.5"/>` +
+    `<circle cx="24" cy="24" r="18" fill="${i ? '#7dff9a' : '#ffd75e'}" stroke="${INK}" stroke-width="3"/>` +
+    `<path d="M24 12 L27.5 20.5 L36.5 21 L29.5 26.5 L32 35 L24 30 L16 35 L18.5 26.5 L11.5 21 L20.5 20.5 Z" fill="${i ? '#fff' : '#fff6c9'}" stroke="${INK}" stroke-width="1.6" stroke-linejoin="round"/>`));
+  // Mirror block: frame 0 = "/" , frame 1 = "\"
+  add('mirror', 48, 48, [0, 1].map(i => `<rect x="2" y="2" width="44" height="44" rx="9" fill="#5a2a4a" stroke="${INK}" stroke-width="3"/>` +
+    `<g transform="rotate(${i ? 45 : -45} 24 24)"><rect x="3" y="19" width="42" height="10" rx="4" fill="#e8f4ff" stroke="${INK}" stroke-width="2.5"/><rect x="6" y="21" width="20" height="3" rx="1.5" fill="#fff"/></g>` +
+    `<circle cx="24" cy="24" r="4" fill="#ffd75e" stroke="${INK}" stroke-width="1.6"/>`));
+  // Beam emitter (a crystal lamp) and receiver crystal (off / lit)
+  add('emitter', 48, 48, [`<rect x="4" y="8" width="40" height="32" rx="10" fill="#3a1430" stroke="${INK}" stroke-width="3"/><circle cx="34" cy="24" r="10" fill="#fff4b0" stroke="${INK}" stroke-width="2.5"/><circle cx="34" cy="24" r="5" fill="#fff"/>`]);
+  add('receiver', 48, 48, [0, 1].map(i => `<path d="M24 3 L40 18 L34 45 L14 45 L8 18 Z" fill="${i ? '#7dff9a' : '#8a3a5a'}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M24 3 L24 45 M8 18 L40 18" stroke="${i ? '#d0ffd8' : '#c06080'}" stroke-width="2"/><path d="M16 12 L21 8" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.8"/>`));
+  // Squeeze hole (tiny cat-sized tunnel mouth)
+  add('vent', 48, 48, [`<path d="M4 48 L4 30 Q4 12 24 12 Q44 12 44 30 L44 48 Z" fill="#1a0a16" stroke="${INK}" stroke-width="3"/><path d="M10 48 L10 32 Q10 18 24 18 Q38 18 38 32 L38 48" fill="none" stroke="#ff8aa6" stroke-width="2" stroke-dasharray="3 5"/><g fill="#ff9fb0"><ellipse cx="24" cy="38" rx="4.5" ry="3.5"/><circle cx="18.5" cy="32" r="2"/><circle cx="22.5" cy="30" r="2"/><circle cx="26.5" cy="30" r="2"/><circle cx="30" cy="32" r="2"/></g>`]);
+  // Swap orb for light/shadow (two looks)
+  // Sun orb (frame 0) and moon orb (frame 1): touch to switch to that side
+  const sunIcon = `<circle cx="32" cy="32" r="9" fill="#fff6c9" stroke="${INK}" stroke-width="2.5"/>` + [0, 1, 2, 3, 4, 5, 6, 7].map(i => { const a = i * Math.PI / 4; return `<path d="M${(32 + Math.cos(a) * 12).toFixed(1)} ${(32 + Math.sin(a) * 12).toFixed(1)} L${(32 + Math.cos(a) * 17).toFixed(1)} ${(32 + Math.sin(a) * 17).toFixed(1)}" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>`; }).join('');
+  const moonIcon = `<path d="M37 17 A15 15 0 1 0 37 47 A12 12 0 1 1 37 17 Z" fill="#e0ecff" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>`;
+  add('swaporb', 64, 64, [0, 1].map(i => `<circle cx="32" cy="32" r="31" fill="url(#so${i})"/><circle cx="32" cy="32" r="21" fill="${i ? '#4a5ad8' : '#ffb84a'}" stroke="${INK}" stroke-width="3"/>` +
+    (i ? moonIcon : sunIcon) + `<path d="M19 24 Q23 16 31 14" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.8"/>`),
+    `<radialGradient id="so0"><stop offset="0.55" stop-color="#fff0b0" stop-opacity="0.8"/><stop offset="1" stop-color="#ffb84a" stop-opacity="0"/></radialGradient><radialGradient id="so1"><stop offset="0.55" stop-color="#c0d4ff" stop-opacity="0.8"/><stop offset="1" stop-color="#4a5ad8" stop-opacity="0"/></radialGradient>`);
+  add('windstreak', 64, 8, [`<path d="M2 4 L62 4" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.9"/>`]);
   add(`obj-done-${name}`, 2, 2, ['']);
   await Promise.all(jobs);
 }
