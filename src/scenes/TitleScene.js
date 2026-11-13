@@ -20,9 +20,9 @@ export class TitleScene extends Phaser.Scene {
     planet.fillStyle(0x5b3d8f, 1); planet.fillCircle(cx, vh + 568, 710);
     planet.fillStyle(0x8f7fe0, 1); planet.fillCircle(cx, vh + 600, 690);
     planet.fillStyle(0x6f5ce0, 1); [[-300, 40, 40], [220, 70, 60], [-60, 110, 30], [420, 140, 50]].forEach(([x, y, r]) => planet.fillCircle(cx + x, vh - 150 + y + 200, r));
-    this.landon = this.add.sprite(cx - 70, vh - 148, 'landon-jersey', 0).setOrigin(0.5, 101 / 104).setScale(1.1);
+    this.landon = this.add.sprite(cx - 200, vh - 150, 'landon-jersey', 0).setOrigin(0.5, 101 / 104).setScale(0.85);
     this.landon.play('landon-jersey-idle');
-    this.winnie = this.add.sprite(cx + 60, vh - 146, 'winnie', 0).setOrigin(0.5, 53 / 56).setScale(1);
+    this.winnie = this.add.sprite(cx - 90, vh - 150, 'winnie', 0).setOrigin(0.5, 53 / 56).setScale(0.85);
     this.winnie.play('winnie-sit');
     // title
     const title = this.add.text(cx, 150, 'Landon and Winnie', { fontFamily: FONT, fontSize: '104px', fontStyle: '900', color: '#ffe680', stroke: '#2a1f3d', strokeThickness: 18, padding: { x: 10, y: 10 } }).setOrigin(0.5);
@@ -35,7 +35,7 @@ export class TitleScene extends Phaser.Scene {
     const sub = makeText(this, cx, 252, 'Journey to the Stars', 50, { color: '#c9e6ff', strokeW: 10 });
     this.tweens.add({ targets: title, y: 158, duration: 1800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     this.tweens.add({ targets: sub, scale: 1.03, duration: 1200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    const play = makeButton(this, cx, 380, 300, 92, 'Play!', () => this.start(), { color: 0x5ec26a, size: 44 });
+    const play = makeButton(this, cx + 220, 470, 300, 92, 'Play!', () => this.start(), { color: 0x5ec26a, size: 44 });
     this.tweens.add({ targets: play, scale: 1.06, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     this.nav = new FocusNav(this, [play]);
     // shooting stars

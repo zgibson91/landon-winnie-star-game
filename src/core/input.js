@@ -20,6 +20,7 @@ export const Input = {
   kb: Object.fromEntries(ACTIONS.map(a => [a, false])),
   touch: Object.fromEntries(ACTIONS.map(a => [a, false])),
   pad: Object.fromEntries(ACTIONS.map(a => [a, false])),
+  latched: Object.fromEntries(ACTIONS.map(a => [a, false])), // a press seen between two frames counts for one frame
   bot: null,              // test bot can override all inputs: {left, right, jump, ...}
   lastDevice: 'keyboard', // 'touch' | 'keyboard' | 'gamepad'
   padConnected: false,
@@ -28,7 +29,7 @@ export const Input = {
   init() {
     window.addEventListener('keydown', (e) => {
       const a = KEYMAP[e.code];
-      if (a) { this.kb[a] = true; this.lastDevice = 'keyboard'; e.preventDefault(); }
+      if (a) { if (!this.kb[a]) this.latched[a] = true; this.kb[a] = true; this.lastDevice = 'keyboard'; e.preventDefault(); }
       this.listeners.forEach(fn => fn('key', e));
     }, { passive: false });
     window.addEventListener('keyup', (e) => {
@@ -69,7 +70,8 @@ export const Input = {
     for (const a of ACTIONS) {
       this.prev[a] = this.held[a];
       if (this.bot) this.held[a] = !!this.bot[a];
-      else this.held[a] = this.kb[a] || this.touch[a] || this.pad[a];
+      else this.held[a] = this.kb[a] || this.touch[a] || this.pad[a] || this.latched[a];
+      this.latched[a] = false;
     }
   },
 
@@ -81,5 +83,6 @@ export const Input = {
   // Menus: "confirm" accepts jump/confirm presses from any device.
   confirmPressed() { return this.pressed('confirm') || (this.pressed('jump') && !this.kbSpaceIsTyping); },
   onKey(fn) { this.listeners.push(fn); },
+  latch(a) { this.latched[a] = true; },
   clearTouch() { for (const a of ACTIONS) this.touch[a] = false; },
 };

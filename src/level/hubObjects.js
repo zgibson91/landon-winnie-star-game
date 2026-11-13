@@ -21,7 +21,7 @@ export class HubPortal {
     this.back = scene.add.image(this.x, this.y + 4, 'portal-frame').setOrigin(0.5, 1).setScale(inv).setDepth(8);
     this.swirl = scene.add.image(this.x, this.y - 56, 'portal-swirl').setScale(inv).setDepth(8.5).setTint(hex(s.glow));
     // size comparison: disc radius grows with the log of the star's size
-    const r = 13 + Math.log10(s.size) * 9;
+    const r = 17 + Math.log10(s.size) * 8.5;
     this.disc = scene.add.image(this.x, this.y - 58, 'stardisc').setScale(r / 64).setTint(col).setDepth(9);
     this.sun = s.id !== 'sun' ? scene.add.circle(this.x + r + 9, this.y - 58 + r - 4, 3, 0xffcf4a).setStrokeStyle(1.5, 0x2a1f3d).setDepth(9) : null;
     this.label = makeText(scene, this.x, this.y + 22, s.short, 18, { strokeW: 5 }).setDepth(9);
@@ -44,7 +44,7 @@ export class HubPortal {
       this.lock.setVisible(!open); this.lockText.setVisible(!open).setText(`${Save.totalShards()} / ${FINAL_SHARDS}`);
       this.disc.setAlpha(open ? 1 : 0.35);
     }
-    if (!this.star.built && !this.soon) this.soon = makeText(this.scene, this.x, this.y - 112, 'coming soon', 14, { strokeW: 4, color: '#c9bfff' }).setDepth(10);
+    if (!this.star.built && !this.soon && !(this.lock && this.lock.visible)) this.soon = makeText(this.scene, this.x, this.y - 112, 'coming soon', 14, { strokeW: 4, color: '#c9bfff' }).setDepth(10);
   }
   isNear(p) { return Math.abs(p.x - this.x) < 56 && Math.abs(p.bottom - this.y) < 60; }
   showCard(on) {
@@ -63,7 +63,7 @@ export class HubPortal {
     c.add(makeText(sc, 0, -49, s.name, 20, { strokeW: 5 }));
     c.add(makeText(sc, 0, -14, '★'.repeat(s.diff) + '☆'.repeat(5 - s.diff), 22, { color: '#ffb000', strokeW: 4 }));
     c.add(makeText(sc, 0, 16, s.sizeText, 16, { color: '#2a1f3d', stroke: false, shadow: false }));
-    const go = levelUnlocked(s) ? (s.built ? 'Press ⓦ or tap here to go!' : 'Under construction!') : `Need ${FINAL_SHARDS} Star Shards`;
+    const go = levelUnlocked(s) ? (s.built ? 'Tap here or press GO!' : 'Still being built!') : `Need ${FINAL_SHARDS} Star Shards`;
     c.add(makeText(sc, 0, 40, go, 14, { color: '#6f5ce0', stroke: false, shadow: false }));
     c.setSize(260, 128).setInteractive({ useHandCursor: true });
     c.on('pointerdown', () => this.activate());
@@ -103,7 +103,7 @@ export class HubDoor {
     this.spr = scene.add.image(this.x, this.y + 4, tex).setOrigin(0.5, 1).setScale(inv).setDepth(8);
     const label = { closet: 'Closet', museum: 'Star Museum', trophy: 'Trophies', telescope: '' }[o.kind];
     if (label) makeText(scene, this.x, this.y - 168, label, 18, { strokeW: 5 }).setDepth(9);
-    this.hint = makeText(scene, this.x, this.y - 196, 'ⓦ', 26, { strokeW: 5 }).setDepth(9).setAlpha(0);
+    this.hint = makeText(scene, this.x, this.y - 196, 'GO!', 22, { strokeW: 5, color: '#7dff9a' }).setDepth(9).setAlpha(0);
   }
   isNear(p) { return Math.abs(p.x - this.x) < 50 && Math.abs(p.bottom - this.y) < 60; }
   activate() {

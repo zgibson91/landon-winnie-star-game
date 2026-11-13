@@ -215,14 +215,12 @@ export class LevelScene extends Phaser.Scene {
     // Teach any earlier abilities this level needs that Landon hasn't learned yet (levels can be played in any order).
     const need = (this.def.abilities || []).filter(a => a !== this.def.teaches && !Save.hasAbility(a));
     const queue = need.slice();
-    const next = () => {
-      const a = queue.shift();
-      if (!a) return;
-      this.learnAbility(a, null, next);
-    };
+    const fact = () => { if (star) this.game.events.emit('toast', { title: star.name, text: star.fact, icon: 'shard', ms: 4200 }); };
+    // lessons first (they pause the level), then the star's fun fact
     this.time.delayedCall(500, () => {
-      if (star) this.game.events.emit('toast', { title: star.name, text: star.fact, icon: 'shard', ms: 4200 });
-      if (queue.length) this.time.delayedCall(800, next);
+      if (!queue.length) { fact(); return; }
+      const run = () => { const a = queue.shift(); if (!a) { fact(); return; } this.learnAbility(a, null, run); };
+      run();
     });
   }
 

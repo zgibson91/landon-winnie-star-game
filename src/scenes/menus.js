@@ -164,21 +164,21 @@ export class ClosetScene extends Menu {
   constructor() { super('Closet'); }
   create(data) {
     this.setup();
-    makePanel(this, this.cx, this.cy, 720, 540, { color: 0x2f7a4a });
-    makeText(this, this.cx, this.cy - 220, 'Outfit Closet', 44);
+    makePanel(this, this.cx, this.cy, 720, 600, { color: 0x2f7a4a });
+    makeText(this, this.cx, this.cy - 248, 'Outfit Closet', 44);
     const outfits = [['jersey', 'Soccer #7'], ['pajamas', 'Dino Pizza PJs']];
     const btns = [];
     outfits.forEach(([o, label], i) => {
-      const x = this.cx + (i - 0.5) * 300, y = this.cy - 10;
+      const x = this.cx + (i - 0.5) * 300, y = this.cy - 40;
       const sel = () => { Save.data.outfit = o; Save.save(); refresh(); Audio.sfx('learn'); };
-      const b = makeButton(this, x, y + 175, 240, 64, label, sel, { size: 24, color: 0x8f7fe0 });
-      const card = this.add.rectangle(x, y, 230, 290, 0xfff8e1).setStrokeStyle(5, 0x2a1f3d).setInteractive();
+      const b = makeButton(this, x, y + 168, 240, 60, label, sel, { size: 24, color: 0x8f7fe0 });
+      const card = this.add.rectangle(x, y, 230, 270, 0xfff8e1).setStrokeStyle(5, 0x2a1f3d).setInteractive();
       card.on('pointerdown', () => b.press());
-      const kid = this.add.sprite(x, y + 20, `landon-${o}`, landonFrameIndex('celebrate')).setScale(1.25);
+      const kid = this.add.sprite(x, y + 14, `landon-${o}`, landonFrameIndex('celebrate')).setScale(1.15);
       kid.play(`landon-${o}-idle`);
       btns.push(b); b.card = card; b.outfit = o; b.kid = kid;
     });
-    const close = makeButton(this, this.cx, this.cy + 260, 220, 60, 'Done', () => this.closeMenu(data.onClose), { color: 0x5ec26a, size: 26 });
+    const close = makeButton(this, this.cx, this.cy + 232, 220, 60, 'Done', () => this.closeMenu(data.onClose), { color: 0x5ec26a, size: 26 });
     const refresh = () => btns.forEach(b => {
       const on = Save.data.outfit === b.outfit;
       b.card.setStrokeStyle(on ? 9 : 5, on ? 0xffd75e : 0x2a1f3d);
@@ -222,31 +222,27 @@ export class MuseumScene extends Menu {
   }
   pick(s) {
     this.view.removeAll(true);
-    const cx = this.areaX + this.areaW / 2, cy = this.cy - 20;
-    const maxR = 190;
-    // star circle: sizes compared to the Sun; the Sun is shown as a dot (scaled to stay visible)
-    const r = s.id === 'sun' ? 120 : maxR;
+    const cx = this.areaX + this.areaW / 2, cy = this.cy - 30;
+    const r = s.id === 'sun' ? 90 : 140;
     const col = Phaser.Display.Color.HexStringToColor(s.color).color;
-    const glow = this.add.image(cx, cy, 'softglow').setScale(r / 18).setTint(col).setAlpha(0.5);
+    const glow = this.add.image(cx, cy, 'softglow').setScale(r / 16).setTint(col).setAlpha(0.45);
     const disc = this.add.circle(cx, cy, r, col).setStrokeStyle(6, 0x2a1f3d);
-    const shine = this.add.ellipse(cx - r * 0.35, cy - r * 0.4, r * 0.6, r * 0.3, 0xffffff, 0.35);
+    const shine = this.add.ellipse(cx - r * 0.35, cy - r * 0.42, r * 0.6, r * 0.28, 0xffffff, 0.35);
     this.view.add([glow, disc, shine]);
     if (s.id !== 'sun') {
-      const sunR = Math.max(1.5, r / s.size);
-      const sx = cx + r + 40, sy = cy + r - 20;
-      const dot = this.add.circle(sx, sy, Math.max(2.5, sunR), 0xffcf4a).setStrokeStyle(1.5, 0x2a1f3d);
-      const arrow = makeText(this, sx + 4, sy - 34, '← the Sun', 18, { ox: 0 });
-      arrow.setPosition(sx - 10, sy + 28);
-      this.view.add([dot, arrow]);
-      if (sunR < 2.5) this.view.add(makeText(this, sx, sy + 56, '(even smaller, really!)', 14, { color: '#c9d6ff', stroke: false }));
+      // the Sun at the same scale (never smaller than a dot you can see)
+      const sx = cx + r + 34, sy = cy + r - 16;
+      const dot = this.add.circle(sx, sy, Math.max(2.5, r / s.size), 0xffcf4a).setStrokeStyle(1.5, 0x2a1f3d);
+      const lab = makeText(this, sx + 12, sy, '← the Sun', 18, { ox: 0 });
+      this.view.add([dot, lab]);
     }
-    const name = makeText(this, cx, cy - r - 30, s.name, 32);
-    const size = makeText(this, cx, cy, s.sizeText, 24);
-    const cmp = makeText(this, cx, this.cy + 210, COMPARE[s.id], 24, { wrap: this.areaW - 20, color: '#ffe680' });
-    const fact = makeText(this, cx, this.cy + 262, s.museum, 19, { wrap: this.areaW - 20, color: '#e6deff', stroke: false });
+    const name = makeText(this, cx, cy - r - 28, s.name, 32);
+    const size = makeText(this, cx, cy, s.sizeText, 24, { wrap: r * 1.8 });
+    const cmp = makeText(this, cx, cy + r + 48, COMPARE[s.id], 24, { wrap: this.areaW - 20, color: '#ffe680' });
+    const fact = makeText(this, cx, cy + r + 100, s.museum, 19, { wrap: this.areaW - 20, color: '#e6deff', stroke: false });
     this.view.add([name, size, cmp, fact]);
-    disc.setScale(0.6); this.tweens.add({ targets: [disc, glow], scale: { from: 0.6 * disc.scale, to: disc.scale }, duration: 300, ease: 'Back.easeOut' });
-    disc.setScale(1);
+    [disc, glow].forEach(o => { const k = o.scale; o.setScale(k * 0.6); this.tweens.add({ targets: o, scale: k, duration: 300, ease: 'Back.easeOut' }); });
+    Audio.sfx('tap');
   }
 }
 

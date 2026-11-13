@@ -34,7 +34,14 @@ export class UIScene extends Phaser.Scene {
     for (const [k, fn] of Object.entries(this.handlers)) ge.on(k, fn);
     this.events.once('shutdown', () => { for (const [k, fn] of Object.entries(this.handlers)) ge.off(k, fn); });
     this.scale.on('resize', this.layout, this);
-    this.input.on('pointerdown', () => { if (!this.touchMode) { this.touchMode = true; this.layout(); } Input.lastDevice = 'touch'; });
+    this.input.on('pointerdown', (p) => {
+      if (!this.touchMode) { this.touchMode = true; this.layout(); }
+      Input.lastDevice = 'touch';
+      // latch quick taps on the action buttons so a tap shorter than a frame still counts
+      const vx = p.x / this.z, vy = p.y / this.z;
+      if (Phaser.Math.Distance.Between(vx, vy, this.btnJump.x, this.btnJump.y) < this.btnJump.r + 30) Input.latch('jump');
+      else if (Phaser.Math.Distance.Between(vx, vy, this.btnWinnie.x, this.btnWinnie.y) < this.btnWinnie.r + 20) Input.latch('winnie');
+    });
     this.layout();
   }
 

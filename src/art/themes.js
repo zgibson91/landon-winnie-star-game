@@ -207,20 +207,28 @@ export function buildBackground(scene, name) {
 
 // ---------- themed objects (SVG) ----------
 function capsule(fill, rim, hi, h, glowCol) {
-  const w = 24;
-  const body = (x0, x1, l, r) => {
-    const rr = Math.min(h / 2, 12);
-    let d = `M${l ? x0 + rr : x0 - 1} 2.5 L${r ? x1 - rr : x1 + 1} 2.5 ` + (r ? `Q${x1 - 1.5} 2.5 ${x1 - 1.5} ${2.5 + rr} L${x1 - 1.5} ${h - 2.5 - rr} Q${x1 - 1.5} ${h - 2.5} ${x1 - rr} ${h - 2.5}` : `L${x1 + 1} ${h - 2.5}`) +
-      ` L${l ? x0 + rr : x0 - 1} ${h - 2.5} ` + (l ? `Q${x0 + 1.5} ${h - 2.5} ${x0 + 1.5} ${h - 2.5 - rr} L${x0 + 1.5} ${2.5 + rr} Q${x0 + 1.5} 2.5 ${x0 + rr} 2.5` : `L${x0 - 1} 2.5`) + 'Z';
-    const stroke = l && r ? '' : '';
-    return `<path d="${d}" fill="${fill}"/>` +
-      `<clipPath id="c${l ? 1 : 2}"><path d="${d}"/></clipPath><g clip-path="url(#c${l ? 1 : 2})"><rect x="${x0 - 2}" y="0" width="${w + 4}" height="${h * 0.42}" fill="${rim}"/><rect x="${x0 - 2}" y="${h * 0.18}" width="${w + 4}" height="2.5" fill="${hi}"/></g>` +
-      (glowCol ? `<path d="${d}" fill="none" stroke="${glowCol}" stroke-width="6" opacity="0.35"/>` : '') +
-      `<path d="${d}" fill="none" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>` + stroke;
+  // Three 24-wide frames (left cap, stretchable middle, right cap). Strokes are open paths so the
+  // joins between frames never show a dark seam.
+  const rr = Math.min(h / 2, 12), t = 2.5, bt = h - 2.5;
+  const shade = (x0) => `<rect x="${x0}" y="${t}" width="26" height="${h * 0.42 - t}" fill="${rim}"/><rect x="${x0}" y="${h * 0.18}" width="26" height="2.5" fill="${hi}"/>`;
+  const left = () => {
+    const d = `M25 ${t} L${1.5 + rr} ${t} Q1.5 ${t} 1.5 ${t + rr} L1.5 ${bt - rr} Q1.5 ${bt} ${1.5 + rr} ${bt} L25 ${bt} Z`;
+    const open = `M26 ${t} L${1.5 + rr} ${t} Q1.5 ${t} 1.5 ${t + rr} L1.5 ${bt - rr} Q1.5 ${bt} ${1.5 + rr} ${bt} L26 ${bt}`;
+    return `<clipPath id="cl"><path d="${d}"/></clipPath><path d="${d}" fill="${fill}"/><g clip-path="url(#cl)">${shade(0)}</g>` +
+      (glowCol ? `<path d="${open}" fill="none" stroke="${glowCol}" stroke-width="6" opacity="0.35"/>` : '') +
+      `<path d="${open}" fill="none" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>`;
   };
-  // three frames: left cap, middle, right cap. Middle has no side strokes (covered by neighbors).
-  const mid = `<rect x="24" y="2.5" width="24" height="${h - 5}" fill="${fill}"/><rect x="24" y="2.5" width="24" height="${h * 0.42 - 2.5}" fill="${rim}"/><rect x="24" y="${h * 0.18}" width="24" height="2.5" fill="${hi}"/><path d="M23 2.5 L49 2.5 M23 ${h - 2.5} L49 ${h - 2.5}" stroke="${INK}" stroke-width="2.5"/>`;
-  return [body(0, 24, true, false), mid.replace(/x="24"/g, 'x="0"').replace('M23 2.5 L49 2.5', 'M-1 2.5 L25 2.5').replace(`M23 ${h - 2.5} L49 ${h - 2.5}`, `M-1 ${h - 2.5} L25 ${h - 2.5}`), body(0, 24, false, true)];
+  const right = () => {
+    const d = `M-1 ${t} L${22.5 - rr} ${t} Q22.5 ${t} 22.5 ${t + rr} L22.5 ${bt - rr} Q22.5 ${bt} ${22.5 - rr} ${bt} L-1 ${bt} Z`;
+    const open = `M-2 ${t} L${22.5 - rr} ${t} Q22.5 ${t} 22.5 ${t + rr} L22.5 ${bt - rr} Q22.5 ${bt} ${22.5 - rr} ${bt} L-2 ${bt}`;
+    return `<clipPath id="cr"><path d="${d}"/></clipPath><path d="${d}" fill="${fill}"/><g clip-path="url(#cr)">${shade(-2)}</g>` +
+      (glowCol ? `<path d="${open}" fill="none" stroke="${glowCol}" stroke-width="6" opacity="0.35"/>` : '') +
+      `<path d="${open}" fill="none" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>`;
+  };
+  const mid = `<rect x="-1" y="${t}" width="26" height="${bt - t}" fill="${fill}"/>${shade(-1)}` +
+    (glowCol ? `<path d="M-1 ${t} L25 ${t} M-1 ${bt} L25 ${bt}" stroke="${glowCol}" stroke-width="6" opacity="0.35"/>` : '') +
+    `<path d="M-1 ${t} L25 ${t} M-1 ${bt} L25 ${bt}" stroke="${INK}" stroke-width="2.5"/>`;
+  return [left(), mid, right()];
 }
 
 export async function buildThemeObjects(scene, name) {

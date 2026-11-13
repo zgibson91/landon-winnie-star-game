@@ -79,7 +79,7 @@ export function makeButton(scene, x, y, w, h, label, onPress, opts = {}) {
 export class FocusNav {
   constructor(scene, buttons, opts = {}) {
     this.scene = scene; this.buttons = buttons.filter(Boolean); this.i = -1; this.onBack = opts.onBack; this.repeat = 0;
-    this.active = true;
+    this.active = true; this.start = opts.start || 0;
     if (opts.autoFocus !== false && Input.lastDevice !== 'touch') this.focus(opts.start || 0);
   }
   focus(i) {
@@ -107,7 +107,7 @@ export class FocusNav {
     if (Input.pressed('right')) this.move(1, 0);
     if (Input.pressed('up')) this.move(0, -1);
     if (Input.pressed('down')) this.move(0, 1);
-    if (Input.pressed('confirm') || Input.pressed('jump')) { if (this.i < 0) this.focus(0); else this.buttons[this.i].press(); }
+    if (Input.pressed('confirm') || Input.pressed('jump')) { if (this.i < 0) this.focus(this.start || 0); this.buttons[this.i].press(); }
     if ((Input.pressed('pause') || Input.pressed('winnie')) && this.onBack) this.onBack();
   }
 }

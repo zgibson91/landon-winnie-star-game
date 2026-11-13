@@ -9,6 +9,7 @@ page.on('pageerror', e => errs.push('PAGEERROR ' + e.message));
 await page.goto(`http://localhost:8080/?nosw=1&test=1&level=${level}`);
 await page.waitForFunction(() => window.LW && LW.state() && !LW.state().busy, null, { timeout: 15000 }).catch(() => {});
 await page.waitForTimeout(800);
+for (let k = 0; k < 4; k++) { await page.keyboard.press('Enter'); await page.waitForTimeout(300); }
 let i = 0;
 for (const s of spots.length ? spots : ['']) {
   if (s) { const [x, y] = s.split(',').map(Number); await page.evaluate(([x, y]) => LW.teleport(x, y), [x, y]); }

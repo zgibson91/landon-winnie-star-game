@@ -6,8 +6,10 @@
   "description": "Landon and Winnie: Journey to the Stars",
   "scripts": {
     "serve": "node scripts/serve.mjs",
-    "test": "playwright test",
-    "vendor": "node scripts/vendor.mjs"
+    "build": "node scripts/build-sw.mjs",
+    "icons": "node tools/make-icons.mjs",
+    "test": "node scripts/build-sw.mjs && playwright test",
+    "reach": "node tests/reach.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",

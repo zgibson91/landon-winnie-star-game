@@ -108,4 +108,19 @@ window.LW = {
   teleport: (tx, ty) => { const l = game.scene.getScene('Level'); l.player.teleport(tx * 48 + 24, ty * 48 + 16); },
   test: TEST,
 };
-if (DEBUG) console.log('[LW] debug mode');
+if (DEBUG) {
+  console.log('[LW] debug mode: N = next lantern, B = back a lantern, 0 = hub, 1 = Sun, 3 = Betelgeuse, I = toggle invincible');
+  const order = { Digit0: 'hub', Digit1: 'sun', Digit3: 'betelgeuse' };
+  window.addEventListener('keydown', (e) => {
+    const l = game.scene.getScene('Level');
+    if (order[e.code]) startLevel(order[e.code], null);
+    if (!l || !l.ready || l.isHub) return;
+    if (e.code === 'KeyN' || e.code === 'KeyB') {
+      const lan = l.lanterns.filter(x => !x.assistOnly || l.assist);
+      const cur = lan.findIndex(x => x.idx === l.cp.idx);
+      const next = lan[Math.max(0, Math.min(lan.length - 1, cur + (e.code === 'KeyN' ? 1 : -1)))];
+      if (next) { next.light(true); l.setCheckpoint(next); l.respawn(); }
+    }
+    if (e.code === 'KeyI') { l.invincible = !l.invincible; console.log('invincible', l.invincible); }
+  });
+}
