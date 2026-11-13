@@ -44,24 +44,26 @@ export function checkLevel(def) {
 
   // Collectibles
   const targets = [];
-  lv.coins.forEach(({ c, r }) => targets.push({ kind: 'glimmer', c, r, x: c * TILE + 24, y: r * TILE + 24, rx: 30, ry: 46 }));
-  lv.hiddenCoins.forEach(({ c, r }) => targets.push({ kind: 'hidden glimmer', c, r, x: c * TILE + 24, y: r * TILE + 24, rx: 30, ry: 46 }));
+  lv.coins.forEach(({ c, r }) => targets.push({ kind: 'glimmer', c, r, x: c * TILE + 24, y: r * TILE + 24, rx: 36, ry: 50 }));
+  lv.hiddenCoins.forEach(({ c, r }) => targets.push({ kind: 'hidden glimmer', c, r, x: c * TILE + 24, y: r * TILE + 24, rx: 36, ry: 50 }));
   lv.shardSpots.forEach(({ c, r }) => targets.push({ kind: 'shard', c, r, x: c * TILE + 24, y: r * TILE + 24, rx: 38, ry: 48 }));
   lv.objects.filter(o => o.t === 'shard').forEach(o => targets.push({ kind: 'shard', c: o.x, r: o.y, x: o.x * TILE + 24, y: o.y * TILE + 24, rx: 38, ry: 48 }));
   lv.checkpoints.forEach(({ c, r }) => targets.push({ kind: 'lantern', c, r, x: c * TILE + 24, y: (r + 1) * TILE - 31, rx: 34, ry: 60 }));
   if (lv.goal) targets.push({ kind: 'goal', c: lv.goal.c, r: lv.goal.r, x: lv.goal.c * TILE + 24, y: (lv.goal.r + 1) * TILE - 31, rx: 34, ry: 80 });
   const hit = new Set();
+  const hits = new Array(targets.length).fill(0); // how many simulated moves touch each target (low = hard to get)
+  let simId = 0; const lastSim = new Array(targets.length).fill(-1);
   const touch = (x, bottom) => {
     const cy = bottom - BH / 2;
     for (let i = 0; i < targets.length; i++) {
-      if (hit.has(i)) continue;
       const t = targets[i];
-      if (Math.abs(x - t.x) < t.rx && Math.abs(cy - t.y) < t.ry) hit.add(i);
+      if (Math.abs(x - t.x) < t.rx && Math.abs(cy - t.y) < t.ry) { hit.add(i); if (lastSim[i] !== simId) { lastSim[i] = simId; hits[i]++; } }
     }
   };
 
   // One trajectory: returns landing spot {x, y} or null (died / fell out).
   function simulate(x, bottom, dir1, t1, dir2, hold) {
+    simId++;
     let vx = dir1 * PHYS.runSpeed * 0.8, vy = hold > 0 ? -PHYS.jumpV : 0, t = 0, cut = false, jumping = hold > 0;
     for (let step = 0; step < 240; step++) {
       t += DT;
@@ -165,7 +167,8 @@ export function checkLevel(def) {
   const missing = targets.filter((t, i) => !hit.has(i));
   // bells: some standable spot within Winnie's pounce range
   const missingBells = bells.filter(bl => !visitedStands.some(s => Math.max(0, s.a - bl.x, bl.x - s.b) < 470 && Math.abs(bl.y - s.y) < 380));
-  return { targets: targets.length, missing, missingBells, stands: visitedStands.length };
+  const difficulty = targets.map((t, i) => ({ kind: t.kind, c: t.c, r: t.r, hits: hits[i] })).sort((a, b) => a.hits - b.hits);
+  return { targets: targets.length, missing, missingBells, stands: visitedStands.length, difficulty };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

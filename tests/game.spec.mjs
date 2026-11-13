@@ -165,3 +165,21 @@ test('works offline after the first load (service worker)', async ({ page, conte
   await levelReady(page, 'sun');
   await context.setOffline(false);
 });
+
+test('portals still work after coming back to Star Station from a level', async ({ page }) => {
+  const errors = watchErrors(page);
+  await boot(page, '&level=hub');
+  await levelReady(page, 'hub');
+  const enter = async (star) => {
+    await page.evaluate((star) => { const L = LW.level(); const p = L.portals.find(q => q.star.id === star); L.player.teleport(p.x, p.y - 40); }, star);
+    await page.waitForTimeout(400);
+    await page.keyboard.press('KeyX');   // Winnie button = GO! next to a portal
+    await levelReady(page, star);
+  };
+  await enter('sun');
+  await page.evaluate(() => LW.game.events.emit('goto-hub', 'sun'));
+  await levelReady(page, 'hub');
+  await page.waitForTimeout(500);
+  await enter('betelgeuse');
+  expect(errors).toEqual([]);
+});

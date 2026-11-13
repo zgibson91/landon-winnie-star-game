@@ -22,6 +22,9 @@ export class LevelScene extends Phaser.Scene {
     this.levelId = data.id || 'hub';
     this.fromPortal = data.from || null;
     this.isHub = this.levelId === 'hub';
+    // Phaser reuses this scene object on restart, so clear any flags left from the previous visit.
+    this.leaving = false; this.ready = false; this.finished = false; this.busyModal = false;
+    this.syncT = 0; this.lastFail = null; this.winnieAction = null; this.interact = null;
   }
 
   async create() {

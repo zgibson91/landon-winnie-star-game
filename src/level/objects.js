@@ -219,7 +219,7 @@ export class Glimmer {
   update() {
     if (this.taken || !this.revealed) return;
     const p = this.scene.player;
-    if (!p.dead && Math.abs(p.x - this.x) < 30 && Math.abs(p.body.y - this.y) < 46) this.collect();
+    if (!p.dead && Math.abs(p.x - this.x) < 36 && Math.abs(p.body.y - this.y) < 50) this.collect();
   }
   collect() {
     this.taken = true; Audio.sfx('coin');
