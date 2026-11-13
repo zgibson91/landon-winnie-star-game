@@ -1,0 +1,16 @@
+{
+  "name": "landon-winnie-star-game",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Landon and Winnie: Journey to the Stars",
+  "scripts": {
+    "serve": "node scripts/serve.mjs",
+    "test": "playwright test",
+    "vendor": "node scripts/vendor.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "phaser": "3.90.0"
+  }
+}

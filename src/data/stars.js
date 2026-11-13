@@ -1,0 +1,36 @@
+// The ten stars. Sizes are "about" values in Sun-widths; real measurements vary a lot between studies.
+export const STARS = [
+  { id: 'sun', name: 'The Sun', short: 'Sun', size: 1, sizeText: 'our own star', diff: 1, color: '#ffcf4a', glow: '#fff1a8', built: true,
+    fact: 'The Sun is so big that about one million Earths could fit inside it!',
+    museum: 'Our Sun is a yellow star. Its light takes about 8 minutes to reach Earth.' },
+  { id: 'arcturus', name: 'Arcturus', short: 'Arcturus', size: 25, sizeText: 'about 25 Suns wide', diff: 1, color: '#ff9a3c', glow: '#ffd3a0',
+    fact: 'Arcturus is an orange giant. It is one of the brightest stars in the night sky.',
+    museum: 'Arcturus is old. One day our Sun will puff up into a giant like it.' },
+  { id: 'betelgeuse', name: 'Betelgeuse', short: 'Betelgeuse', size: 750, sizeText: 'about 750 Suns wide', diff: 2, color: '#ff5a4e', glow: '#ffb0a0', built: true,
+    fact: 'Betelgeuse is a red supergiant. It grows and shrinks, like it is breathing!',
+    museum: 'You can see Betelgeuse in Orion, on the hunter\'s shoulder. Red stars are cooler than yellow ones.' },
+  { id: 'mucephei', name: 'Mu Cephei', short: 'Garnet Star', size: 1000, sizeText: 'about 1,000 Suns wide', diff: 3, color: '#d22a52', glow: '#ff9ab0',
+    fact: 'Mu Cephei is called the Garnet Star because it glows deep red, like a gem.',
+    museum: 'A famous astronomer named William Herschel gave the Garnet Star its nickname.' },
+  { id: 'vvcephei', name: 'VV Cephei A', short: 'VV Cephei', size: 1050, sizeText: 'about 1,000 Suns wide', diff: 3, color: '#ff7a5a', glow: '#9fd8ff',
+    fact: 'VV Cephei A has a hot blue partner star. The two stars spin around each other.',
+    museum: 'When the blue star passes behind the big red one, it is hidden for over a year!' },
+  { id: 'vycma', name: 'VY Canis Majoris', short: 'VY Canis Majoris', size: 1400, sizeText: 'about 1,400 Suns wide', diff: 4, color: '#e0603a', glow: '#ffc08a',
+    fact: 'VY Canis Majoris throws off huge clouds of dust, like a giant dusty sneeze.',
+    museum: 'If VY Canis Majoris sat where our Sun is, it would reach past Jupiter.' },
+  { id: 'uyscuti', name: 'UY Scuti', short: 'UY Scuti', size: 1700, sizeText: 'about 900 to 1,700 Suns wide', diff: 4, color: '#ff6b6b', glow: '#ffd0d0',
+    fact: 'Scientists are still arguing about how big UY Scuti is. Stars are hard to measure!',
+    museum: 'UY Scuti is so far away that its light left it thousands of years ago.' },
+  { id: 'stephenson', name: 'Stephenson 2-18', short: 'Stephenson 2-18', size: 2150, sizeText: 'about 2,000 Suns wide', diff: 4, color: '#ff4a6a', glow: '#ffb3c6',
+    fact: 'Stephenson 2-18 may be one of the biggest stars we know. It lives in a big star cluster.',
+    museum: 'Light would need about 9 hours to go all the way around Stephenson 2-18.' },
+  { id: 'wohg64', name: 'WOH G64', short: 'WOH G64', size: 1550, sizeText: 'about 1,500 Suns wide', diff: 5, color: '#ff8a5a', glow: '#ffe0b0',
+    fact: 'WOH G64 is in a different galaxy! It has a giant ring of dust around it.',
+    museum: 'WOH G64 is the first star outside our galaxy that got a close-up picture.' },
+  { id: 'quasistar', name: 'The Quasi-Star', short: 'Quasi-Star', size: 10000, sizeText: 'maybe 10,000 Suns wide', diff: 5, color: '#b58aff', glow: '#e6d6ff', final: true,
+    fact: 'A quasi-star is a giant star with a black hole in its middle. Scientists think they lived long, long ago.',
+    museum: 'Nobody has ever seen a quasi-star. They are an idea scientists use to explain the very first black holes.' },
+];
+
+export const STAR_BY_ID = Object.fromEntries(STARS.map(s => [s.id, s]));
+export const FINAL_SHARDS = 20;

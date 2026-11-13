@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><title>Art preview</title>
+<body style="background:#6a5acd;margin:0;font:14px sans-serif;color:#fff">
+<div id="out" style="display:flex;flex-wrap:wrap;gap:4px;padding:8px"></div>
+<script type="module">
+import { LANDON_ORDER, landonSvg, LANDON_FRAME } from '../src/art/landon.js';
+import { WINNIE_ORDER, WINNIE_FRAME } from '../src/art/winnie.js';
+const out = document.getElementById('out');
+const add = (inner, w, h, label, s=2) => { const d=document.createElement('div'); d.style.cssText='background:rgba(255,255,255,.15);text-align:center';
+  d.innerHTML=`<svg width="${w*s}" height="${h*s}" viewBox="0 0 ${w} ${h}">${inner}</svg><div>${label}</div>`; out.appendChild(d); };
+for (const o of ['jersey','pajamas']) LANDON_ORDER.forEach(f => add(landonSvg(f.p,o), LANDON_FRAME.w, LANDON_FRAME.h, f.name+f.i));
+WINNIE_ORDER.forEach(f => add(f.svg, WINNIE_FRAME.w, WINNIE_FRAME.h, f.name+f.i, 3));
+</script>

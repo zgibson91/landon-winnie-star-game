@@ -1,0 +1,10 @@
+import { chromium, webkit } from '@playwright/test';
+const which = process.argv[2] || 'chromium';
+const args = process.argv.slice(3);
+const b = await (which === 'webkit' ? webkit : chromium).launch({ args });
+const page = await b.newPage({ viewport: { width: 1180, height: 820 }, hasTouch: true });
+await page.goto('http://localhost:8080/?nosw=1&test=1&level=sun');
+await page.waitForFunction(() => window.LW && LW.state(), null, { timeout: 20000 });
+await page.waitForTimeout(3000);
+console.log(which, args.join(' '), await page.evaluate(() => ({ fps: LW.game.loop.actualFps, t: LW.state().time, renderer: LW.game.renderer.type })));
+await b.close();

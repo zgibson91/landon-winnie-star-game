@@ -1,0 +1,478 @@
+{
+ "timeout": 300,
+ "steps": [
+  {
+   "note": "run to first step",
+   "dir": 1,
+   "x": 10.3
+  },
+  {
+   "note": "hop on step",
+   "dir": 1,
+   "jump": 220,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 13.3
+  },
+  {
+   "note": "hop up",
+   "dir": 1,
+   "jump": 220,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 17.2
+  },
+  {
+   "note": "jump the first pit",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "wait for walker to walk away",
+   "dir": 0,
+   "until": "L.walkers[0].x > P.x + 120 && L.walkers[0].dir > 0",
+   "ms": 9000
+  },
+  {
+   "dir": 1,
+   "x": 27
+  },
+  {
+   "note": "stomp walker",
+   "dir": 1,
+   "until": "Math.abs(L.walkers[0].x - P.x) < 150",
+   "ms": 6000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 33.5
+  },
+  {
+   "note": "onto ledge",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 38.6
+  },
+  {
+   "note": "over pit 2",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "to loop",
+   "dir": 1,
+   "x": 49.3
+  },
+  {
+   "note": "jump onto loop",
+   "dir": 1,
+   "jump": 160,
+   "until": "P.body.body.velocity.y < -900",
+   "ms": 3000
+  },
+  {
+   "note": "land on high ledge",
+   "dir": 1,
+   "land": true,
+   "ms": 4000
+  },
+  {
+   "dir": 1,
+   "x": 64.2
+  },
+  {
+   "note": "drop down",
+   "dir": 1,
+   "land": true,
+   "ms": 4000
+  },
+  {
+   "dir": 1,
+   "x": 67.4
+  },
+  {
+   "note": "onto sunspot",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 72.5
+  },
+  {
+   "note": "to ground (may bounce on loop)",
+   "dir": 1,
+   "land": true,
+   "ms": 5000
+  },
+  {
+   "note": "back to loop",
+   "dir": -1,
+   "x": 77.4,
+   "ms": 5000
+  },
+  {
+   "note": "bounce for sky coins",
+   "dir": 0,
+   "jump": 120,
+   "until": "P.body.body.velocity.y < -900",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.body.body.velocity.y > 0",
+   "ms": 3000
+  },
+  {
+   "note": "drift right, land",
+   "dir": 1,
+   "land": true,
+   "ms": 5000
+  },
+  {
+   "note": "to flare sea",
+   "dir": 1,
+   "x": 88.6
+  },
+  {
+   "note": "onto platform 1",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 92
+  },
+  {
+   "note": "wait flare 95",
+   "dir": 0,
+   "until": "flare(95) === 'idle'",
+   "ms": 6000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 98.4
+  },
+  {
+   "note": "wait flare 101",
+   "dir": 0,
+   "until": "flare(101) === 'idle'",
+   "ms": 6000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 104
+  },
+  {
+   "note": "wait flare 107",
+   "dir": 0,
+   "until": "flare(107) === 'idle'",
+   "ms": 6000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 110.4
+  },
+  {
+   "note": "wait flare 113",
+   "dir": 0,
+   "until": "flare(113) === 'idle'",
+   "ms": 6000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 116
+  },
+  {
+   "note": "wait flare 119",
+   "dir": 0,
+   "until": "flare(119) === 'idle'",
+   "ms": 6000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 122.4
+  },
+  {
+   "note": "wait flare 125",
+   "dir": 0,
+   "until": "flare(125) === 'idle'",
+   "ms": 6000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "to shrine and pit edge",
+   "dir": 1,
+   "x": 143.6,
+   "ms": 15000
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1",
+   "ms": 2000
+  },
+  {
+   "note": "night eyes 1",
+   "dir": 0,
+   "winnie": true,
+   "ms": 3000
+  },
+  {
+   "note": "jump to H1",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 147.5
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1",
+   "ms": 2000
+  },
+  {
+   "note": "night eyes 2",
+   "dir": 0,
+   "winnie": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 149.2
+  },
+  {
+   "note": "jump to H2",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 153.6
+  },
+  {
+   "note": "jump up-left to H4",
+   "dir": -1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": -1,
+   "x": 150.6
+  },
+  {
+   "note": "jump up-right to H5",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "until": "L.runShards[1]",
+   "x": 153.8,
+   "ms": 3000
+  },
+  {
+   "note": "drop back to H2",
+   "dir": 1,
+   "x": 154.9,
+   "ms": 3000
+  },
+  {
+   "dir": -1,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 154.4
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1",
+   "ms": 2000
+  },
+  {
+   "note": "night eyes 3",
+   "dir": 0,
+   "winnie": true,
+   "ms": 3000
+  },
+  {
+   "note": "jump to H3",
+   "dir": 1,
+   "jump": 450,
+   "until": "P.x > 157.9*48",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 159.4
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 150,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "stomp walker 2",
+   "dir": 1,
+   "until": "!L.walkers[1].alive || Math.abs(L.walkers[1].x - P.x) < 140",
+   "ms": 8000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "to finale loop",
+   "dir": 1,
+   "x": 179.3,
+   "ms": 12000
+  },
+  {
+   "dir": 1,
+   "jump": 160,
+   "until": "P.body.body.velocity.y < -900",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "land": true,
+   "ms": 4000
+  },
+  {
+   "note": "edge of ledge",
+   "dir": 1,
+   "x": 191.6
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1 && L.objs.find(o => o.constructor.name === 'Mover').zone.body.x < 194*48 && L.objs.find(o => o.constructor.name === 'Mover').zone.body.velocity.x > 0",
+   "ms": 9000
+  },
+  {
+   "note": "drop onto mover",
+   "dir": 1,
+   "x": 193.5
+  },
+  {
+   "dir": 0,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "ride",
+   "dir": 0,
+   "until": "L.objs.find(o => o.constructor.name === 'Mover').zone.body.x > 201*48",
+   "ms": 9000
+  },
+  {
+   "dir": 1,
+   "x": 205.2
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 212.6
+  },
+  {
+   "note": "wait last flare",
+   "dir": 0,
+   "until": "flare(215) === 'idle'",
+   "ms": 6000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "to the gate",
+   "dir": 1,
+   "until": "L.finished",
+   "ms": 8000
+  }
+ ]
+}

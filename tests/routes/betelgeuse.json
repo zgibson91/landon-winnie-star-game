@@ -1,0 +1,587 @@
+{
+ "timeout": 300,
+ "steps": [
+  {
+   "note": "to the edge",
+   "dir": 1,
+   "x": 6.9
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1 && pulse(0) > 0.55 && pulse(0.03) > pulse(0)",
+   "ms": 5000
+  },
+  {
+   "note": "to pulse 10",
+   "dir": 1,
+   "jump": 450,
+   "x": 9.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0) > 0.55 && pulse(0.03) > pulse(0)",
+   "ms": 5000
+  },
+  {
+   "note": "to pulse 15",
+   "dir": 1,
+   "jump": 450,
+   "x": 14.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0) > 0.55 && pulse(0.03) > pulse(0)",
+   "ms": 5000
+  },
+  {
+   "note": "to pulse 20",
+   "dir": 1,
+   "jump": 450,
+   "x": 19.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0) > 0.55 && pulse(0.03) > pulse(0)",
+   "ms": 5000
+  },
+  {
+   "note": "to pulse 25",
+   "dir": 1,
+   "jump": 450,
+   "x": 24.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0) > 0.7 && pulse(0.03) > pulse(0)",
+   "ms": 5000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "to tunnel",
+   "dir": 1,
+   "x": 45.3,
+   "ms": 8000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0) < 0.5 && pulse(0.02) < pulse(0)",
+   "ms": 5000
+  },
+  {
+   "note": "spikes 1",
+   "dir": 1,
+   "x": 51.5,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0.22) < 0.5 && pulse(0.24) < pulse(0.22)",
+   "ms": 5000
+  },
+  {
+   "note": "spikes 2",
+   "dir": 1,
+   "x": 58.5,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0.44) < 0.5 && pulse(0.46) < pulse(0.44)",
+   "ms": 5000
+  },
+  {
+   "note": "spikes 3",
+   "dir": 1,
+   "x": 65.5,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0.66) < 0.5 && pulse(0.68) < pulse(0.66)",
+   "ms": 5000
+  },
+  {
+   "note": "spikes 4",
+   "dir": 1,
+   "x": 72,
+   "ms": 3000
+  },
+  {
+   "note": "to shrine",
+   "dir": 1,
+   "x": 93.6,
+   "ms": 10000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0) > 0.55 && pulse(0.03) > pulse(0)",
+   "ms": 5000
+  },
+  {
+   "note": "over pulse 96",
+   "dir": 1,
+   "jump": 450,
+   "x": 95.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0) > 0.55 && pulse(0.03) > pulse(0)",
+   "ms": 5000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "under red bell",
+   "dir": 1,
+   "x": 101.8,
+   "ms": 4000
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1",
+   "ms": 2000
+  },
+  {
+   "note": "pounce red",
+   "dir": 0,
+   "winnie": true,
+   "ms": 4000
+  },
+  {
+   "note": "under yellow bell",
+   "dir": 1,
+   "x": 109.8,
+   "ms": 4000
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1",
+   "ms": 2000
+  },
+  {
+   "note": "pounce yellow",
+   "dir": 0,
+   "winnie": true,
+   "ms": 4000
+  },
+  {
+   "note": "back to the pulse",
+   "dir": -1,
+   "x": 99.4,
+   "ms": 5000
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1 && pulse(0) > 0.55 && pulse(0.03) > pulse(0)",
+   "ms": 5000
+  },
+  {
+   "dir": -1,
+   "jump": 450,
+   "x": 98.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0) > 0.55 && pulse(0.03) > pulse(0)",
+   "ms": 5000
+  },
+  {
+   "dir": -1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "under blue bell",
+   "dir": -1,
+   "x": 92.4,
+   "ms": 4000
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1",
+   "ms": 2000
+  },
+  {
+   "note": "pounce blue",
+   "dir": 0,
+   "winnie": true,
+   "until": "L.doors.d1.open",
+   "ms": 4000
+  },
+  {
+   "dir": 1,
+   "x": 93.6,
+   "ms": 4000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0) > 0.55 && pulse(0.03) > pulse(0)",
+   "ms": 5000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "x": 95.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0) > 0.55 && pulse(0.03) > pulse(0)",
+   "ms": 5000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "through the door",
+   "dir": 1,
+   "x": 125.9,
+   "ms": 10000
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1 && pulse(0) > 0.55 && pulse(0.03) > pulse(0)",
+   "ms": 5000
+  },
+  {
+   "note": "climb 129",
+   "dir": 1,
+   "jump": 450,
+   "x": 128.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0) < 0.45 && pulse(0.03) < pulse(0)",
+   "ms": 5000
+  },
+  {
+   "note": "climb 133",
+   "dir": 1,
+   "jump": 450,
+   "x": 132.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0) > 0.55 && pulse(0.03) > pulse(0)",
+   "ms": 5000
+  },
+  {
+   "note": "climb 137",
+   "dir": 1,
+   "jump": 450,
+   "x": 136.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0) < 0.45 && pulse(0.03) < pulse(0)",
+   "ms": 5000
+  },
+  {
+   "note": "climb 141",
+   "dir": 1,
+   "jump": 450,
+   "x": 140.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(0) < 0.45",
+   "ms": 5000
+  },
+  {
+   "note": "to the ledge",
+   "dir": 1,
+   "jump": 450,
+   "x": 144.6,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 145.6,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1",
+   "ms": 2000
+  },
+  {
+   "note": "night eyes",
+   "dir": 0,
+   "winnie": true,
+   "ms": 4000
+  },
+  {
+   "note": "stop",
+   "dir": -1,
+   "x": 145.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1",
+   "ms": 2000
+  },
+  {
+   "note": "jump for hidden glimmers",
+   "dir": 0,
+   "jump": 600,
+   "until": "P.body.body.velocity.y > 0",
+   "ms": 3000
+  },
+  {
+   "until": "P.grounded && P.body.body.velocity.y === 0",
+   "ms": 3000,
+   "dir": 0
+  },
+  {
+   "dir": 1,
+   "x": 145.6,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1",
+   "ms": 2000
+  },
+  {
+   "note": "jump for the shard",
+   "dir": 0,
+   "jump": 600,
+   "until": "P.body.body.velocity.y > 0",
+   "ms": 3000
+  },
+  {
+   "until": "P.grounded && P.body.body.velocity.y === 0",
+   "ms": 3000,
+   "dir": 0
+  },
+  {
+   "dir": 1,
+   "x": 148.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1",
+   "ms": 2000
+  },
+  {
+   "note": "jump for glimmers 2",
+   "dir": 0,
+   "jump": 600,
+   "until": "P.body.body.velocity.y > 0",
+   "ms": 3000
+  },
+  {
+   "until": "P.grounded && P.body.body.velocity.y === 0",
+   "ms": 3000,
+   "dir": 0
+  },
+  {
+   "note": "drop to ground",
+   "dir": 1,
+   "land": true,
+   "ms": 4000
+  },
+  {
+   "note": "to the wave",
+   "dir": 1,
+   "x": 162.8,
+   "ms": 8000
+  },
+  {
+   "dir": 0,
+   "until": "Math.abs(P.vx) < 1 && pulse(0) > 0.55 && pulse(0.03) > pulse(0)",
+   "ms": 5000
+  },
+  {
+   "note": "wave 166",
+   "dir": 1,
+   "jump": 450,
+   "x": 165.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(-0.3) > 0.55 && pulse(-0.27) > pulse(-0.3)",
+   "ms": 5000
+  },
+  {
+   "note": "wave 171",
+   "dir": 1,
+   "jump": 450,
+   "x": 170.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(-0.6) > 0.55 && pulse(-0.57) > pulse(-0.6)",
+   "ms": 5000
+  },
+  {
+   "note": "wave 176",
+   "dir": 1,
+   "jump": 450,
+   "x": 175.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(-0.9) > 0.55 && pulse(-0.87) > pulse(-0.9)",
+   "ms": 5000
+  },
+  {
+   "note": "wave 181",
+   "dir": 1,
+   "jump": 450,
+   "x": 180.0,
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded && Math.abs(P.body.body.velocity.y) < 1",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "pulse(-0.9) > 0.75",
+   "ms": 5000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 600,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 187.2,
+   "ms": 3000
+  },
+  {
+   "note": "over spikes",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "stomp walker",
+   "dir": 1,
+   "until": "!L.walkers[0].alive || Math.abs(L.walkers[0].x - P.x) < 150",
+   "ms": 8000
+  },
+  {
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "gate",
+   "dir": 1,
+   "until": "L.finished",
+   "ms": 8000
+  }
+ ]
+}
