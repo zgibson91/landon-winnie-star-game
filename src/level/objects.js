@@ -372,16 +372,45 @@ export class Door {
 export class BellPuzzle {
   constructor(scene, o) {
     this.scene = scene; this.o = o; this.order = o.order; this.progress = 0; this.solved = false;
-    const lx = o.x * TILE + TILE / 2, ly = o.y * TILE + TILE / 2;
-    this.lamps = this.order.map((_, i) => scene.add.image(lx + (i - (this.order.length - 1) / 2) * 30, ly, 'lamp', 0).setScale(inv).setDepth(20));
+    // Progress lamps by the door: big, on a dark board so green/red read clearly.
+    const lx = o.x * TILE + TILE / 2, ly = o.y * TILE + TILE / 2, n = this.order.length, gap = 54;
+    const bw = gap * n + 16, bh = 70;
+    this.board = scene.add.graphics().setDepth(19);
+    this.board.fillStyle(0x2a1f3d, 0.92).fillRoundedRect(lx - bw / 2, ly - bh / 2, bw, bh, 18);
+    this.board.lineStyle(4, 0xfff3c4, 0.9).strokeRoundedRect(lx - bw / 2, ly - bh / 2, bw, bh, 18);
+    this.lamps = this.order.map((_, i) => scene.add.image(lx + (i - (n - 1) / 2) * gap, ly, 'lamp', 0).setScale(inv * 1.9).setDepth(20));
+    this.badges = [];
     scene.events.on('bell', this.onBell, this);
     scene.events.once('shutdown', () => scene.events.off('bell', this.onBell, this));
   }
+
+  // A round badge under a bell: green with the step number when right, red with an X when wrong.
+  badge(bell, ok, label) {
+    const s = this.scene, x = bell.x, y = bell.y + 58;
+    const c = s.add.container(x, y).setDepth(45);
+    const g = s.add.graphics();
+    g.fillStyle(0x2a1f3d, 1).fillCircle(0, 3, 25);
+    g.fillStyle(ok ? 0x3fbf5f : 0xe0404a, 1).fillCircle(0, 0, 25);
+    g.lineStyle(4, 0xffffff, 1).strokeCircle(0, 0, 25);
+    c.add([g, s.makeText(0, 1, label, 28, { strokeW: 5 })]);
+    c.setScale(0);
+    s.tweens.add({ targets: c, scale: 1, duration: 260, ease: 'Back.easeOut' });
+    return c;
+  }
+
+  clearBadges() {
+    for (const b of this.badges) this.scene.tweens.add({ targets: b, scale: 0, alpha: 0, duration: 250, onComplete: () => b.destroy() });
+    this.badges = [];
+  }
+
   onBell(bell) {
     if (this.solved || !this.o.bells.includes(bell.id)) return;
     if (bell.color === this.order[this.progress]) {
       this.lamps[this.progress].setFrame(1);
+      this.scene.tweens.add({ targets: this.lamps[this.progress], scale: inv * 2.5, duration: 140, yoyo: true });
       this.progress++;
+      this.badges.push(this.badge(bell, true, String(this.progress)));
+      Audio.sfx('chime', { m: 84 + this.progress * 4 });
       if (this.progress >= this.order.length) {
         this.solved = true; Audio.sfx('learn');
         this.scene.time.delayedCall(400, () => this.scene.doors[this.o.door] && this.scene.doors[this.o.door].unlock());
@@ -389,8 +418,13 @@ export class BellPuzzle {
       }
     } else {
       Audio.sfx('buzz');
+      this.scene.shake(0.004, 160);
+      const wrong = this.badge(bell, false, '✗');
+      this.scene.tweens.add({ targets: wrong, x: wrong.x + 6, duration: 50, yoyo: true, repeat: 4 });
+      this.scene.time.delayedCall(1100, () => this.scene.tweens.add({ targets: wrong, scale: 0, alpha: 0, duration: 250, onComplete: () => wrong.destroy() }));
+      this.clearBadges();
       this.lamps.forEach(l => l.setFrame(2));
-      this.scene.time.delayedCall(600, () => { if (!this.solved) this.lamps.forEach(l => l.setFrame(0)); });
+      this.scene.time.delayedCall(900, () => { if (!this.solved) this.lamps.forEach(l => l.setFrame(0)); });
       this.progress = 0;
       this.scene.puzzleMistake(this.o.id);
     }
