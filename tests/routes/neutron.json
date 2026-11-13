@@ -1,0 +1,325 @@
+{
+ "timeout": 500,
+ "steps": [
+  {
+   "note": "settle",
+   "dir": 0,
+   "until": "L.levelTime > 1.5 && !L.busyModal",
+   "ms": 20000
+  },
+  {
+   "dir": 1,
+   "x": 8.6,
+   "ms": 12000,
+   "note": "before pulsar 0"
+  },
+  {
+   "stay": 8,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 8.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 8,
+   "until": "beam(0) > 96 && beam(0) < 120",
+   "ms": 12000,
+   "note": "wait for beam 0 to pass"
+  },
+  {
+   "dir": 1,
+   "x": 19.4,
+   "ms": 5000,
+   "note": "under pulsar 0"
+  },
+  {
+   "note": "over the pit",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 24.0,
+   "ms": 12000
+  },
+  {
+   "stay": 24,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 24.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 24,
+   "until": "beam(1) > 96 && beam(1) < 120",
+   "ms": 12000,
+   "note": "wait for beam 1 to pass"
+  },
+  {
+   "dir": 1,
+   "x": 38.0,
+   "ms": 6000,
+   "note": "under pulsar 1"
+  },
+  {
+   "dir": 1,
+   "x": 51.4,
+   "ms": 10000,
+   "note": "to pit 54"
+  },
+  {
+   "stay": 52,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 52.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 52,
+   "until": "flare(54) === 'idle' && flareT(54) > 1.65",
+   "ms": 12000,
+   "note": "wait flare 54"
+  },
+  {
+   "note": "over pit 54",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 56.4,
+   "ms": 10000,
+   "note": "to pit 59"
+  },
+  {
+   "stay": 57,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 57.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 57,
+   "until": "flare(59) === 'idle' && flareT(59) > 1.65",
+   "ms": 12000,
+   "note": "wait flare 59"
+  },
+  {
+   "note": "over pit 59",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 61.4,
+   "ms": 10000,
+   "note": "to pit 64"
+  },
+  {
+   "stay": 62,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 62.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 62,
+   "until": "flare(64) === 'idle' && flareT(64) > 1.65",
+   "ms": 12000,
+   "note": "wait flare 64"
+  },
+  {
+   "note": "over pit 64",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 69.6,
+   "ms": 6000,
+   "note": "to the loop"
+  },
+  {
+   "stay": 70,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 70.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "onto the loop",
+   "dir": 1,
+   "jump": 160,
+   "until": "P.body.body.velocity.y < -900",
+   "ms": 3000
+  },
+  {
+   "note": "over the pit",
+   "dir": 1,
+   "land": true,
+   "ms": 4000
+  },
+  {
+   "note": "approach walker",
+   "dir": 1,
+   "until": "!L.walkers[0].alive || L.walkers[0].x < P.x - 40 || (L.walkers[0].x > P.x && L.walkers[0].x - P.x < 120)",
+   "ms": 12000
+  },
+  {
+   "note": "jump over walker",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 93.0,
+   "ms": 10000,
+   "note": "to the up orb"
+  },
+  {
+   "note": "walk into the up orb",
+   "dir": 1,
+   "until": "P.g < 0",
+   "ms": 6000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 105.6,
+   "ms": 12000
+  },
+  {
+   "note": "over the ceiling gap",
+   "dir": 1,
+   "jump": 450,
+   "x": 108.6,
+   "ms": 3000
+  },
+  {
+   "stay": 109,
+   "until": "P.grounded && Math.abs(P.x/48 - 109.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "stay": 109,
+   "until": "beam(2) > 96 && beam(2) < 120",
+   "ms": 12000,
+   "note": "wait for the beam"
+  },
+  {
+   "dir": 1,
+   "x": 115.6,
+   "ms": 4000,
+   "note": "under the pulsar"
+  },
+  {
+   "note": "over the ceiling spike",
+   "dir": 1,
+   "jump": 450,
+   "x": 118.6,
+   "ms": 3000
+  },
+  {
+   "stay": 119,
+   "until": "P.grounded && Math.abs(P.x/48 - 119.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "walk into the down orb",
+   "dir": 1,
+   "until": "P.g > 0",
+   "ms": 6000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 139.0,
+   "ms": 10000,
+   "note": "to the edge"
+  },
+  {
+   "stay": 139,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 139.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 139,
+   "until": "rockIn(0, 128, 148)",
+   "ms": 12000,
+   "note": "wait ring 0"
+  },
+  {
+   "note": "hop on ring 0",
+   "jump": 450,
+   "seek": "rk(0, nearRock(0)).cx - 0.5",
+   "until": "myRock() && myRock().ring === 0",
+   "ms": 3000
+  },
+  {
+   "note": "ride ring 0 to the right",
+   "seek": "myRock() ? myRock().cx : P.x/48 - 0.5",
+   "until": "myRock() && (myRock().angle > 340 && myRock().angle < 356)",
+   "ms": 20000
+  },
+  {
+   "note": "to ring 1",
+   "jump": 450,
+   "seek": "rk(1, nearRock(1)).cx - 0.5",
+   "until": "myRock() && myRock().ring === 1",
+   "ms": 3000
+  },
+  {
+   "note": "ride ring 1 up",
+   "seek": "myRock() ? myRock().cx : P.x/48 - 0.5",
+   "until": "myRock() && (myRock().angle > 300 && myRock().angle < 320)",
+   "ms": 20000
+  },
+  {
+   "note": "night eyes on the ring",
+   "dir": 0,
+   "winnie": true,
+   "ms": 3000
+  },
+  {
+   "note": "ride ring 1 to the top",
+   "seek": "myRock() ? myRock().cx : P.x/48 - 0.5",
+   "until": "myRock() && (myRock().angle > 262 && myRock().angle < 285)",
+   "ms": 20000
+  },
+  {
+   "note": "jump to the secret",
+   "jump": 500,
+   "seek": "159.6",
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "stay": 160,
+   "until": "L.runShards[1]",
+   "ms": 3000
+  },
+  {
+   "note": "down to ground",
+   "dir": 1,
+   "x": 163.5,
+   "ms": 4000
+  },
+  {
+   "dir": 1,
+   "until": "P.grounded",
+   "ms": 4000
+  },
+  {
+   "note": "gate",
+   "dir": 1,
+   "until": "L.finished",
+   "ms": 15000
+  }
+ ]
+}

@@ -65,6 +65,19 @@ export const ICONS = {
   meow: `<path d="M20 44 Q20 22 34 20 L30 8 L44 18 Q48 17 52 18 L66 8 L62 20 Q76 22 76 44 Q76 64 48 64 Q20 64 20 44 Z" fill="#2c2735" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><ellipse cx="48" cy="50" rx="9" ry="7" fill="#b8435a"/><path d="M80 30 Q88 37 80 44 M86 24 Q98 37 86 50" stroke="#ffd75e" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
   gravity: `<circle cx="48" cy="37" r="24" fill="#ff6a9a" stroke="${INK}" stroke-width="3"/><path d="M36 40 L48 26 L60 40 M36 52 L48 38 L60 52" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
   pads: `<g stroke="${INK}" stroke-width="2.5"><rect x="8" y="50" width="22" height="10" rx="3" fill="#ff5a4e"/><rect x="37" y="50" width="22" height="10" rx="3" fill="#6f9fd6"/><rect x="66" y="50" width="22" height="10" rx="3" fill="#5ec26a"/></g><text x="19" y="40" font-size="20" font-weight="900" text-anchor="middle" fill="#2a1f3d" font-family="sans-serif">2</text><text x="48" y="40" font-size="20" font-weight="900" text-anchor="middle" fill="#2a1f3d" font-family="sans-serif">1</text><text x="77" y="40" font-size="20" font-weight="900" text-anchor="middle" fill="#2a1f3d" font-family="sans-serif">3</text>`,
+  ring: `<circle cx="48" cy="37" r="26" fill="none" stroke="#d8905a" stroke-width="4" stroke-dasharray="4 4"/><circle cx="48" cy="37" r="8" fill="#ffd0a0" stroke="${INK}" stroke-width="2.4"/>` +
+    [0, 1, 2, 3].map(i => { const a = i * Math.PI / 2 - 0.4; return `<rect x="${(48 + Math.cos(a) * 26 - 11).toFixed(1)}" y="${(37 + Math.sin(a) * 26 - 5).toFixed(1)}" width="22" height="10" rx="5" fill="#d8905a" stroke="${INK}" stroke-width="2.2"/>`; }).join('') +
+    `<path d="M74 14 Q84 24 80 36" stroke="#5ec26a" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M76 34 L80 38 L84 33" stroke="#5ec26a" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
+  freeze: `<circle cx="34" cy="37" r="22" fill="none" stroke="#d8905a" stroke-width="4" stroke-dasharray="4 4"/><circle cx="34" cy="37" r="7" fill="#ffd0a0" stroke="${INK}" stroke-width="2.2"/>` +
+    `<circle cx="72" cy="30" r="13" fill="#ffd75e" stroke="${INK}" stroke-width="2.6"/><path d="M72 21 L74.6 27 L81 27.4 L76 31.4 L77.8 37.6 L72 34 L66.2 37.6 L68 31.4 L63 27.4 L69.4 27 Z" fill="#fff6c9" stroke="${INK}" stroke-width="1.2"/>` +
+    `<rect x="62" y="50" width="8" height="18" rx="2" fill="#6f9fd6" stroke="${INK}" stroke-width="2"/><rect x="74" y="50" width="8" height="18" rx="2" fill="#6f9fd6" stroke="${INK}" stroke-width="2"/>`,
+  pull: `<circle cx="48" cy="37" r="24" fill="#b58aff" opacity="0.4"/><circle cx="48" cy="37" r="12" fill="#05020c" stroke="#d6a0ff" stroke-width="3"/>` +
+    `<path d="M8 22 L26 30 M20 24 L26 30 L19 35 M88 22 L70 30 M76 24 L70 30 L77 35" stroke="#ff9a5a" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` +
+    `<path d="M10 58 L84 58" stroke="#5ec26a" stroke-width="4" stroke-linecap="round"/><path d="M20 52 L10 58 L20 64" stroke="#5ec26a" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+  slow: `<circle cx="48" cy="37" r="26" fill="#9fd8ff" opacity="0.35" stroke="#6fb0ff" stroke-width="3" stroke-dasharray="6 5"/><circle cx="48" cy="37" r="14" fill="#fff" stroke="${INK}" stroke-width="2.6"/><path d="M48 37 L48 28 M48 37 L54 40" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>` +
+    `<text x="48" y="72" font-size="13" font-weight="900" text-anchor="middle" fill="#3d7fd6" font-family="sans-serif">slow</text>`,
+  pulsar: `<circle cx="48" cy="37" r="10" fill="#fff" stroke="#6ac8f0" stroke-width="3"/><path d="M48 37 L90 16" stroke="#8fe8ff" stroke-width="9" stroke-linecap="round" opacity="0.8"/><path d="M48 37 L6 58" stroke="#8fe8ff" stroke-width="9" stroke-linecap="round" opacity="0.8"/>` +
+    `<path d="M66 60 A26 26 0 0 0 74 40" stroke="#5ec26a" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M70 42 L74 38 L78 43" stroke="#5ec26a" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
   shard: `<path d="${star5(48, 38, 24, 11)}" fill="#ffe680" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round"/>`,
   up: `<path d="M48 12 L70 40 L56 40 L56 62 L40 62 L40 40 L26 40 Z" fill="#5ec26a" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>`,
   stomp: `<path d="M48 8 L48 30 M40 22 L48 31 L56 22" stroke="#6f9fd6" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 64 Q28 42 48 42 Q68 42 68 64 Z" fill="#ff8a3c" stroke="${INK}" stroke-width="2.6"/><circle cx="42" cy="54" r="2.6" fill="${INK}"/><circle cx="54" cy="54" r="2.6" fill="${INK}"/>`,
@@ -106,6 +119,9 @@ export async function buildProps(scene) {
     svgSheet(scene, 'walker-blue', 48, 48, [walker('#5a6ad8', '#c0d4ff', 0), walker('#5a6ad8', '#c0d4ff', 1)]),
     svgSheet(scene, 'walker-dust', 48, 48, [walker('#b8865a', '#ffe0b0', 0), walker('#b8865a', '#ffe0b0', 1)]),
     svgSheet(scene, 'walker-pink', 48, 48, [walker('#e05a8a', '#ffd0e0', 0), walker('#e05a8a', '#ffd0e0', 1)]),
+    svgSheet(scene, 'walker-amber', 48, 48, [walker('#d88040', '#ffe0a0', 0), walker('#d88040', '#ffe0a0', 1)]),
+    svgSheet(scene, 'walker-violet', 48, 48, [walker('#7a4ac8', '#e6d6ff', 0), walker('#7a4ac8', '#e6d6ff', 1)]),
+    svgSheet(scene, 'walker-ice', 48, 48, [walker('#3a90c0', '#e8fcff', 0), walker('#3a90c0', '#e8fcff', 1)]),
     svgSheet(scene, 'walker-red', 48, 48, [walker('#d2364a', '#ff8a5e', 0), walker('#d2364a', '#ff8a5e', 1)]),
     svgImage(scene, 'spark', 16, 16, `<circle cx="8" cy="8" r="7" fill="url(#g)"/>`, glow('g', '#ffffff', '#ffffff')),
     svgImage(scene, 'softglow', 64, 64, `<circle cx="32" cy="32" r="32" fill="url(#g)"/>`, glow('g', '#ffffff', '#ffffff')),

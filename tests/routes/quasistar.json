@@ -1,0 +1,410 @@
+{
+ "timeout": 560,
+ "steps": [
+  {
+   "note": "settle",
+   "dir": 0,
+   "until": "L.levelTime > 1.5 && !L.busyModal",
+   "ms": 20000
+  },
+  {
+   "dir": 1,
+   "x": 9.2,
+   "ms": 12000,
+   "note": "to the edge"
+  },
+  {
+   "stay": 9,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 9.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "platform 13",
+   "dir": 1,
+   "jump": 450,
+   "x": 12.6,
+   "ms": 3000
+  },
+  {
+   "stay": 13,
+   "until": "P.grounded && Math.abs(P.x/48 - 13.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "platform 18",
+   "dir": 1,
+   "jump": 450,
+   "x": 17.6,
+   "ms": 3000
+  },
+  {
+   "stay": 18,
+   "until": "P.grounded && Math.abs(P.x/48 - 18.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "platform 22",
+   "dir": 1,
+   "jump": 450,
+   "x": 21.6,
+   "ms": 3000
+  },
+  {
+   "stay": 22,
+   "until": "P.grounded && Math.abs(P.x/48 - 22.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "platform 27",
+   "dir": 1,
+   "jump": 450,
+   "x": 26.6,
+   "ms": 3000
+  },
+  {
+   "stay": 27,
+   "until": "P.grounded && Math.abs(P.x/48 - 27.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "platform 32",
+   "dir": 1,
+   "jump": 450,
+   "x": 31.6,
+   "ms": 3000
+  },
+  {
+   "stay": 32,
+   "until": "P.grounded && Math.abs(P.x/48 - 32.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 33.4,
+   "ms": 12000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 52.4,
+   "ms": 10000,
+   "note": "to pit 55"
+  },
+  {
+   "stay": 53,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 53.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 53,
+   "until": "flare(55) === 'idle' && L.timeK < 0.5",
+   "ms": 12000,
+   "note": "wait flare 55"
+  },
+  {
+   "note": "over pit 55",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 61.4,
+   "ms": 10000,
+   "note": "to pit 64"
+  },
+  {
+   "stay": 62,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 62.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 62,
+   "until": "flare(64) === 'idle' && L.timeK < 0.5",
+   "ms": 12000,
+   "note": "wait flare 64"
+  },
+  {
+   "note": "over pit 64",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 70.4,
+   "ms": 10000,
+   "note": "to pit 73"
+  },
+  {
+   "stay": 71,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 71.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 71,
+   "until": "flare(73) === 'idle' && L.timeK < 0.5",
+   "ms": 12000,
+   "note": "wait flare 73"
+  },
+  {
+   "note": "over pit 73",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 79.4,
+   "ms": 10000,
+   "note": "to pit 82"
+  },
+  {
+   "stay": 80,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 80.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 80,
+   "until": "flare(82) === 'idle' && L.timeK < 0.5",
+   "ms": 12000,
+   "note": "wait flare 82"
+  },
+  {
+   "note": "over pit 82",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 98.0,
+   "ms": 10000,
+   "note": "to the edge"
+  },
+  {
+   "stay": 98,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 98.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 98,
+   "until": "rockIn(0, 128, 148)",
+   "ms": 12000,
+   "note": "wait ring 0"
+  },
+  {
+   "note": "hop on ring 0",
+   "jump": 450,
+   "seek": "rk(0, nearRock(0)).cx - 0.5",
+   "until": "myRock() && myRock().ring === 0",
+   "ms": 3000
+  },
+  {
+   "note": "ride ring 0 to the right",
+   "seek": "myRock() ? myRock().cx : P.x/48 - 0.5",
+   "until": "myRock() && (myRock().angle > 340 && myRock().angle < 356)",
+   "ms": 20000
+  },
+  {
+   "note": "to ring 1",
+   "jump": 450,
+   "seek": "rk(1, nearRock(1)).cx - 0.5",
+   "until": "myRock() && myRock().ring === 1",
+   "ms": 3000
+  },
+  {
+   "note": "ride ring 1 to the right",
+   "seek": "myRock() ? myRock().cx : P.x/48 - 0.5",
+   "until": "myRock() && (myRock().angle > 4 && myRock().angle < 20)",
+   "ms": 20000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 143.0,
+   "ms": 12000,
+   "note": "on to the walker"
+  },
+  {
+   "note": "approach walker",
+   "dir": 1,
+   "until": "!L.walkers[0].alive || L.walkers[0].x < P.x - 40 || (L.walkers[0].x > P.x && L.walkers[0].x - P.x < 120)",
+   "ms": 12000
+  },
+  {
+   "note": "jump over walker",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 155.0,
+   "ms": 10000,
+   "note": "to the black hole"
+  },
+  {
+   "stay": 155,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 155.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "middle platform",
+   "dir": 1,
+   "jump": 450,
+   "x": 157.6,
+   "ms": 3000
+  },
+  {
+   "stay": 158,
+   "until": "P.grounded && Math.abs(P.x/48 - 158.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "far side",
+   "dir": 1,
+   "jump": 450,
+   "x": 161.6,
+   "ms": 3000
+  },
+  {
+   "stay": 162,
+   "until": "P.grounded && Math.abs(P.x/48 - 162.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 165.0,
+   "ms": 12000
+  },
+  {
+   "stay": 165,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 165.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "onto the rock",
+   "dir": 1,
+   "jump": 450,
+   "x": 166.2,
+   "ms": 3000
+  },
+  {
+   "stay": 166,
+   "until": "P.grounded && Math.abs(P.x/48 - 166.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "night eyes",
+   "dir": 0,
+   "winnie": true,
+   "ms": 6000
+  },
+  {
+   "note": "hidden 1",
+   "dir": 1,
+   "jump": 450,
+   "x": 168.6,
+   "ms": 3000
+  },
+  {
+   "stay": 169,
+   "until": "P.grounded && Math.abs(P.x/48 - 169.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "hidden 2",
+   "dir": 1,
+   "jump": 600,
+   "x": 171.6,
+   "ms": 3000
+  },
+  {
+   "stay": 172,
+   "until": "P.grounded && Math.abs(P.x/48 - 172.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "night eyes again",
+   "dir": 0,
+   "winnie": true,
+   "ms": 6000
+  },
+  {
+   "note": "hidden 3",
+   "dir": 1,
+   "jump": 600,
+   "x": 174.6,
+   "ms": 3000
+  },
+  {
+   "stay": 175,
+   "until": "P.grounded && Math.abs(P.x/48 - 175.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "stay": 176,
+   "until": "L.runShards[1]",
+   "ms": 3000
+  },
+  {
+   "note": "drop down",
+   "dir": 1,
+   "x": 178.0,
+   "ms": 4000
+  },
+  {
+   "dir": 1,
+   "until": "P.grounded",
+   "ms": 4000
+  },
+  {
+   "note": "approach walker",
+   "dir": 1,
+   "until": "!L.walkers[1].alive || L.walkers[1].x < P.x - 40 || (L.walkers[1].x > P.x && L.walkers[1].x - P.x < 120)",
+   "ms": 12000
+  },
+  {
+   "note": "jump over walker",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 189.5,
+   "ms": 12000,
+   "note": "into the arena"
+  },
+  {
+   "note": "boss",
+   "boss": true,
+   "ms": 240000
+  },
+  {
+   "note": "credits",
+   "dir": 0,
+   "until": "L.finished",
+   "ms": 90000
+  }
+ ]
+}

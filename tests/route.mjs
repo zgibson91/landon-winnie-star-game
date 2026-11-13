@@ -17,9 +17,10 @@ await page.waitForFunction(() => window.LW && LW.state(), null, { timeout: 20000
 await page.evaluate((r) => { LW.Save.reset(); LWBot.start(r.steps); }, route);
 const t0 = Date.now(); let n = 0;
 while (Date.now() - t0 < (route.timeout || 400) * 1000) {
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(Number(process.env.POLL || 500));
   const st = await page.evaluate(() => ({ done: LWBot.done, failed: LWBot.failed, i: LWBot.i, s: LW.state() }));
-  if (shotDir && n++ % 6 === 0) await page.screenshot({ path: `${shotDir}/${level}-bot-${String(n).padStart(3, '0')}.png` });
+  const every = Number(process.env.SHOT_EVERY || 6), from = Number(process.env.SHOT_FROM || 0);
+  if (shotDir && n++ % every === 0 && st.s && st.s.time >= from) await page.screenshot({ path: `${shotDir}/${level}-bot-${String(n).padStart(3, '0')}.png` });
   if (st.done || st.failed) break;
 }
 const res = await page.evaluate(() => ({ dbg: (() => { const L = LW.level(); return L ? `t=${L.levelTime.toFixed(2)} p0=${L.pulseAt(0).toFixed(2)} spikes=` + L.objs.filter(o => o.constructor.name === 'PulseSpikes').map(o => `${o.x/48}:${o.spr[0].y.toFixed(0)}`).join(',') + ` hb=${JSON.stringify(L.player.getHitbox())}` + ` songs=${(L.songstones||[]).map(q => `${q.progress}/${q.seq.length}${q.solved?'!':''} frame${q.spr.frame.name}`).join(' ')} pads=${Object.values(L.pads||{}).map(p => p.id + (p.on?'*':'')).join(',')}` : ''; })(), missed: (LW.level().objs || []).filter(o => o.constructor.name === 'Glimmer' && !o.taken).map(o => `${Math.floor(o.x / 48)},${Math.floor(o.y / 48)}${o.hidden ? 'h' : ''}`).join(' '), done: LWBot.done, failed: LWBot.failed, log: LWBot.log.slice(-12), state: LW.state(), fps: LW.game.loop.actualFps }));

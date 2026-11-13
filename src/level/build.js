@@ -19,7 +19,7 @@ export function buildLevel(def) {
     const w = sec.w || Math.max(...sec.rows.map(r => r.length));
     if (sec.rows.length !== H) console.warn(`[level ${def.id}] section "${sec.name}" has ${sec.rows.length} rows, expected ${H}`);
     for (let r = 0; r < H; r++) rows[r] += (sec.rows[r] || '').padEnd(w, '.').slice(0, w);
-    for (const o of sec.objects || []) objects.push(Object.assign({}, o, { x: o.x + col, x2: o.x2 != null ? o.x2 + col : undefined, section: sections.length }));
+    for (const o of sec.objects || []) objects.push(Object.assign({}, o, { x: o.x + col, x2: o.x2 != null ? o.x2 + col : undefined, trigger: o.trigger != null ? o.trigger + col : undefined, section: sections.length }));
     sections.push({ name: sec.name, start: col, end: col + w, hints: sec.hints || null });
     col += w;
   }

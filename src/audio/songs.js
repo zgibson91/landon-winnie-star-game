@@ -76,6 +76,33 @@ export const SONGS = {
       { inst: 'lead', notes: 'A4 - C5 - E5 - - - | F5 - E5 - C5 - A4 - | G4 - C5 - E5 - G5 - | F5 - E5 - D5 - - - | A5 - - - E5 - A5 - | C6 - B5 - A5 - F5 - | G5 - F5 - D5 - B4 - | G#4 - B4 - E5 - - - | F5 - - - A5 - D6 - | C6 - - - A5 - E5 - | F5 - A5 - C6 - A5 - | G#5 - - - B5 - E6 - | D6 - - - A5 - F5 - | E5 - - - C5 - A4 - | D5 - F5 - Bb5 - A5 - | G#5 - - - - - . .' },
     ],
   },
+  wohg64: {
+    // far away in another galaxy: a wide, wondering tune with a rolling arp
+    bpm: 108, bass: 'bounce', arp: 'updown', arpInst: 'marimba', arpOct: 1,
+    chords: ['Am', 'F', 'C', 'G', 'Am', 'F', 'Dm', 'E7'],
+    drums: { kick: 'x.....x...x.....', snare: '....x.......x...', shaker: '..o...o...o...o.' },
+    voices: [{ inst: 'lead', notes: 'E5 - A5 - C6 - B5 A5 | A5 - - - F5 - C5 - | E5 - G5 - C6 - E6 - | D6 - - - B5 - G5 - | C6 - B5 - A5 - E5 - | F5 - A5 - C6 - F6 - | E6 - D6 - A5 - F5 - | G#5 - - - B5 - E6 -' }],
+  },
+  quasistar: {
+    // deep and a bit spooky, but brave: minor key, slow pad, steady march
+    bpm: 96, bass: 'pulse', arp: 'wide', arpInst: 'bell', arpOct: 1, padVel: 1.4,
+    chords: ['Dm', 'Bb', 'Gm', 'A', 'Dm', 'Bb', 'C', 'A7'],
+    drums: { kick: 'x.......x.......', snare: '....x.......x...', shaker: '..o...o...o...o.' },
+    voices: [{ inst: 'marimba', notes: 'D5 - - - F5 - A5 - | Bb5 - - - A5 - F5 - | G5 - Bb5 - D6 - C6 Bb5 | A5 - - - C#6 - E6 - | D6 - - - A5 - F5 - | Bb5 - D6 - F6 - D6 - | C6 - E6 - G6 - E6 C6 | C#6 - - - A5 - - -' }],
+  },
+  neutron: {
+    // tiny and super fast: bright, bouncy, 132 bpm
+    bpm: 132, bass: 'drive', arp: 'up', arpInst: 'pluck', arpOct: 2,
+    chords: ['E', 'C#m', 'A', 'B', 'E', 'G#m', 'A', 'B7'],
+    drums: { kick: 'x...x...x...x...', clap: '....x.......x...', hat: 'xoxoxoxoxoxoxoxo' },
+    voices: [{ inst: 'lead', notes: 'B5 - E6 - G#6 - E6 - | C#6 - E6 - G#6 - B6 - | A6 - - - E6 - C#6 - | D#6 - - - F#6 - B5 - | G#5 - B5 - E6 - G#6 - | D#6 - B5 - G#5 - B5 - | C#6 - E6 - A6 - G#6 F#6 | F#6 - - - D#6 - B5 -' }],
+  },
+  miniboss: {
+    bpm: 132, bass: 'drive', arp: 'up', arpInst: 'pluck', arpOct: 1,
+    chords: ['Em', 'C', 'D', 'B', 'Em', 'C', 'Am', 'B7'],
+    drums: { kick: 'x..x..x.x..x....', snare: '....x.......x...', hat: 'x.x.x.x.x.x.x.x.' },
+    voices: [{ inst: 'lead', notes: 'E5 - G5 - B5 - E6 - | C6 - B5 - G5 - E5 - | F#5 - A5 - D6 - F#6 - | D#6 - - - B5 - - - | E6 - - D6 C6 - B5 - | G5 - - A5 B5 - C6 - | A5 - C6 - E6 - A6 - | F#6 - - - D#6 - B5 -' }],
+  },
   boss: {
     bpm: 140, bass: 'drive', arp: 'up', arpInst: 'pluck', arpOct: 1,
     chords: ['Dm', 'Bb', 'C', 'A', 'Dm', 'Bb', 'Gm', 'A'],

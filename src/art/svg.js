@@ -20,14 +20,14 @@ export async function svgSheet(scene, key, fw, fh, frames, defs = '', scale = AR
   const W = fw * cols, H = fh * rows;
   const body = frames.map((f, i) => `<g transform="translate(${(i % cols) * fw},${Math.floor(i / cols) * fh})">${f}</g>`).join('');
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W * scale}" height="${H * scale}" viewBox="0 0 ${W} ${H}"><defs>${defs}</defs>${body}</svg>`;
-  const img = await toImage(svg);
+  const img = await toImage(svg).catch(e => { throw new Error(`${e.message} (${key})`); });
   if (scene.textures.exists(key)) scene.textures.remove(key);
   scene.textures.addSpriteSheet(key, img, { frameWidth: fw * scale, frameHeight: fh * scale, endFrame: n - 1 });
 }
 
 export async function svgImage(scene, key, w, h, inner, defs = '', scale = ART) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(w * scale)}" height="${Math.ceil(h * scale)}" viewBox="0 0 ${w} ${h}"><defs>${defs}</defs>${inner}</svg>`;
-  const img = await toImage(svg);
+  const img = await toImage(svg).catch(e => { throw new Error(`${e.message} (${key})`); });
   if (scene.textures.exists(key)) scene.textures.remove(key);
   scene.textures.addImage(key, img);
 }

@@ -168,6 +168,19 @@ export const Audio = {
       case 'clap': this.noiseHit(t, 0.2 * vel, 0.12, 'bandpass', 1300, dest, 0.35); break;
       case 'hat': this.noiseHit(t, 0.07 * vel, 0.035, 'highpass', 7500, dest); break;
       case 'shaker': this.noiseHit(t, 0.05 * vel, 0.06, 'highpass', 5200, dest); break;
+      case 'roar': { // a big cartoon growl: low wobbly saw + rumble
+        const g = this.out(bus); this.env(g, t, 0.05, 0.16, 1.0);
+        const o1 = this.osc('sawtooth', 90, t, t + 1.0, g), o2 = this.osc('sawtooth', 96, t, t + 1.0, g);
+        o1.frequency.linearRampToValueAtTime(60, t + 1.0); o2.frequency.linearRampToValueAtTime(64, t + 1.0);
+        const l = c.createOscillator(); l.frequency.value = 9; const lg = c.createGain(); lg.gain.value = 14; l.connect(lg); lg.connect(o1.frequency); lg.connect(o2.frequency); l.start(t); l.stop(t + 1.0);
+        this.noiseHit(t, 0.12, 0.9, 'lowpass', 400, bus, 0.3); break;
+      }
+      case 'laugh': [0, 0.22, 0.44].forEach((d, i) => { const g = this.out(bus); this.env(g, t + d, 0.02, 0.12, 0.18); const o = this.osc('square', 150 - i * 12, t + d, t + d + 0.2, g); o.frequency.exponentialRampToValueAtTime(100 - i * 10, t + d + 0.18); }); break;
+      case 'pop': sweep('sine', 900, 200, 0.12, 0.2); this.noiseHit(t, 0.12, 0.08, 'highpass', 3000); [84, 91].forEach((m, i) => this.play('bell', m, t + 0.05 + i * 0.06, 0.15, 0.6, bus)); break;
+      case 'swoop': sweep('triangle', 900, 300, 0.35, 0.08, 0.3); break;
+      case 'tick': [96, 91].forEach((m, i) => this.play('marimba', m, t + i * 0.12, 0.06, 0.6, bus)); break;
+      case 'vortex': { const n = this.noiseHit(t, 0.1, 1.4, 'bandpass', 300, bus, 0.4); n.f.frequency.exponentialRampToValueAtTime(80, t + 1.3); sweep('sine', 220, 70, 1.2, 0.08, 0.3); break; }
+      case 'bosshit': sweep('square', 520, 120, 0.2, 0.12); this.noiseHit(t, 0.18, 0.18, 'lowpass', 1800); [79, 74].forEach((m, i) => this.play('pluck', m, t + i * 0.07, 0.1, 0.9, bus)); break;
       default: break;
     }
   },
@@ -230,6 +243,19 @@ export const Audio = {
       case 'storm': { const n = this.noiseHit(t, 0.14, 2.6, 'lowpass', 300, bus, 0.3); n.g.gain.cancelScheduledValues(t); n.g.gain.setValueAtTime(0.0001, t); n.g.gain.linearRampToValueAtTime(0.14, t + 1.2); n.g.gain.exponentialRampToValueAtTime(0.0001, t + 2.6); n.f.frequency.linearRampToValueAtTime(900, t + 1.4); break; }
       case 'flip': sweep('triangle', 700, 220, 0.3, 0.16, 0.3); sweep('sine', 300, 900, 0.25, 0.08); break;
       case 'swap': sweep('sine', 300, 900, 0.25, 0.14, 0.4); this.play('bell', 76, t + 0.05, 0.2, 0.6, bus); this.play('bell', 83, t + 0.12, 0.2, 0.5, bus); break;
+      case 'roar': { // a big cartoon growl: low wobbly saw + rumble
+        const g = this.out(bus); this.env(g, t, 0.05, 0.16, 1.0);
+        const o1 = this.osc('sawtooth', 90, t, t + 1.0, g), o2 = this.osc('sawtooth', 96, t, t + 1.0, g);
+        o1.frequency.linearRampToValueAtTime(60, t + 1.0); o2.frequency.linearRampToValueAtTime(64, t + 1.0);
+        const l = c.createOscillator(); l.frequency.value = 9; const lg = c.createGain(); lg.gain.value = 14; l.connect(lg); lg.connect(o1.frequency); lg.connect(o2.frequency); l.start(t); l.stop(t + 1.0);
+        this.noiseHit(t, 0.12, 0.9, 'lowpass', 400, bus, 0.3); break;
+      }
+      case 'laugh': [0, 0.22, 0.44].forEach((d, i) => { const g = this.out(bus); this.env(g, t + d, 0.02, 0.12, 0.18); const o = this.osc('square', 150 - i * 12, t + d, t + d + 0.2, g); o.frequency.exponentialRampToValueAtTime(100 - i * 10, t + d + 0.18); }); break;
+      case 'pop': sweep('sine', 900, 200, 0.12, 0.2); this.noiseHit(t, 0.12, 0.08, 'highpass', 3000); [84, 91].forEach((m, i) => this.play('bell', m, t + 0.05 + i * 0.06, 0.15, 0.6, bus)); break;
+      case 'swoop': sweep('triangle', 900, 300, 0.35, 0.08, 0.3); break;
+      case 'tick': [96, 91].forEach((m, i) => this.play('marimba', m, t + i * 0.12, 0.06, 0.6, bus)); break;
+      case 'vortex': { const n = this.noiseHit(t, 0.1, 1.4, 'bandpass', 300, bus, 0.4); n.f.frequency.exponentialRampToValueAtTime(80, t + 1.3); sweep('sine', 220, 70, 1.2, 0.08, 0.3); break; }
+      case 'bosshit': sweep('square', 520, 120, 0.2, 0.12); this.noiseHit(t, 0.18, 0.18, 'lowpass', 1800); [79, 74].forEach((m, i) => this.play('pluck', m, t + i * 0.07, 0.1, 0.9, bus)); break;
       default: break;
     }
   },

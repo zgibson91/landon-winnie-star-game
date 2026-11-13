@@ -9,6 +9,7 @@ const inv = 1 / ART;
 const hex = (s) => Phaser.Display.Color.HexStringToColor(s).color;
 
 export function levelUnlocked(star) {
+  if (star.bonus) return !!(Save.settings.unlockAll || Save.data.done.quasistar);
   if (!star.final) return true;
   return Save.settings.unlockAll || Save.totalShards() >= FINAL_SHARDS;
 }
@@ -21,7 +22,7 @@ export class HubPortal {
     this.back = scene.add.image(this.x, this.y + 4, 'portal-frame').setOrigin(0.5, 1).setScale(inv).setDepth(8);
     this.swirl = scene.add.image(this.x, this.y - 56, 'portal-swirl').setScale(inv).setDepth(8.5).setTint(hex(s.glow));
     // size comparison: disc radius grows with the log of the star's size
-    const r = 17 + Math.log10(s.size) * 8.5;
+    const r = Math.max(7, 17 + Math.log10(s.size) * 8.5); // the neutron star is a tiny dot
     this.disc = scene.add.image(this.x, this.y - 58, 'stardisc').setScale(r / 64).setTint(col).setDepth(9);
     this.sun = s.id !== 'sun' ? scene.add.circle(this.x + r + 9, this.y - 58 + r - 4, 3, 0xffcf4a).setStrokeStyle(1.5, 0x2a1f3d).setDepth(9) : null;
     this.label = makeText(scene, this.x, this.y + 22, s.short, 18, { strokeW: 5 }).setDepth(9);
@@ -34,6 +35,13 @@ export class HubPortal {
     }
     this.soon = null;
     this.card = null; this.near = false; this.t = Math.random() * 5;
+    // the bonus portal stays hidden until it's unlocked
+    this.hidden = !!s.bonus && !levelUnlocked(s);
+    if (this.hidden) [this.back, this.swirl, this.disc, this.label, ...this.pips].forEach(o => o.setVisible(false));
+    else if (s.bonus) {
+      this.newTag = makeText(scene, this.x, this.y - 128, Save.data.done.neutron ? 'BONUS' : 'NEW!', 18, { strokeW: 5, color: '#7dff9a' }).setDepth(10);
+      scene.tweens.add({ targets: this.newTag, y: this.y - 136, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
     this.refresh();
   }
   refresh() {
@@ -46,7 +54,7 @@ export class HubPortal {
     }
     if (!this.star.built && !this.soon && !(this.lock && this.lock.visible)) this.soon = makeText(this.scene, this.x, this.y - 112, 'coming soon', 14, { strokeW: 4, color: '#c9bfff' }).setDepth(10);
   }
-  isNear(p) { return Math.abs(p.x - this.x) < 56 && Math.abs(p.bottom - this.y) < 60; }
+  isNear(p) { return !this.hidden && Math.abs(p.x - this.x) < 56 && Math.abs(p.bottom - this.y) < 60; }
   showCard(on) {
     if (on === this.near) return; this.near = on;
     if (on && !this.card) this.buildCard();

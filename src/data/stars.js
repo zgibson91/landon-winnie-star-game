@@ -24,13 +24,18 @@ export const STARS = [
   { id: 'stephenson', built: true, name: 'Stephenson 2-18', short: 'Stephenson 2-18', size: 2150, sizeText: 'about 2,000 Suns wide', diff: 4, color: '#ff4a6a', glow: '#ffb3c6',
     fact: 'Stephenson 2-18 may be one of the biggest stars we know. It lives in a big star cluster.',
     museum: 'Light would need about 9 hours to go all the way around Stephenson 2-18.' },
-  { id: 'wohg64', name: 'WOH G64', short: 'WOH G64', size: 1550, sizeText: 'about 1,500 Suns wide', diff: 5, color: '#ff8a5a', glow: '#ffe0b0',
+  { id: 'wohg64', built: true, name: 'WOH G64', short: 'WOH G64', size: 1550, sizeText: 'about 1,500 Suns wide', diff: 5, color: '#ff8a5a', glow: '#ffe0b0',
     fact: 'WOH G64 is in a different galaxy! It has a giant ring of dust around it.',
     museum: 'WOH G64 is the first star outside our galaxy that got a close-up picture.' },
-  { id: 'quasistar', name: 'The Quasi-Star', short: 'Quasi-Star', size: 10000, sizeText: 'maybe 10,000 Suns wide', diff: 5, color: '#b58aff', glow: '#e6d6ff', final: true,
+  { id: 'quasistar', built: true, name: 'The Quasi-Star', short: 'Quasi-Star', size: 10000, sizeText: 'maybe 10,000 Suns wide', diff: 5, color: '#b58aff', glow: '#e6d6ff', final: true,
     fact: 'A quasi-star is a giant star with a black hole in its middle. Scientists think they lived long, long ago.',
     museum: 'Nobody has ever seen a quasi-star. They are an idea scientists use to explain the very first black holes.' },
+  // Post-game bonus star: its portal appears after The Reaper is beaten.
+  { id: 'neutron', built: true, bonus: true, name: 'Neutron Star', short: 'Neutron Star', size: 0.000016, sizeText: 'only about 12 miles wide!', diff: 5, color: '#8fe8ff', glow: '#e8fcff',
+    fact: 'A neutron star is tiny but SUPER heavy. One spoonful would weigh as much as a mountain!',
+    museum: 'Some neutron stars spin hundreds of times every second and shine beams of light like a lighthouse. Those are called pulsars.' },
 ];
 
+export const MAIN_STARS = STARS.filter(s => !s.bonus);
 export const STAR_BY_ID = Object.fromEntries(STARS.map(s => [s.id, s]));
 export const FINAL_SHARDS = 20;

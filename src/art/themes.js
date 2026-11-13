@@ -1,6 +1,7 @@
 // Per-star look: terrain tiles (Canvas2D, auto-tiled), parallax backgrounds and themed objects.
 import { canvasTexture, svgSheet, svgImage, INK } from './svg.js';
 import { ART } from '../core/constants.js';
+import { buildBatch3Art } from './batch3.js';
 
 const T2 = 48 * ART; // tile size in texture pixels
 export const PAD = 3; // tileset margin; each tile is extruded into it to avoid seams
@@ -62,6 +63,27 @@ export const THEMES = {
     plat: '#200a20', platRim: '#e0405a', platHi: '#ffa0b0',
     spike: ['#ffd0d8', '#e0405a'], plasma: ['#ffc0a0', '#ff4a3a', '#7a0a1a'],
     walker: 'walker-red', fog: 0xff4a6a, ember: 0xffb0c0,
+  },
+  wohg64: {
+    music: 'wohg64', sky: ['#0a1428', '#3a2a4a', '#e0905a'],
+    ground: '#5a3a3a', speck: '#463030', crust: '#ffb070', crustHi: '#ffe0b0', crustLo: '#c87848',
+    plat: '#3a2430', platRim: '#ffa060', platHi: '#ffd8a8',
+    spike: ['#ffe8c8', '#e08048'], plasma: ['#ffe0a0', '#ff9048', '#8a3020'],
+    walker: 'walker-amber', fog: 0xffb070, ember: 0xffe0b0,
+  },
+  quasistar: {
+    music: 'quasistar', sky: ['#04020c', '#1e0c3a', '#6a2a96'],
+    ground: '#2c1a4a', speck: '#20123a', crust: '#b58aff', crustHi: '#e6d6ff', crustLo: '#7a4ac8',
+    plat: '#1a0c30', platRim: '#c49aff', platHi: '#f0e6ff',
+    spike: ['#f0e6ff', '#9a6ae0'], plasma: ['#e6d6ff', '#9a5aff', '#30105a'],
+    walker: 'walker-violet', fog: 0xb58aff, ember: 0xe6d6ff,
+  },
+  neutron: {
+    music: 'neutron', sky: ['#020814', '#0a2a4a', '#2a7ab0'],
+    ground: '#1e3a5a', speck: '#163048', crust: '#8fe8ff', crustHi: '#e8fcff', crustLo: '#4ab0d8',
+    plat: '#102438', platRim: '#8fe8ff', platHi: '#e8fcff',
+    spike: ['#ffffff', '#6ac8f0'], plasma: ['#e8fcff', '#6ac8f0', '#103a6a'],
+    walker: 'walker-ice', fog: 0x8fe8ff, ember: 0xe8fcff,
   },
   station: {
     music: 'hub', sky: ['#120d33', '#2b1d6b', '#4a2f8f'],
@@ -281,6 +303,45 @@ function farLayer(scene, name) {
       g.addColorStop(0, 'rgba(220,240,255,0.95)'); g.addColorStop(0.4, 'rgba(140,190,255,0.6)'); g.addColorStop(1, 'rgba(120,160,255,0)');
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(W * 0.75, H * 0.25, 160, 0, Math.PI * 2); ctx.fill();
       for (let i = 0; i < 200; i++) { ctx.fillStyle = `rgba(255,255,255,${0.2 + rnd() * 0.6})`; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 0.8 + rnd() * 2, 0, Math.PI * 2); ctx.fill(); }
+    } else if (name === 'wohg64') {
+      // another galaxy: a smudge of faraway stars (the Large Magellanic Cloud) and a giant tilted dust ring
+      for (let i = 0; i < 260; i++) { ctx.fillStyle = `rgba(255,240,220,${0.25 + rnd() * 0.6})`; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 0.8 + rnd() * 2, 0, Math.PI * 2); ctx.fill(); }
+      for (let i = 0; i < 30; i++) {
+        const x = W * 0.15 + rnd() * W * 0.3, y = H * 0.12 + rnd() * H * 0.2, r = 30 + rnd() * 70;
+        const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, 'rgba(200,220,255,0.18)'); g.addColorStop(1, 'rgba(200,220,255,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+      }
+      const g = ctx.createRadialGradient(W * 0.68, H * 0.42, 0, W * 0.68, H * 0.42, 200);
+      g.addColorStop(0, 'rgba(255,220,170,0.95)'); g.addColorStop(0.35, 'rgba(255,150,90,0.6)'); g.addColorStop(1, 'rgba(255,120,80,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(W * 0.68, H * 0.42, 200, 0, Math.PI * 2); ctx.fill();
+      for (let k = 0; k < 3; k++) {
+        ctx.strokeStyle = `rgba(${230 - k * 20},${150 - k * 20},${100 - k * 10},${0.35 - k * 0.08})`; ctx.lineWidth = 46 - k * 12;
+        ctx.beginPath(); ctx.ellipse(W * 0.68, H * 0.42, 420 + k * 70, 120 + k * 22, -0.25, 0, Math.PI * 2); ctx.stroke();
+      }
+    } else if (name === 'quasistar') {
+      // the black hole heart: a huge dark circle ringed with glowing gas, and stars being pulled in
+      const cx = W * 0.6, cy = H * 0.38;
+      for (let i = 0; i < 260; i++) { ctx.fillStyle = `rgba(230,214,255,${0.2 + rnd() * 0.6})`; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 0.8 + rnd() * 2, 0, Math.PI * 2); ctx.fill(); }
+      for (let k = 0; k < 4; k++) {
+        ctx.strokeStyle = `rgba(${255 - k * 30},${150 + k * 20},${120 + k * 40},${0.45 - k * 0.08})`; ctx.lineWidth = 34 - k * 6;
+        ctx.beginPath(); ctx.ellipse(cx, cy, 300 + k * 60, 80 + k * 16, 0.12, 0, Math.PI * 2); ctx.stroke();
+      }
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 220);
+      g.addColorStop(0, 'rgba(2,0,8,1)'); g.addColorStop(0.55, 'rgba(10,0,30,1)'); g.addColorStop(0.7, 'rgba(180,120,255,0.8)'); g.addColorStop(1, 'rgba(120,60,200,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, 220, 0, Math.PI * 2); ctx.fill();
+    } else if (name === 'neutron') {
+      // icy sky, sweeping light beams in the distance
+      for (let i = 0; i < 320; i++) { ctx.fillStyle = `rgba(220,250,255,${0.25 + rnd() * 0.6})`; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 0.8 + rnd() * 2, 0, Math.PI * 2); ctx.fill(); }
+      const cx = W * 0.3, cy = H * 0.3;
+      for (const a of [0.5, 0.5 + Math.PI]) {
+        const g = ctx.createLinearGradient(cx, cy, cx + Math.cos(a) * 900, cy + Math.sin(a) * 900);
+        g.addColorStop(0, 'rgba(180,240,255,0.5)'); g.addColorStop(1, 'rgba(180,240,255,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(a - 0.08) * 1400, cy + Math.sin(a - 0.08) * 1400); ctx.lineTo(cx + Math.cos(a + 0.08) * 1400, cy + Math.sin(a + 0.08) * 1400); ctx.closePath(); ctx.fill();
+      }
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 90);
+      g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.3, 'rgba(160,240,255,0.8)'); g.addColorStop(1, 'rgba(80,160,255,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, 90, 0, Math.PI * 2); ctx.fill();
     } else {
       // night sky for Star Station
       for (let i = 0; i < 380; i++) { ctx.fillStyle = `rgba(255,255,240,${0.3 + rnd() * 0.7})`; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 0.8 + rnd() * 2.6, 0, Math.PI * 2); ctx.fill(); }
@@ -437,7 +498,11 @@ export async function buildThemeObjects(scene, name) {
   add('gravorb', 64, 64, [0, 1].map(i => `<circle cx="32" cy="32" r="31" fill="url(#go)"/><circle cx="32" cy="32" r="21" fill="${i ? '#5ec26a' : '#ff6a9a'}" stroke="${INK}" stroke-width="3"/>` +
     `<g transform="rotate(${i ? 180 : 0} 32 32)"><path d="M22 34 L32 22 L42 34 M22 44 L32 32 L42 44" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`),
     `<radialGradient id="go"><stop offset="0.5" stop-color="#ffd0e0" stop-opacity="0.8"/><stop offset="1" stop-color="#ff6a9a" stop-opacity="0"/></radialGradient>`);
+  add('cap-dust', 24, 30, capsule('#7a4a3a', '#d8905a', '#ffd0a0', 30, '#ffc080'));
+  add('cap-void', 24, 26, capsule('#2a1650', '#b58aff', '#f0e6ff', 26, '#d6b8ff'));
+  add('cap-ice', 24, 26, capsule('#2a5a7a', '#8fe8ff', '#ffffff', 26, '#c8f6ff'));
   add('windstreak', 64, 8, [`<path d="M2 4 L62 4" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.9"/>`]);
   add(`obj-done-${name}`, 2, 2, ['']);
+  jobs.push(buildBatch3Art(scene));
   await Promise.all(jobs);
 }

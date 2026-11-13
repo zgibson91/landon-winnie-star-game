@@ -70,6 +70,7 @@ export class Lever {
     if (this.o.opens && s.doors[this.o.opens]) s.time.delayedCall(250, () => s.doors[this.o.opens].unlock());
     if (this.o.starts && s.movers[this.o.starts]) s.movers[this.o.starts].start();
     if (this.o.swap && s.phase) s.phase.toggle();
+    if (this.o.freezes && s.rings[this.o.freezes]) s.rings[this.o.freezes].setFrozen(this.on);
     s.events.emit('lever', this);
   }
   update(dt) {

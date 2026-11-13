@@ -42,6 +42,10 @@ export function checkLevel(def) {
         const x = (o.x + (o.dx || 0) * k) * TILE, y = (o.y + (o.dy || 0) * k) * TILE;
         extraOneWay.push({ x0: x, x1: x + (o.w || 3) * TILE, y });
       }
+    } else if (o.t === 'ring') {
+      // dust-ring rocks: available anywhere along their circle
+      const R = (o.r || 3) * TILE, w = (o.w || 2) * TILE, cx = o.x * TILE + TILE / 2, cy = o.y * TILE + TILE / 2;
+      for (let i = 0; i < 48; i++) { const a = i / 48 * Math.PI * 2; extraOneWay.push({ x0: cx + Math.cos(a) * R - w / 2, x1: cx + Math.cos(a) * R + w / 2, y: cy + Math.sin(a) * R }); }
     } else if (o.t === 'pulse') {
       const cx = o.x * TILE + TILE / 2, w = (o.max ?? 4) * TILE;
       extraOneWay.push({ x0: cx - w / 2, x1: cx + w / 2, y: o.y * TILE });
@@ -54,7 +58,7 @@ export function checkLevel(def) {
     } else if (o.t === 'mirror') {
       grid[o.y][o.x] = 1;
       if (!o.fixed) bells.push({ x: o.x * TILE + TILE / 2, y: o.y * TILE + TILE / 2, id: `mirror@${o.x},${o.y}`, bump: true });
-    } else if (o.t === 'swap') orbs.push({ x: o.x * TILE + TILE / 2, y: o.y * TILE + TILE / 2, to: o.to ? (o.to === 'dark' ? 1 : 0) : null });
+    } else if (o.t === 'swap') orbs.push({ x: o.x * TILE + TILE / 2, y: o.y * TILE + TILE / 2, to: o.to ? (o.to === 'dark' ? 1 : 0) : null, rx: o.wide ? 40 : 34, ry: o.wide ? 64 : 50 });
     else if (o.t === 'swapclock') { flippers.push({ kind: 'clock', x0: o.x * TILE, x1: o.x2 * TILE }); clocks.push({ x0: o.x * TILE, x1: o.x2 * TILE }); }
     else if (o.t === 'gravity') gorbs.push({ x: o.x * TILE + TILE / 2, y: o.y * TILE + TILE / 2, to: o.to === 'down' ? 1 : -1 });
     else if (o.t === 'pad') padSpots.push({ c: o.x, r: o.y, id: o.id });
@@ -156,7 +160,7 @@ export function checkLevel(def) {
       // a clock zone can flip the side while Landon is in the air
       if (flipAt != null && !flipped && t >= flipAt && clocks.some(c => x > c.x0 && x < c.x1)) { PH = 1 - PH; flipped = true; }
       for (let i = 0; i < orbs.length; i++) {
-        const o = orbs[i], inside = Math.abs(x - o.x) < 40 && Math.abs(bottom - BH / 2 - o.y) < 64;
+        const o = orbs[i], inside = Math.abs(x - o.x) < o.rx && Math.abs(bottom - BH / 2 - o.y) < o.ry;
         if (inside && !inOrb[i]) PH = o.to == null ? 1 - PH : o.to;
         inOrb[i] = inside;
       }

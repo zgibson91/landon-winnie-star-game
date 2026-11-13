@@ -12,6 +12,7 @@ import * as O from '../level/objects.js';
 import { HubPortal, HubDoor, CatBed } from '../level/hubObjects.js';
 import * as M from '../level/mechanics.js';
 import * as M2 from '../level/mechanics2.js';
+import * as M3 from '../level/mechanics3.js';
 import { makeText } from '../ui/ui.js';
 import { STAR_BY_ID } from '../data/stars.js';
 
@@ -38,13 +39,14 @@ export class LevelScene extends Phaser.Scene {
     this.theme = THEMES[def.theme];
     this.assist = !!Save.settings.assist;
     this.invincible = !!Save.settings.invincible;
-    this.hzRate = this.assist ? 0.7 : 1;
+    this.baseRate = this.assist ? 0.7 : 1; this.hzRate = this.baseRate; this.timeK = 1;
     this.levelTime = 0; this.hz = 0; this.fails = 0; this.cpFails = 0; this.hintLevel = 0;
     this.glimmers = 0; this.paused = false; this.finished = false; this.busyModal = false;
     this.runShards = [false, false, false];
     this.objs = []; this.doors = {}; this.pounceTargets = []; this.walkers = []; this.hidden = []; this.revealables = [];
     this.portals = []; this.hubDoors = []; this.interact = null;
     this.movers = {}; this.beams = null; this.squeezes = []; this.pads = {}; this.songstones = [];
+    this.rings = {}; this.bossFights = []; this.boss = null; this.bubbles = [];
     Audio.setMusicTone && Audio.setMusicTone(false);
     this.phase = this.lv.rows.some(r => /[LD]/.test(r)) ? new M.PhaseSystem(this) : null;
 
@@ -228,6 +230,12 @@ export class LevelScene extends Phaser.Scene {
         case 'pad': { const pd = add(new M2.Pad(this, o)); this.pads[o.id] = pd; break; }
         case 'songstone': this.songstones.push(add(new M2.SongStone(this, o))); break;
         case 'gravity': add(new M2.GravityOrb(this, o)); break;
+        case 'ring': add(new M3.RingWheel(this, o)); break;
+        case 'pull': add(new M3.Pull(this, o)); break;
+        case 'slow': this.bubbles.push(add(new M3.SlowBubble(this, o))); break;
+        case 'pulsar': add(new M3.Pulsar(this, o)); break;
+        case 'teaser': add(new M3.Teaser(this, o)); break;
+        case 'boss': add(o.kind === 'reaper' ? new M3.Reaper(this, o) : new M3.DustKing(this, o)); break;
         case 'text': add({ update() {}, t: makeText(this, o.x * TILE + TILE / 2, o.y * TILE + TILE / 2, o.text, o.size || 26, { wrap: o.wrap }).setDepth(15) }); break;
         default: console.warn('unknown object', o.t);
       }
@@ -273,6 +281,14 @@ export class LevelScene extends Phaser.Scene {
     if (!this.ready) return;
     const dt = Math.min(deltaMs / 1000, 1 / 30);
     if (!this.busyModal) {
+      // slow-time bubbles: hazards (and everything on the hazard clock) crawl while Landon is inside one
+      if (this.bubbles.length) {
+        const inside = !this.player.dead && this.bubbles.some(b => b.contains(this.player));
+        const want = inside ? 0.3 : 1;
+        this.timeK += (want - this.timeK) * Math.min(1, dt * 6);
+        if (inside !== this.wasSlow) { this.wasSlow = inside; Audio.setMusicTone && Audio.setMusicTone(inside); }
+      }
+      this.hzRate = this.baseRate * this.timeK;
       this.levelTime += dt; this.hz += dt * this.hzRate;
     }
     // keep rhythm music locked to the game clock
@@ -367,7 +383,7 @@ export class LevelScene extends Phaser.Scene {
       if (best) act = { kind: 'pounce', target: best };
     }
     if (!act && Save.hasAbility('meow')) {
-      if (this.songstones.some(st => st.near(p)) || this.walkers.some(e => e.alive && Math.abs(e.x - p.x) < ABILITY_RANGE.meow && Math.abs(e.y - p.bottom) < 200)) act = { kind: 'meow' };
+      if ((this.boss && this.boss.meowable && this.boss.meowable(p)) || this.songstones.some(st => st.near(p)) || this.walkers.some(e => e.alive && Math.abs(e.x - p.x) < ABILITY_RANGE.meow && Math.abs(e.y - p.bottom) < 200)) act = { kind: 'meow' };
     }
     if (!act && Save.hasAbility('nightEyes')) act = { kind: 'eyes' };
     this.winnieAction = act;
@@ -431,6 +447,7 @@ export class LevelScene extends Phaser.Scene {
   }
 
   currentHints() {
+    if (this.boss && this.boss.active && !this.boss.over && this.boss.hints()) return this.boss.hints();
     const sec = this.lv.sections[this.cp.section];
     const p = this.lv.sections[this.lv.sectionAt(Math.floor(this.player.x / TILE))];
     return (p && p.hints) || (sec && sec.hints) || null;
@@ -477,10 +494,19 @@ export class LevelScene extends Phaser.Scene {
     p.teleport(this.cp.x, this.cp.y);
     p.dead = false; p.invuln = 0.7; p.vx = 0; p.play('idle'); p.squash(0.8, 1.2);
     this.winnie.reset();
+    for (const bf of this.bossFights) bf.onRespawn();
     this.cameras.main.fadeIn(260, 18, 11, 46);
     this.cameras.main.centerOn(p.x, p.y);
     Audio.sfx('respawn');
     this.fx.starBurst(p.x, p.body.y, 10, 0xffe680);
+  }
+
+  // A boss was beaten. The Reaper's ends the game: credits roll, then the level-complete screen.
+  bossWon(boss) {
+    if (boss.name !== 'The Reaper') return;
+    Save.data.beatReaper = true; Save.save();
+    this.freeze(true);
+    this.scene.launch('Credits', { onClose: () => { this.freeze(false); this.finishLevel({ x: boss.cxA, y: boss.floor }); } });
   }
 
   finishLevel(gate) {

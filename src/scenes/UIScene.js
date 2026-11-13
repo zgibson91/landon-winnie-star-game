@@ -29,7 +29,8 @@ export class UIScene extends Phaser.Scene {
       toast: (t) => this.toast(t),
       'hint-available': () => this.showHint(true),
       'hint-reset': () => this.showHint(false),
-      'level-ready': () => { this.showHint(false); this.layout(); },
+      'level-ready': () => { this.showHint(false); this.bossBar(null); this.layout(); },
+      'boss-ui': (b) => this.bossBar(b),
     };
     for (const [k, fn] of Object.entries(this.handlers)) ge.on(k, fn);
     this.events.once('shutdown', () => { for (const [k, fn] of Object.entries(this.handlers)) ge.off(k, fn); });
@@ -74,6 +75,7 @@ export class UIScene extends Phaser.Scene {
     this.hudGlim.setPosition(s.l + 20, s.t + 40);
     this.hudShards.setPosition(s.l + 200, s.t + 40);
     this.hudTimer.setPosition(vw / 2, s.t + 40);
+    if (this.boss) this.boss.setPosition(vw / 2, s.t + (this.hudTimer.visible ? 92 : 44));
     this.controls.setVisible(this.touchMode);
     this.btnPause.setVisible(true);
   }
@@ -152,7 +154,7 @@ export class UIScene extends Phaser.Scene {
     const lvl = this.scene.get('Level');
     const inLevel = lvl && lvl.scene.isActive() && lvl.ready;
     const modal = this.scene.isActive('Pause') || this.scene.isActive('Parent') || this.scene.isActive('Complete') || this.scene.isActive('Learn') ||
-      this.scene.isActive('Closet') || this.scene.isActive('Museum') || this.scene.isActive('Trophy') || this.scene.isActive('Telescope');
+      this.scene.isActive('Closet') || this.scene.isActive('Museum') || this.scene.isActive('Trophy') || this.scene.isActive('Telescope') || this.scene.isActive('Credits');
     const showPlay = inLevel && !modal;
     this.hud.setVisible(inLevel);
     this.controls.setVisible(this.touchMode && showPlay);
@@ -215,6 +217,36 @@ export class UIScene extends Phaser.Scene {
       this.btnWinnie.setAlpha(kind ? 1 : 0.5);
       if (kind === 'pounce' || kind === 'go' || kind === 'squeeze') this.tweens.add({ targets: this.btnWinnie, scale: 1.15, duration: 120, yoyo: true });
     }
+  }
+
+  // ---- boss health bar: name, three hearts, and a pip for each phase ----
+  bossBar(b) {
+    if (this.boss) { this.boss.destroy(); this.boss = null; }
+    if (!b || !b.show) return;
+    const c = this.add.container(0, 0).setDepth(20);
+    const g = this.add.graphics();
+    const w = 330;
+    g.fillStyle(INK, 0.55); g.fillRoundedRect(-w / 2, -26, w, 66, 20);
+    c.add(g);
+    c.add(makeText(this, 0, -8, b.name, 22, { strokeW: 5, color: '#ffd0f0' }));
+    const heart = (x, y, full) => {
+      const h = this.add.graphics();
+      h.fillStyle(full ? 0xff4a6a : 0x4a3a66, 1); h.lineStyle(3, INK, 1);
+      h.fillCircle(x - 6, y - 3, 7.5); h.fillCircle(x + 6, y - 3, 7.5);
+      h.fillTriangle(x - 13.5, y, x + 13.5, y, x, y + 14);
+      if (full) { h.fillStyle(0xffffff, 0.6); h.fillCircle(x - 8, y - 6, 2.4); }
+      return h;
+    };
+    for (let i = 0; i < b.max; i++) c.add(heart((i - (b.max - 1) / 2) * 34 - (b.phases > 1 ? 40 : 0), 22, i < b.hearts));
+    if (b.phases > 1) {
+      for (let i = 0; i < b.phases; i++) {
+        const done = i < b.phase - 1, cur = i === b.phase - 1;
+        c.add(this.add.circle(70 + i * 22, 22, 7, done ? 0x7dff9a : cur ? 0xffd75e : 0x4a3a66).setStrokeStyle(2.5, INK));
+      }
+    }
+    this.boss = c; this.hud.add(c);
+    c.setScale(0.6); this.tweens.add({ targets: c, scale: 1, duration: 200, ease: 'Back.easeOut' });
+    this.layout();
   }
 
   // ---- hints ----

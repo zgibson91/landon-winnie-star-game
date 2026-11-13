@@ -4,7 +4,8 @@ import { Input } from '../core/input.js';
 import { Save } from '../core/save.js';
 import { Audio } from '../audio/audio.js';
 import { makeText, makeButton, makePanel, FocusNav } from '../ui/ui.js';
-import { STARS, STAR_BY_ID, FINAL_SHARDS } from '../data/stars.js';
+import { STARS, MAIN_STARS, STAR_BY_ID, FINAL_SHARDS } from '../data/stars.js';
+import { levelUnlocked } from '../level/hubObjects.js';
 import { landonFrameIndex } from '../art/landon.js';
 
 class Menu extends Phaser.Scene {
@@ -203,6 +204,7 @@ const COMPARE = {
   stephenson: 'Stephenson 2-18 would be almost as long as a blue whale!',
   wohg64: 'WOH G64 would be about a humpback whale!',
   quasistar: 'A quasi-star might be as big as a whole football field!',
+  neutron: 'A neutron star would be smaller than a speck of dust, but heavier than a mountain!',
 };
 export class MuseumScene extends Menu {
   constructor() { super('Museum'); }
@@ -211,9 +213,11 @@ export class MuseumScene extends Menu {
     makePanel(this, this.cx, this.cy, Math.min(1100, this.vw - 40), 640, { color: 0x24305e });
     makeText(this, this.cx, this.cy - 280, 'Star Museum', 42);
     const left = this.cx - Math.min(1100, this.vw - 40) / 2 + 30;
-    const btns = STARS.map((s, i) => makeButton(this, left + 130 + (i % 2) * 0, this.cy - 220 + i * 50, 240, 44, s.short, () => this.pick(s), { size: 19, color: Phaser.Display.Color.HexStringToColor(s.color).color }));
+    const list = STARS.filter(s => !s.bonus || levelUnlocked(s));
+    const gap = list.length > 10 ? 46 : 50;
+    const btns = list.map((s, i) => makeButton(this, left + 130 + (i % 2) * 0, this.cy - 220 + i * 50, 240, 44, s.short, () => this.pick(s), { size: 19, color: Phaser.Display.Color.HexStringToColor(s.color).color }));
     // two columns if needed
-    btns.forEach((b, i) => b.setPosition(left + 130, this.cy - 222 + i * 50));
+    btns.forEach((b, i) => b.setPosition(left + 130, this.cy - 222 + i * gap));
     this.view = this.add.container(0, 0);
     this.areaX = left + 270; this.areaW = this.cx + Math.min(1100, this.vw - 40) / 2 - 30 - this.areaX;
     const close = makeButton(this, this.cx + Math.min(1100, this.vw - 40) / 2 - 110, this.cy - 280, 160, 56, 'Done', () => this.closeMenu(data.onClose), { size: 24, color: 0x5ec26a });
@@ -222,24 +226,33 @@ export class MuseumScene extends Menu {
   }
   pick(s) {
     this.view.removeAll(true);
-    const cx = this.areaX + this.areaW / 2, cy = this.cy - 30;
-    const r = s.id === 'sun' ? 90 : 140;
+    const cx0 = this.areaX + this.areaW / 2, cy = this.cy - 30;
+    const tiny = s.size < 1; // the neutron star: a speck next to a big Sun
+    const r = tiny ? 8 : s.id === 'sun' ? 90 : 140;
+    const lr = tiny ? 110 : r; // layout radius for the text around the picture
+    const cx = tiny ? cx0 + 110 : cx0;
     const col = Phaser.Display.Color.HexStringToColor(s.color).color;
-    const glow = this.add.image(cx, cy, 'softglow').setScale(r / 16).setTint(col).setAlpha(0.45);
-    const disc = this.add.circle(cx, cy, r, col).setStrokeStyle(6, 0x2a1f3d);
+    const glow = this.add.image(cx, cy, 'softglow').setScale(Math.max(r, 20) / 16).setTint(col).setAlpha(0.45);
+    const disc = this.add.circle(cx, cy, r, col).setStrokeStyle(tiny ? 3 : 6, 0x2a1f3d);
     const shine = this.add.ellipse(cx - r * 0.35, cy - r * 0.42, r * 0.6, r * 0.28, 0xffffff, 0.35);
     this.view.add([glow, disc, shine]);
-    if (s.id !== 'sun') {
+    if (tiny) {
+      const sx = cx0 - 90;
+      const sun = this.add.circle(sx, cy, lr, 0xffcf4a).setStrokeStyle(6, 0x2a1f3d);
+      const lab = makeText(this, sx, cy, 'the Sun', 26);
+      const arrow = makeText(this, cx, cy + 40, '↑ the neutron star\n(it would really be\nmuch, much tinier!)', 17, { wrap: 220 });
+      this.view.add([sun, lab, arrow]);
+    } else if (s.id !== 'sun') {
       // the Sun at the same scale (never smaller than a dot you can see)
       const sx = cx + r + 34, sy = cy + r - 16;
       const dot = this.add.circle(sx, sy, Math.max(2.5, r / s.size), 0xffcf4a).setStrokeStyle(1.5, 0x2a1f3d);
       const lab = makeText(this, sx + 12, sy, '← the Sun', 18, { ox: 0 });
       this.view.add([dot, lab]);
     }
-    const name = makeText(this, cx, cy - r - 28, s.name, 32);
-    const size = makeText(this, cx, cy, s.sizeText, 24, { wrap: r * 1.8 });
-    const cmp = makeText(this, cx, cy + r + 48, COMPARE[s.id], 24, { wrap: this.areaW - 20, color: '#ffe680' });
-    const fact = makeText(this, cx, cy + r + 100, s.museum, 19, { wrap: this.areaW - 20, color: '#e6deff', stroke: false });
+    const name = makeText(this, cx0, cy - lr - (tiny ? 54 : 28), s.name, 32);
+    const size = tiny ? makeText(this, cx0, cy - lr - 18, s.sizeText, 22) : makeText(this, cx, cy, s.sizeText, 24, { wrap: r * 1.8 });
+    const cmp = makeText(this, cx0, cy + lr + 48, COMPARE[s.id], 24, { wrap: this.areaW - 20, color: '#ffe680' });
+    const fact = makeText(this, cx0, cy + lr + 48 + cmp.displayHeight / 2 + 10, s.museum, 19, { wrap: this.areaW - 20, color: '#e6deff', stroke: false, oy: 0 });
     this.view.add([name, size, cmp, fact]);
     [disc, glow].forEach(o => { const k = o.scale; o.setScale(k * 0.6); this.tweens.add({ targets: o, scale: k, duration: 300, ease: 'Back.easeOut' }); });
     Audio.sfx('tap');
@@ -253,8 +266,8 @@ export class TrophyScene extends Menu {
     this.setup();
     const W = Math.min(1100, this.vw - 40);
     makePanel(this, this.cx, this.cy, W, 640, { color: 0x6a3b1f });
-    makeText(this, this.cx, this.cy - 280, `Trophy Wall   ★ ${Save.totalShards()} / 30`, 40, { color: '#ffe680' });
-    STARS.forEach((s, i) => {
+    makeText(this, this.cx, this.cy - 280, `Trophy Wall   ★ ${MAIN_STARS.reduce((n, s) => n + Save.shards(s.id).filter(Boolean).length, 0)} / 30`, 40, { color: '#ffe680' });
+    MAIN_STARS.forEach((s, i) => {
       const col = i % 5, row = Math.floor(i / 5);
       const x = this.cx + (col - 2) * (W - 80) / 5, y = this.cy - 150 + row * 210;
       const done = Save.data.done[s.id];
@@ -268,6 +281,12 @@ export class TrophyScene extends Menu {
     });
     const secrets = Object.keys(Save.data.secrets).length;
     makeText(this, this.cx - W / 2 + 40, this.cy + 280, `Secrets found: ${secrets} / 2`, 22, { ox: 0 });
+    const bonus = STAR_BY_ID.neutron;
+    if (levelUnlocked(bonus)) {
+      const bx = this.cx - 40, by = this.cy + 280;
+      makeText(this, bx, by, 'Bonus: Neutron Star', 22, { color: '#8fe8ff' });
+      Save.shards('neutron').forEach((h, k) => this.add.image(bx + 150 + k * 34, by, h ? 'shard' : 'shard-ghost').setScale(0.36));
+    }
     const close = makeButton(this, this.cx + W / 2 - 110, this.cy + 270, 160, 56, 'Done', () => this.closeMenu(data.onClose), { size: 24, color: 0x5ec26a });
     this.nav = new FocusNav(this, [close], { onBack: () => close.press() });
   }
@@ -295,4 +314,63 @@ export class TelescopeScene extends Menu {
   }
 }
 
-export const MENU_SCENES = [PauseScene, ParentScene, LearnScene, CompleteScene, ClosetScene, MuseumScene, TrophyScene, TelescopeScene];
+// ---------------------------------------------------------------- Credits (after The Reaper)
+export class CreditsScene extends Menu {
+  constructor() { super('Credits'); }
+  create(data) {
+    this.setup();
+    this.data0 = data;
+    this.add.rectangle(this.cx, this.cy, 5000, 5000, 0x0b0720, 1).setInteractive();
+    for (let i = 0; i < 160; i++) { const s = this.add.circle(Math.random() * this.vw, Math.random() * this.vh, Math.random() * 1.8 + 0.5, 0xffffff, 0.3 + Math.random() * 0.6); this.tweens.add({ targets: s, alpha: 0.1, duration: 600 + Math.random() * 1400, yoyo: true, repeat: -1 }); }
+    Audio.playSong('credits');
+    const lines = [
+      ['Landon and Winnie', 54, '#ffe680'], ['Journey to the Stars', 36, '#c9bfff'], ['', 30],
+      ['You saved the stars!', 34, '#7dff9a'], ['', 30],
+      ['Starring', 24, '#9fd8ff'], ['Landon, the bravest star explorer', 30], ['Winnie, the calico kitten', 30], ['and a little lost star', 30], ['', 30],
+      ['Stars visited', 24, '#9fd8ff'],
+      ...MAIN_STARS.map(s => [`${s.name}: ${s.sizeText}`, 24, s.glow]), ['', 30],
+      ['Made for Landon, with love', 30, '#ffb3c6'], ['', 20],
+      ['Every picture and every song', 22, '#e6deff'], ['was drawn and played by code.', 22, '#e6deff'], ['', 20],
+      ['Game engine: Phaser (MIT license)', 20, '#c9bfff'], ['', 40],
+      ['A new portal opened in Star Station...', 26, '#8fe8ff'], ['the Neutron Star!', 34, '#8fe8ff'], ['', 30],
+      ['Thanks for playing!', 44, '#ffe680'],
+    ];
+    this.roll = this.add.container(0, this.vh + 40);
+    let y = 0;
+    for (const [t, size, color] of lines) { if (t) this.roll.add(makeText(this, this.cx, y, t, size, { color: color || '#fff8e1', wrap: this.vw - 80 })); y += size + 18; }
+    this.rollH = y;
+    this.roll.setDepth(1);
+    // a strip of starry ground along the bottom: the credits scroll up from behind it
+    const band = this.add.graphics().setDepth(5);
+    band.fillStyle(0x0b0720, 1).fillRect(-50, this.vh - 120, this.vw + 100, 140);
+    band.fillStyle(0x3a2466, 1).fillRect(-50, this.vh - 40, this.vw + 100, 60);
+    band.lineStyle(4, 0xb58aff, 1).lineBetween(-50, this.vh - 40, this.vw + 100, this.vh - 40);
+    // Landon and Winnie walking along the bottom
+    const lf = landonFrameIndex('run');
+    this.landon = this.add.sprite(-80, this.vh - 38, `landon-${Save.data.outfit}`, lf).setOrigin(0.5, 1).setScale(0.42).setDepth(6);
+    this.landon.play(`landon-${Save.data.outfit}-run`);
+    this.winnie = this.add.sprite(-150, this.vh - 36, 'winnie', 0).setOrigin(0.5, 1).setScale(0.42).setDepth(6);
+    this.winnie.play('winnie-walk');
+    this.t = 0; this.done = false;
+    this.skip = makeText(this, this.vw - 20, this.vh - 70, 'Tap to skip', 18, { ox: 1, color: '#8f84c0', stroke: false }).setAlpha(0).setDepth(7);
+    this.input.on('pointerdown', () => { if (this.t > 2.5) this.finish(); });
+  }
+  update(time, dms) {
+    const dt = dms / 1000; this.t += dt;
+    // scroll until "Thanks for playing!" sits in the middle, then rest there for a moment
+    if (this.roll.y > this.vh / 2 - this.rollH + 40) this.roll.y -= dt * 62; else this.restT = (this.restT || 0) + dt;
+    this.landon.x += dt * 90; this.winnie.x += dt * 90;
+    if (this.landon.x > this.vw + 100) { this.landon.x = -80; this.winnie.x = -150; }
+    if (this.t > 2.5) this.skip.setAlpha(1);
+    if (this.t > 2.5 && Input.confirmPressed()) this.finish();
+    if (this.restT > 3.5) this.finish();
+  }
+  finish() {
+    if (this.done) return; this.done = true;
+    Audio.stopSong();
+    this.cameras.main.fadeOut(400, 11, 7, 32);
+    this.time.delayedCall(420, () => { this.scene.stop(); this.data0.onClose && this.data0.onClose(); });
+  }
+}
+
+export const MENU_SCENES = [PauseScene, ParentScene, LearnScene, CompleteScene, ClosetScene, MuseumScene, TrophyScene, TelescopeScene, CreditsScene];

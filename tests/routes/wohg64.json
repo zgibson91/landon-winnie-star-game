@@ -1,0 +1,336 @@
+{
+ "timeout": 500,
+ "steps": [
+  {
+   "note": "settle",
+   "dir": 0,
+   "until": "L.levelTime > 1.5 && !L.busyModal",
+   "ms": 20000
+  },
+  {
+   "dir": 1,
+   "x": 8.0,
+   "ms": 12000,
+   "note": "to the edge"
+  },
+  {
+   "stay": 8,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 8.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 8,
+   "until": "rockIn(0, 128, 150)",
+   "ms": 12000,
+   "note": "wait for a low rock"
+  },
+  {
+   "note": "hop on ring 0",
+   "jump": 450,
+   "seek": "rk(0, nearRock(0)).cx - 0.5",
+   "until": "myRock() && myRock().ring === 0",
+   "ms": 3000
+  },
+  {
+   "note": "ride to the top",
+   "seek": "myRock() ? myRock().cx : P.x/48 - 0.5",
+   "until": "myRock() && (myRock().angle > 262 && myRock().angle < 285)",
+   "ms": 15000
+  },
+  {
+   "note": "to the platform",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "stay": 19,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 19.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 19,
+   "until": "rockIn(1, 195, 225)",
+   "ms": 12000,
+   "note": "wait ring 1 rock on the left"
+  },
+  {
+   "note": "drop onto ring 1",
+   "jump": 450,
+   "seek": "rk(1, nearRock(1)).cx - 0.5",
+   "until": "myRock() && myRock().ring === 1",
+   "ms": 3000
+  },
+  {
+   "note": "ride ring 1 round to the right",
+   "seek": "myRock() ? myRock().cx : P.x/48 - 0.5",
+   "until": "myRock() && (myRock().angle < 25 && myRock().angle > 3)",
+   "ms": 15000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 52.0,
+   "ms": 12000,
+   "note": "to the ledge"
+  },
+  {
+   "stay": 52,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 52.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 52,
+   "until": "rockIn(2, 96, 106)",
+   "ms": 12000,
+   "note": "wait to freeze"
+  },
+  {
+   "note": "pounce the switch (freeze)",
+   "dir": 0,
+   "winnie": true,
+   "ms": 4000,
+   "until": "L.rings.r1.frozen"
+  },
+  {
+   "note": "hop on the frozen ring",
+   "jump": 450,
+   "seek": "rk(2, nearRock(2)).cx - 0.5",
+   "until": "myRock() && myRock().ring === 2",
+   "ms": 3000
+  },
+  {
+   "note": "pounce again (go)",
+   "dir": 0,
+   "winnie": true,
+   "ms": 4000,
+   "until": "!L.rings.r1.frozen"
+  },
+  {
+   "note": "ride toward the top",
+   "seek": "myRock() ? myRock().cx : P.x/48 - 0.5",
+   "until": "myRock() && (myRock().angle > 246 && myRock().angle < 258)",
+   "ms": 15000
+  },
+  {
+   "note": "pounce (freeze at the top)",
+   "dir": 0,
+   "winnie": true,
+   "ms": 4000,
+   "until": "L.rings.r1.frozen"
+  },
+  {
+   "note": "to the high ledge",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 84.0,
+   "ms": 12000,
+   "note": "across and down"
+  },
+  {
+   "dir": 1,
+   "x": 92.0,
+   "ms": 8000,
+   "note": "to the edge"
+  },
+  {
+   "stay": 92,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 92.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "stay": 92,
+   "until": "rockIn(3, 128, 150)",
+   "ms": 12000,
+   "note": "wait ring 3"
+  },
+  {
+   "note": "hop on ring 3",
+   "jump": 450,
+   "seek": "rk(3, nearRock(3)).cx - 0.5",
+   "until": "myRock() && myRock().ring === 3",
+   "ms": 3000
+  },
+  {
+   "note": "ride ring 3 to its right side",
+   "seek": "myRock() ? myRock().cx : P.x/48 - 0.5",
+   "until": "myRock() && (myRock().angle > 340 && myRock().angle < 355)",
+   "ms": 15000
+  },
+  {
+   "note": "to ring 4",
+   "jump": 450,
+   "seek": "rk(4, nearRock(4)).cx - 0.5",
+   "until": "myRock() && myRock().ring === 4",
+   "ms": 3000
+  },
+  {
+   "note": "ride ring 4 to its right side",
+   "seek": "myRock() ? myRock().cx : P.x/48 - 0.5",
+   "until": "myRock() && (myRock().angle > 3 && myRock().angle < 18)",
+   "ms": 15000
+  },
+  {
+   "note": "to ring 5",
+   "jump": 450,
+   "seek": "rk(5, nearRock(5)).cx - 0.5",
+   "until": "myRock() && myRock().ring === 5",
+   "ms": 3000
+  },
+  {
+   "note": "ride ring 5 to its right side",
+   "seek": "myRock() ? myRock().cx : P.x/48 - 0.5",
+   "until": "myRock() && (myRock().angle > 340 && myRock().angle < 355)",
+   "ms": 15000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 141.6,
+   "ms": 12000,
+   "note": "to the hidden steps"
+  },
+  {
+   "stay": 142,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 142.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "night eyes",
+   "dir": 0,
+   "winnie": true,
+   "ms": 6000
+  },
+  {
+   "note": "hidden 1",
+   "dir": 1,
+   "jump": 450,
+   "x": 143.6,
+   "ms": 3000
+  },
+  {
+   "stay": 144,
+   "until": "P.grounded && Math.abs(P.x/48 - 144.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "hidden 2",
+   "dir": 1,
+   "jump": 600,
+   "x": 146.6,
+   "ms": 3000
+  },
+  {
+   "stay": 147,
+   "until": "P.grounded && Math.abs(P.x/48 - 147.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "night eyes again",
+   "dir": 0,
+   "winnie": true,
+   "ms": 6000
+  },
+  {
+   "note": "hidden 3",
+   "dir": 1,
+   "jump": 600,
+   "x": 149.6,
+   "ms": 3000
+  },
+  {
+   "stay": 150,
+   "until": "P.grounded && Math.abs(P.x/48 - 150.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "hidden 4",
+   "dir": 1,
+   "jump": 600,
+   "x": 152.6,
+   "ms": 3000
+  },
+  {
+   "stay": 153,
+   "until": "P.grounded && Math.abs(P.x/48 - 153.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "stay": 154,
+   "until": "L.runShards[1]",
+   "ms": 3000
+  },
+  {
+   "note": "drop down",
+   "dir": 1,
+   "x": 156.0,
+   "ms": 4000
+  },
+  {
+   "dir": 1,
+   "until": "P.grounded",
+   "ms": 4000
+  },
+  {
+   "note": "approach walker",
+   "dir": 1,
+   "until": "!L.walkers[0].alive || L.walkers[0].x < P.x - 40 || (L.walkers[0].x > P.x && L.walkers[0].x - P.x < 120)",
+   "ms": 12000
+  },
+  {
+   "note": "jump over walker",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "approach walker",
+   "dir": 1,
+   "until": "!L.walkers[1].alive || L.walkers[1].x < P.x - 40 || (L.walkers[1].x > P.x && L.walkers[1].x - P.x < 120)",
+   "ms": 12000
+  },
+  {
+   "note": "jump over walker",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 181.0,
+   "ms": 12000,
+   "note": "into the arena"
+  },
+  {
+   "note": "boss",
+   "boss": true,
+   "ms": 180000
+  },
+  {
+   "note": "gate",
+   "dir": 1,
+   "until": "L.finished",
+   "ms": 30000
+  }
+ ]
+}

@@ -2,7 +2,7 @@
 
 A touch-first cartoon platformer for iPad. Landon and his calico kitten Winnie hop across ten real stars, from the Sun to a quasi-star with a black hole at its heart, collecting Star Shards and facing The Reaper at the end.
 
-**Status: 8 of 10 stars playable.** Star Station (the hub) plus the Sun, Arcturus, Betelgeuse, Mu Cephei, VV Cephei A, VY Canis Majoris, UY Scuti and Stephenson 2-18 are playable, along with the museum, closet, trophy wall, parent menu and the two hub secrets. WOH G64 and the Quasi-Star (with The Reaper) come next.
+**Status: complete.** All ten stars are playable, from the Sun to the Quasi-Star. Star Station (the hub) has the museum, closet, trophy wall, parent menu and two secrets. The Quasi-Star ends with The Reaper boss fight, a little story and the credits. Beating it opens a hidden bonus portal to the Neutron Star.
 
 | Star | New idea | Winnie | Bonus shard |
 | --- | --- | --- | --- |
@@ -14,6 +14,11 @@ A touch-first cartoon platformer for iPad. Landon and his calico kitten Winnie h
 | VY Canis Majoris | dust storms that hide the level, singing-crystal memory puzzles | learns Meow | every Glimmer |
 | UY Scuti | gravity orbs: fall up and run on the ceiling, spikes on both sides | flips upside down with you | no oops |
 | Stephenson 2-18 | the gauntlet: one section for every idea so far, then a 5-note song in a storm | everything | beat 4:00 |
+| WOH G64 | dust rings: rocks that orbit like a Ferris wheel, a switch that freezes a ring, and the **Dust Bunny King** mini-boss | pounces the freeze switch | beat 3:20 |
+| The Quasi-Star | black holes that pull you sideways, slow-time bubbles, and **The Reaper** (3 phases × 3 hearts) | MEOW pops its shield, POUNCE grabs its lantern | every Glimmer |
+| Neutron Star (bonus) | pulsar beams that sweep like a lighthouse, plus remixes of flares, flips and rings | everything | beat 2:10 |
+
+**The Reaper.** In phase 1 it swoops at a pink circle on the floor, then its scythe gets stuck, so you bonk its head. In phase 2 it rolls dark balls at you, then hides in a bubble that Winnie's MEOW pops. In phase 3 it opens a black hole and throws scythes, low ones to jump and high ones to stay under. When its lantern glows, Winnie POUNCES it and the Reaper tumbles out. A health bar at the top shows its hearts and phase. If Landon gets hit, he restarts at the arena lantern and the Reaper keeps the damage it has taken.
 
 ## Play it locally
 
@@ -33,7 +38,7 @@ Useful URL options:
 
 | URL | What it does |
 | --- | --- |
-| `?level=sun`, `arcturus`, `betelgeuse`, `mucephei`, `vvcephei`, `vycma`, `uyscuti`, `stephenson`, `hub` | Jump straight into a level (level-select cheat) |
+| `?level=sun`, `arcturus`, `betelgeuse`, `mucephei`, `vvcephei`, `vycma`, `uyscuti`, `stephenson`, `wohg64`, `quasistar`, `neutron`, `hub` | Jump straight into a level (level-select cheat) |
 | `?debug=1` | FPS and position overlay. Keys: **N**/**B** next/previous lantern, **0/1/3** load hub/Sun/Betelgeuse, **I** invincible |
 | `?debug=1&bodies=1` | Also draws the physics boxes |
 | `?nosw=1` | Skips the offline cache (handy while editing files) |
@@ -67,10 +72,14 @@ Useful URL options:
 
 ## How the game works
 
-- **Star Shards:** each level has 3: finish it, find its secret shard, and beat its bonus challenge (see the table above). The Quasi-Star portal opens at 20 shards.
+- **Star Shards:** each level has 3: finish it, find its secret shard, and beat its bonus challenge (see the table above). The Quasi-Star portal opens at 20 shards. The Neutron Star's 3 bonus shards don't count toward the 30.
 - **No lives:** a mistake costs about 1.5 seconds and puts Landon back at the last lantern. After 3 misses in one spot, a lightbulb appears with hints that get clearer each time you tap it.
 - **Winnie's abilities** unlock the first time a level needs them, with a one-screen picture lesson, so every level can be played in any order.
 - **Progress auto-saves** to the iPad (localStorage). If storage is blocked, it falls back to memory.
+
+## How long is it?
+
+The test bot plays each level in 1 to 3 minutes without mistakes. A young player takes about 3 to 6 minutes per star, with retries and exploring. That adds up to about **1 to 1.5 hours** to reach The Reaper and see the credits, and about **2 to 3 hours** to find all 30 shards and finish the bonus Neutron Star.
 
 ## Editing levels
 
@@ -85,7 +94,7 @@ S  secret shard   P  start   G  goal gate   C  lantern (checkpoint)   c  assist-
 w  walker enemy
 ```
 
-Objects: `flare`, `loop` (bounce arc), `mover` (add `"id"` and `"wait": true` for a lift a switch starts), `pulse` (Betelgeuse platform), `pspike`, `wind` (gusts), `lever` (star switch Winnie pounces: `opens`, `starts`, `swap`), `emitter` / `mirror` / `receiver` (light beams), `squeeze` (cat door), `swap` (sun/moon orb, `"to": "light"` or `"dark"`), `swapclock`, `storm` (dust storm), `songstone` + `pad` (Meow memory puzzle), `gravity` (orb, `"to": "up"` or `"down"`), `sign`, `shrine` (teaches an ability), `bell`, `bellpuzzle`, `door`, `shard` (with `"hidden": true` for Night Eyes), and the hub's `portal` and `hubdoor`. Each section can carry three escalating `hints`.
+Objects: `flare`, `loop` (bounce arc), `mover` (add `"id"` and `"wait": true` for a lift a switch starts), `pulse` (Betelgeuse platform), `pspike`, `wind` (gusts), `lever` (star switch Winnie pounces: `opens`, `starts`, `swap`), `emitter` / `mirror` / `receiver` (light beams), `squeeze` (cat door), `swap` (sun/moon orb, `"to": "light"` or `"dark"`), `swapclock`, `storm` (dust storm), `songstone` + `pad` (Meow memory puzzle), `gravity` (orb, `"to": "up"` or `"down"`), `ring` (dust ring: `r`, `n` rocks, `period`, negative spins the other way; a lever with `"freezes": id` and `"toggle": true` stops it), `pull` (black hole: `range`, `power`), `slow` (slow-time bubble: `r`), `pulsar` (`len`, `period`, `beams`), `boss` (`"kind": "dustking"` or `"reaper"`, arena columns `x`..`x2`, floor row `y`, `trigger` column), `teaser`, `sign`, `shrine` (teaches an ability), `bell`, `bellpuzzle`, `door`, `shard` (with `"hidden": true` for Night Eyes), and the hub's `portal` and `hubdoor`. Each section can carry three escalating `hints`.
 
 The player's physics numbers are in `src/core/constants.js`. Jump height is about 3.3 tiles, and a running jump covers about 4.5 tiles.
 
@@ -99,12 +108,13 @@ npm test                                  # all projects: iPad 1180x820 + 1024x7
 npx playwright test --project=ipad-1180   # just one
 node tests/reach.mjs                      # static reachability check of every level
 node tests/route.mjs arcturus             # watch the bot's log for one level
+node tests/boss.mjs quasistar 184         # drop the bot into a boss arena (level, arena start column)
 ```
 
 What's covered:
 
 - **Clean loads:** every level loads with no console errors, and holds ≥ 50 fps while running (Chromium with GPU).
-- **Bot playthroughs:** `tests/bot.js` plays each level from `tests/routes/<level>.json` through the real input layer and physics. It must finish the level and pick up the secret shard.
+- **Bot playthroughs:** `tests/bot.js` plays each level from `tests/routes/<level>.json` through the real input layer and physics. It must finish the level and pick up the secret shard. For boss fights it switches to a simple reactive "brain" that dodges, stomps and uses Winnie, so both bosses are proven beatable. In those runs it beats the Dust Bunny King in about 20 seconds and The Reaper in about 2 minutes, without getting hit.
 - **Reachability:** `tests/reach.mjs` simulates the jump physics over the level grid and fails if any Glimmer, shard, lantern, bell or goal can't be reached.
 - **Input, saving and offline:** multi-touch (run and jump at once), a mocked Switch-style gamepad, save and reload, blocked storage, the hint bulb, the parent-corner hold, and offline play through the service worker.
 

@@ -39,7 +39,8 @@
         {"t": "portal", "x": 57, "y": 11, "star": "uyscuti"},
         {"t": "portal", "x": 63, "y": 11, "star": "stephenson"},
         {"t": "portal", "x": 69, "y": 11, "star": "wohg64"},
-        {"t": "portal", "x": 78, "y": 11, "star": "quasistar"},
+        {"t": "portal", "x": 74, "y": 11, "star": "neutron"},
+        {"t": "portal", "x": 79, "y": 11, "star": "quasistar"},
         {"t": "catbed", "x": 3, "y": 4},
         {"t": "loop", "x": 84, "y": 12},
         {"t": "hubdoor", "kind": "telescope", "x": 88, "y": 4}

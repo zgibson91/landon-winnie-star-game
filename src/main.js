@@ -60,7 +60,7 @@ window.addEventListener('orientationchange', () => setTimeout(onResize, 250));
 game.events.on('prestep', () => Input.update());
 
 // --- scene flow ---
-const MENUS = ['Pause', 'Parent', 'Learn', 'Complete', 'Closet', 'Museum', 'Trophy', 'Telescope'];
+const MENUS = ['Pause', 'Parent', 'Learn', 'Complete', 'Closet', 'Museum', 'Trophy', 'Telescope', 'Credits'];
 function stopMenus() { for (const k of MENUS) if (game.scene.isActive(k) || game.scene.isPaused(k)) game.scene.stop(k); }
 function startLevel(id, from) {
   stopMenus();

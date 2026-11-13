@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 
-const LEVELS = ['hub', 'sun', 'arcturus', 'betelgeuse', 'mucephei', 'vvcephei', 'vycma', 'uyscuti', 'stephenson'];
+const LEVELS = ['hub', 'sun', 'arcturus', 'betelgeuse', 'mucephei', 'vvcephei', 'vycma', 'uyscuti', 'stephenson', 'wohg64', 'quasistar', 'neutron'];
 const botSrc = fs.readFileSync(new URL('./bot.js', import.meta.url), 'utf8');
 
 function watchErrors(page) {
@@ -47,7 +47,7 @@ for (const id of LEVELS) {
   });
 }
 
-for (const id of ['sun', 'arcturus', 'betelgeuse', 'mucephei', 'vvcephei', 'vycma', 'uyscuti', 'stephenson']) {
+for (const id of ['sun', 'arcturus', 'betelgeuse', 'mucephei', 'vvcephei', 'vycma', 'uyscuti', 'stephenson', 'wohg64', 'quasistar', 'neutron']) {
   test(`bot beats "${id}" and collects the secret shard`, async ({ page }, info) => {
     test.skip(info.project.name !== 'ipad-1180', 'bot runs once (desktop GPU timing)');
     test.setTimeout(560000);
@@ -181,5 +181,20 @@ test('portals still work after coming back to Star Station from a level', async 
   await levelReady(page, 'hub');
   await page.waitForTimeout(500);
   await enter('betelgeuse');
+  expect(errors).toEqual([]);
+});
+
+test('the Neutron Star portal stays hidden until The Reaper is beaten', async ({ page }) => {
+  const errors = watchErrors(page);
+  await boot(page, '&level=hub');
+  await levelReady(page, 'hub');
+  const hidden = () => page.evaluate(() => LW.level().portals.find(p => p.star.id === 'neutron').hidden);
+  await page.evaluate(() => { LW.Save.reset(); LW.game.events.emit('goto-hub', null); });
+  await levelReady(page, 'hub');
+  expect(await hidden()).toBe(true);
+  await page.evaluate(() => { LW.Save.data.done.quasistar = true; LW.Save.save(); LW.game.events.emit('goto-hub', null); });
+  await page.waitForTimeout(800);
+  await levelReady(page, 'hub');
+  expect(await hidden()).toBe(false);
   expect(errors).toEqual([]);
 });
