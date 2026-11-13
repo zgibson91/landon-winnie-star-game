@@ -42,6 +42,27 @@ export const THEMES = {
     spike: ['#e0ecff', '#7a8ad8'], plasma: ['#d0e0ff', '#6a7ae0', '#2a2a7a'],
     walker: 'walker-blue', fog: 0x9fd8ff, ember: 0xfff0d0,
   },
+  vycma: {
+    music: 'vycma', sky: ['#3a1e1a', '#8a4a2e', '#e0a060'],
+    ground: '#7a4630', speck: '#5e3424', crust: '#e8b070', crustHi: '#ffe0a8', crustLo: '#b87a48',
+    plat: '#4a2a1e', platRim: '#c08050', platHi: '#f0c088',
+    spike: ['#ffe0b0', '#c87a48'], plasma: ['#ffe0a0', '#e09048', '#8a3a1e'],
+    walker: 'walker-dust', fog: 0xc89060, ember: 0xffe0b0,
+  },
+  uyscuti: {
+    music: 'uyscuti', sky: ['#1a0820', '#5a1a48', '#ff7a8a'],
+    ground: '#4a2050', speck: '#381840', crust: '#ff8aa0', crustHi: '#ffd0dc', crustLo: '#c0506a',
+    plat: '#30143a', platRim: '#ff7a9a', platHi: '#ffc0d0',
+    spike: ['#ffe0ec', '#e05a80'], plasma: ['#ffd0e0', '#ff6a8a', '#7a1a3a'],
+    walker: 'walker-pink', fog: 0xff7a9a, ember: 0xffd0e0,
+  },
+  stephenson: {
+    music: 'stephenson', sky: ['#0c0414', '#3a0a30', '#b0204a'],
+    ground: '#341832', speck: '#241024', crust: '#ff4a6a', crustHi: '#ffb0c0', crustLo: '#a0203a',
+    plat: '#200a20', platRim: '#e0405a', platHi: '#ffa0b0',
+    spike: ['#ffd0d8', '#e0405a'], plasma: ['#ffc0a0', '#ff4a3a', '#7a0a1a'],
+    walker: 'walker-red', fog: 0xff4a6a, ember: 0xffb0c0,
+  },
   station: {
     music: 'hub', sky: ['#120d33', '#2b1d6b', '#4a2f8f'],
     ground: '#5b3d8f', speck: '#4a3078', crust: '#d99a5b', crustHi: '#f2c48a', crustLo: '#b5773f',
@@ -52,7 +73,7 @@ export const THEMES = {
 };
 
 // Tile indices in the generated tileset.
-export const TILE_IDX = { solidBase: 0, oneway: 16, spike: 20, light: 21, dark: 22 }; // 0..15 = solid by neighbor mask; 16..19 one-way L/M/R/single
+export const TILE_IDX = { solidBase: 0, oneway: 16, spike: 20, light: 21, dark: 22, spikeDown: 23 }; // 0..15 = solid by neighbor mask; 16..19 one-way L/M/R/single
 
 function rng(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
 
@@ -163,6 +184,7 @@ export function buildTileset(scene, name) {
     drawSpike(ctx, ...at(20), th);
     drawPhaseBlock(ctx, ...at(21), false);
     drawPhaseBlock(ctx, ...at(22), true);
+    { const [sx, sy] = at(23); ctx.save(); ctx.translate(sx, sy + T2); ctx.scale(1, -1); drawSpike(ctx, 0, 0, th); ctx.restore(); }
   });
   return key;
 }
@@ -227,6 +249,29 @@ function farLayer(scene, name) {
         ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + w, y + h * 0.3); ctx.lineTo(x + w * 0.6, y + h); ctx.lineTo(x - w * 0.4, y + h * 0.7); ctx.closePath(); ctx.fill();
       }
       for (let i = 0; i < 120; i++) { ctx.fillStyle = `rgba(255,170,200,${0.2 + rnd() * 0.5})`; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 1 + rnd() * 2, 0, Math.PI * 2); ctx.fill(); }
+    } else if (name === 'vycma') {
+      // a huge dusty sky: rolling brown cloud banks and drifting grit
+      for (let i = 0; i < 40; i++) {
+        const x = rnd() * W, y = rnd() * H, rx = 160 + rnd() * 300, ry = 50 + rnd() * 90;
+        ctx.fillStyle = `rgba(${200 + Math.floor(rnd() * 40)},${130 + Math.floor(rnd() * 40)},90,${0.12 + rnd() * 0.12})`;
+        ctx.beginPath(); ctx.ellipse(x, y, rx, ry, rnd() * 0.4, 0, Math.PI * 2); ctx.fill();
+      }
+      for (let i = 0; i < 260; i++) { ctx.fillStyle = `rgba(255,220,170,${0.15 + rnd() * 0.35})`; ctx.fillRect(rnd() * W, rnd() * H, 2 + rnd() * 3, 1.5); }
+    } else if (name === 'uyscuti') {
+      // starry pink space with big soft rings (things look the same upside down!)
+      for (let i = 0; i < 300; i++) { ctx.fillStyle = `rgba(255,230,240,${0.3 + rnd() * 0.6})`; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 0.8 + rnd() * 2.2, 0, Math.PI * 2); ctx.fill(); }
+      ctx.lineWidth = 18;
+      for (let i = 0; i < 5; i++) { ctx.strokeStyle = `rgba(255,140,170,${0.08 + rnd() * 0.08})`; ctx.beginPath(); ctx.ellipse(rnd() * W, rnd() * H, 200 + rnd() * 200, 60 + rnd() * 60, rnd(), 0, Math.PI * 2); ctx.stroke(); }
+    } else if (name === 'stephenson') {
+      // a crowded star cluster: lots of big red and white stars
+      for (let i = 0; i < 70; i++) {
+        const x = rnd() * W, y = rnd() * H, r = 20 + rnd() * 60;
+        const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+        const red = rnd() < 0.7;
+        g.addColorStop(0, red ? 'rgba(255,140,120,0.8)' : 'rgba(230,240,255,0.8)'); g.addColorStop(1, 'rgba(255,80,100,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+      }
+      for (let i = 0; i < 300; i++) { ctx.fillStyle = `rgba(255,220,220,${0.3 + rnd() * 0.6})`; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 0.8 + rnd() * 2, 0, Math.PI * 2); ctx.fill(); }
     } else if (name === 'vvcephei') {
       // the big red star on one side, its hot blue partner on the other
       let g = ctx.createRadialGradient(W * 0.2, H * 0.35, 0, W * 0.2, H * 0.35, 420);
@@ -381,6 +426,17 @@ export async function buildThemeObjects(scene, name) {
   add('swaporb', 64, 64, [0, 1].map(i => `<circle cx="32" cy="32" r="31" fill="url(#so${i})"/><circle cx="32" cy="32" r="21" fill="${i ? '#4a5ad8' : '#ffb84a'}" stroke="${INK}" stroke-width="3"/>` +
     (i ? moonIcon : sunIcon) + `<path d="M19 24 Q23 16 31 14" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.8"/>`),
     `<radialGradient id="so0"><stop offset="0.55" stop-color="#fff0b0" stop-opacity="0.8"/><stop offset="1" stop-color="#ffb84a" stop-opacity="0"/></radialGradient><radialGradient id="so1"><stop offset="0.55" stop-color="#c0d4ff" stop-opacity="0.8"/><stop offset="1" stop-color="#4a5ad8" stop-opacity="0"/></radialGradient>`);
+  // Song stone: a big round crystal that sleeps (0) and sings (1)
+  add('songstone', 80, 112, [0, 1].map(i => `<ellipse cx="40" cy="106" rx="34" ry="6" fill="#000" opacity="0.25"/>` +
+    `<path d="M14 106 L18 70 L40 40 L62 70 L66 106 Z" fill="#6a5aa8" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>` +
+    `<path d="M40 8 L64 40 L52 82 L28 82 L16 40 Z" fill="${i ? '#d6ccff' : '#8f7fe0'}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>` +
+    `<path d="M40 8 L40 82 M16 40 L64 40" stroke="${i ? '#ffffff' : '#b5a6ff'}" stroke-width="2"/>` +
+    (i ? `<path d="M28 52 Q32 46 36 52 M44 52 Q48 46 52 52" stroke="${INK}" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="40" cy="64" rx="6" ry="5" fill="${INK}"/>`
+       : `<path d="M28 52 Q32 56 36 52 M44 52 Q48 56 52 52" stroke="${INK}" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M36 64 L44 64" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>`)));
+  // Gravity orb: up arrows (0) or down arrows (1)
+  add('gravorb', 64, 64, [0, 1].map(i => `<circle cx="32" cy="32" r="31" fill="url(#go)"/><circle cx="32" cy="32" r="21" fill="${i ? '#5ec26a' : '#ff6a9a'}" stroke="${INK}" stroke-width="3"/>` +
+    `<g transform="rotate(${i ? 180 : 0} 32 32)"><path d="M22 34 L32 22 L42 34 M22 44 L32 32 L42 44" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`),
+    `<radialGradient id="go"><stop offset="0.5" stop-color="#ffd0e0" stop-opacity="0.8"/><stop offset="1" stop-color="#ff6a9a" stop-opacity="0"/></radialGradient>`);
   add('windstreak', 64, 8, [`<path d="M2 4 L62 4" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.9"/>`]);
   add(`obj-done-${name}`, 2, 2, ['']);
   await Promise.all(jobs);

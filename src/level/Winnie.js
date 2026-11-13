@@ -22,7 +22,7 @@ export class Winnie {
   reset() {
     this.trail.length = 0; this.busy = false;
     this.scene.tweens.killTweensOf(this);
-    this.x = this.player.x - 50 * this.player.facing; this.y = this.player.bottom;
+    this.x = this.player.x - 50 * this.player.facing; this.y = this.player.feet; this.up = this.player.g < 0;
     this.sprite.setVisible(true).setAlpha(1);
     this.play('sit');
   }
@@ -30,9 +30,9 @@ export class Winnie {
   record() {
     const p = this.player;
     const last = this.trail[this.trail.length - 1];
-    const x = p.x, y = p.bottom;
+    const x = p.x, y = p.feet;
     if (!last || Math.abs(last.x - x) + Math.abs(last.y - y) > 3) {
-      this.trail.push({ x, y, g: p.grounded });
+      this.trail.push({ x, y, g: p.grounded, up: p.g < 0 });
       if (this.trail.length > TRAIL_MAX) this.trail.shift();
     }
   }
@@ -43,11 +43,11 @@ export class Winnie {
     for (let i = this.trail.length - 1; i > 0; i--) {
       const a = this.trail[i], b = this.trail[i - 1];
       const d = Math.hypot(a.x - b.x, a.y - b.y);
-      if (acc + d >= dist) { const t = (dist - acc) / d; return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, g: a.g && b.g }; }
+      if (acc + d >= dist) { const t = (dist - acc) / d; return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, g: a.g && b.g, up: b.up }; }
       acc += d;
     }
     const f = this.trail[0];
-    return f ? { x: f.x, y: f.y, g: f.g } : { x: this.player.x - 50, y: this.player.bottom, g: true };
+    return f ? { x: f.x, y: f.y, g: f.g, up: f.up } : { x: this.player.x - 50, y: this.player.feet, g: true, up: this.player.g < 0 };
   }
 
   update(dt) {
@@ -55,6 +55,7 @@ export class Winnie {
     if (!p.dead) this.record();
     if (!this.busy) {
       const tgt = this.behind(64);
+      this.up = !!tgt.up;
       const dx = tgt.x - this.x, dy = tgt.y - this.y;
       const dist = Math.hypot(dx, dy);
       if (dist > 700) { this.x = tgt.x; this.y = tgt.y; }
@@ -81,7 +82,8 @@ export class Winnie {
       }
     }
     this.sx += (1 - this.sx) * Math.min(1, dt * 10); this.sy += (1 - this.sy) * Math.min(1, dt * 10);
-    this.sprite.setPosition(this.x, this.y + 1).setScale(this.facing * this.sx / ART, this.sy / ART);
+    if (this.sprite.flipY !== !!this.up) { this.sprite.setFlipY(!!this.up); this.sprite.setOrigin(0.5, this.up ? 1 - WINNIE_FRAME.originY : WINNIE_FRAME.originY); }
+    this.sprite.setPosition(this.x, this.y + (this.up ? -1 : 1)).setScale(this.facing * this.sx / ART, this.sy / ART);
     if (this.glow.visible) this.glow.setPosition(this.x + this.facing * 13, this.y - 26);
   }
 

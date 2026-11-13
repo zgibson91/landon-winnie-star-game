@@ -1,0 +1,462 @@
+{
+ "timeout": 400,
+ "steps": [
+  {
+   "note": "settle",
+   "dir": 0,
+   "until": "L.levelTime > 1.5 && !L.busyModal",
+   "ms": 20000
+  },
+  {
+   "note": "walk into the up orb",
+   "dir": 1,
+   "until": "P.g < 0",
+   "ms": 8000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 13.0,
+   "ms": 12000,
+   "note": "ceiling edge"
+  },
+  {
+   "stay": 13,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 13.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "over the ceiling gap",
+   "dir": 1,
+   "jump": 450,
+   "x": 16.6,
+   "ms": 3000
+  },
+  {
+   "stay": 17,
+   "until": "P.grounded && Math.abs(P.x/48 - 17.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 20.6,
+   "ms": 12000
+  },
+  {
+   "note": "over the hanging spike",
+   "dir": 1,
+   "jump": 450,
+   "x": 23.6,
+   "ms": 3000
+  },
+  {
+   "stay": 24,
+   "until": "P.grounded && Math.abs(P.x/48 - 24.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "walk into the down orb",
+   "dir": 1,
+   "until": "P.g > 0",
+   "ms": 6000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 43.4,
+   "ms": 12000,
+   "note": "to the up orb"
+  },
+  {
+   "stay": 43,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 43.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "jump into the up orb",
+   "dir": 1,
+   "jump": 300,
+   "until": "P.g < 0",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 48.6,
+   "ms": 12000
+  },
+  {
+   "note": "gap 1",
+   "dir": 1,
+   "jump": 450,
+   "x": 51.6,
+   "ms": 3000
+  },
+  {
+   "stay": 52,
+   "until": "P.grounded && Math.abs(P.x/48 - 52.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 52.6,
+   "ms": 12000
+  },
+  {
+   "note": "over spike",
+   "dir": 1,
+   "jump": 450,
+   "x": 55.6,
+   "ms": 3000
+  },
+  {
+   "stay": 56,
+   "until": "P.grounded && Math.abs(P.x/48 - 56.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 55.6,
+   "ms": 12000
+  },
+  {
+   "note": "gap 2",
+   "dir": 1,
+   "jump": 450,
+   "x": 59.6,
+   "ms": 3000
+  },
+  {
+   "stay": 60,
+   "until": "P.grounded && Math.abs(P.x/48 - 60.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 60.6,
+   "ms": 12000
+  },
+  {
+   "note": "over spikes",
+   "dir": 1,
+   "jump": 600,
+   "x": 64.6,
+   "ms": 3000
+  },
+  {
+   "stay": 65,
+   "until": "P.grounded && Math.abs(P.x/48 - 65.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 65.6,
+   "ms": 12000
+  },
+  {
+   "note": "gap 3",
+   "dir": 1,
+   "jump": 450,
+   "x": 67.6,
+   "ms": 3000
+  },
+  {
+   "stay": 68,
+   "until": "P.grounded && Math.abs(P.x/48 - 68.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 71.6,
+   "ms": 12000
+  },
+  {
+   "note": "gap 4",
+   "dir": 1,
+   "jump": 450,
+   "x": 74.6,
+   "ms": 3000
+  },
+  {
+   "stay": 75,
+   "until": "P.grounded && Math.abs(P.x/48 - 75.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "walk into the down orb",
+   "dir": 1,
+   "until": "P.g > 0",
+   "ms": 6000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 88.6,
+   "ms": 10000,
+   "note": "to the flip flop"
+  },
+  {
+   "stay": 89,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 89.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "jump through up orb 91",
+   "dir": 1,
+   "jump": 450,
+   "until": "P.g < 0",
+   "ms": 3000
+  },
+  {
+   "stay": 95,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 97.4,
+   "ms": 12000
+  },
+  {
+   "stay": 97,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 97.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "through down orb 99",
+   "dir": 1,
+   "jump": 200,
+   "until": "P.g > 0",
+   "ms": 3000
+  },
+  {
+   "stay": 101,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 103.4,
+   "ms": 12000
+  },
+  {
+   "stay": 103,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 103.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "jump through up orb 105",
+   "dir": 1,
+   "jump": 450,
+   "until": "P.g < 0",
+   "ms": 3000
+  },
+  {
+   "stay": 109,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 111.4,
+   "ms": 12000
+  },
+  {
+   "stay": 111,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 111.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "through down orb 113",
+   "dir": 1,
+   "jump": 200,
+   "until": "P.g > 0",
+   "ms": 3000
+  },
+  {
+   "stay": 116,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 118.6,
+   "ms": 12000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 139.4,
+   "ms": 15000,
+   "note": "to the secret orb"
+  },
+  {
+   "stay": 139,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 139.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "jump into the up orb",
+   "dir": 1,
+   "jump": 450,
+   "until": "P.g < 0",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 142.6,
+   "ms": 12000
+  },
+  {
+   "note": "over spike",
+   "dir": 1,
+   "jump": 450,
+   "x": 145.6,
+   "ms": 3000
+  },
+  {
+   "stay": 146,
+   "until": "P.grounded && Math.abs(P.x/48 - 146.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 147.6,
+   "ms": 12000
+  },
+  {
+   "note": "over spikes",
+   "dir": 1,
+   "jump": 600,
+   "x": 151.6,
+   "ms": 3000
+  },
+  {
+   "stay": 152,
+   "until": "P.grounded && Math.abs(P.x/48 - 152.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 153.6,
+   "ms": 12000
+  },
+  {
+   "note": "over spike",
+   "dir": 1,
+   "jump": 450,
+   "x": 156.6,
+   "ms": 3000
+  },
+  {
+   "stay": 157,
+   "until": "P.grounded && Math.abs(P.x/48 - 157.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "until": "L.runShards[1]",
+   "ms": 4000
+  },
+  {
+   "note": "walk into the down orb",
+   "dir": 1,
+   "until": "P.g > 0",
+   "ms": 6000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "walk into the up orb",
+   "dir": 1,
+   "until": "P.g < 0",
+   "ms": 15000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 178.6,
+   "ms": 12000
+  },
+  {
+   "note": "over spike",
+   "dir": 1,
+   "jump": 450,
+   "x": 181.6,
+   "ms": 3000
+  },
+  {
+   "stay": 182,
+   "until": "P.grounded && Math.abs(P.x/48 - 182.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 184.6,
+   "ms": 12000
+  },
+  {
+   "note": "over spike",
+   "dir": 1,
+   "jump": 450,
+   "x": 187.6,
+   "ms": 3000
+  },
+  {
+   "stay": 188,
+   "until": "P.grounded && Math.abs(P.x/48 - 188.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "walk into the down orb",
+   "dir": 1,
+   "until": "P.g > 0",
+   "ms": 6000
+  },
+  {
+   "dir": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "gate",
+   "dir": 1,
+   "until": "L.finished",
+   "ms": 15000
+  }
+ ]
+}

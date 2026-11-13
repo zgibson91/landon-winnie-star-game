@@ -41,6 +41,7 @@
     tick() {
       const L = LW.level();
       if (!this.route || this.done || this.failed || !L || !L.ready) { if (this.route && (this.done || this.failed)) LW.Input.bot = {}; return; }
+      if (!L.__botHooked) { L.__botHooked = true; L.events.on('pad', (pd) => this.log.push(`PAD ${pd.id} @${this.where()}`)); L.events.on('meow', () => this.log.push(`MEOW @${this.where()}`)); }
       if (L.busyModal) { LW.Input.bot = { confirm: !this.blink, jump: false }; this.blink = !this.blink; this.stepStart = performance.now(); return; }
       const s = this.route[this.i];
       if (!s) { this.done = true; LW.Input.bot = {}; return; }
@@ -66,10 +67,12 @@
       const mv = (n) => { const m = mvs[n]; const b = m.zone.body; return { x: b.x / TILE, y: b.y / TILE, cx: (b.x + m.w / 2) / TILE, vx: b.velocity.x, vy: b.velocity.y }; };
       const winds = L.objs.filter(o => o.constructor.name === 'Wind');
       const wind = (n) => winds[n].state;
+      const storms = L.objs.filter(o => o.constructor.name === 'DustStorm');
+      const storm = (n) => storms[n].state;
       let fin = false;
       if (s.x != null) fin = s.dir === -1 ? P.x <= s.x * TILE + TILE / 2 : P.x >= s.x * TILE + TILE / 2;
       if (s.land) fin = (s.x == null || fin) && this.leftGround && P.grounded && el > 60;
-      if (s.until) { try { fin = (s.x == null || fin) && !!(new Function('L', 'P', 'pulse', 'flare', 'flareT', 'mv', 'wind', 'return (' + s.until + ')'))(L, P, pulse, flare, flareT, mv, wind); } catch (e) { this.failed = 'bad until: ' + e.message; } }
+      if (s.until) { try { fin = (s.x == null || fin) && !!(new Function('L', 'P', 'pulse', 'flare', 'flareT', 'mv', 'wind', 'storm', 'return (' + s.until + ')'))(L, P, pulse, flare, flareT, mv, wind, storm); } catch (e) { this.failed = 'bad until: ' + e.message; } }
       if (s.winnie) fin = this.winnieTapped && el > 120 && !L.winnie.busy && (s.until == null || fin);
       if (s.x == null && !s.land && !s.until && !s.winnie) fin = el >= (s.ms || 0);
       else if (s.ms && el >= s.ms && !fin) { this.failed = `timeout in step ${this.i} (${s.note || ''}) at ${this.where()}`; return; }

@@ -1,0 +1,632 @@
+{
+ "timeout": 400,
+ "steps": [
+  {
+   "note": "settle",
+   "dir": 0,
+   "until": "L.levelTime > 1.5 && !L.busyModal",
+   "ms": 20000
+  },
+  {
+   "dir": 1,
+   "x": 6.8,
+   "ms": 12000,
+   "note": "to the edge"
+  },
+  {
+   "stay": 7,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 7.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "hop to 11",
+   "dir": 1,
+   "jump": 450,
+   "x": 10.6,
+   "ms": 3000
+  },
+  {
+   "stay": 11,
+   "until": "P.grounded && Math.abs(P.x/48 - 11.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "hop to 16",
+   "dir": 1,
+   "jump": 450,
+   "x": 15.6,
+   "ms": 3000
+  },
+  {
+   "stay": 16,
+   "until": "P.grounded && Math.abs(P.x/48 - 16.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "hop to 21",
+   "dir": 1,
+   "jump": 450,
+   "x": 20.6,
+   "ms": 3000
+  },
+  {
+   "stay": 21,
+   "until": "P.grounded && Math.abs(P.x/48 - 21.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "hop to 26",
+   "dir": 1,
+   "jump": 450,
+   "x": 25.6,
+   "ms": 3000
+  },
+  {
+   "stay": 26,
+   "until": "P.grounded && Math.abs(P.x/48 - 26.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "hop to 31",
+   "dir": 1,
+   "jump": 450,
+   "x": 30.6,
+   "ms": 3000
+  },
+  {
+   "stay": 31,
+   "until": "P.grounded && Math.abs(P.x/48 - 31.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 31.8,
+   "ms": 12000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 48.6,
+   "ms": 15000,
+   "note": "to the stone"
+  },
+  {
+   "stay": 49,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 49.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "meow at the stone",
+   "dir": 0,
+   "winnie": true,
+   "ms": 8000,
+   "until": "L.songstones[0].spr.frame.name === 1 && !L.songstones[0].singing"
+  },
+  {
+   "note": "pad 57",
+   "stay": 57,
+   "until": "P.grounded && Math.abs(P.x/48 - 57.5) < 0.2 && Math.abs(P.vx) < 1",
+   "ms": 6000
+  },
+  {
+   "dir": 0,
+   "ms": 400
+  },
+  {
+   "note": "pad 54",
+   "stay": 54,
+   "until": "P.grounded && Math.abs(P.x/48 - 54.5) < 0.2 && Math.abs(P.vx) < 1",
+   "ms": 6000
+  },
+  {
+   "dir": 0,
+   "ms": 400
+  },
+  {
+   "note": "pad 60",
+   "stay": 60,
+   "until": "P.grounded && Math.abs(P.x/48 - 60.5) < 0.2 && Math.abs(P.vx) < 1",
+   "ms": 6000
+  },
+  {
+   "dir": 0,
+   "ms": 400
+  },
+  {
+   "note": "door open?",
+   "dir": 0,
+   "until": "L.doors.d1.open",
+   "ms": 3000
+  },
+  {
+   "note": "approach walker",
+   "dir": 1,
+   "until": "!L.walkers[0].alive || L.walkers[0].x < P.x - 40 || (L.walkers[0].x > P.x && L.walkers[0].x - P.x < 120)",
+   "ms": 12000
+  },
+  {
+   "note": "jump over walker",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 87.6,
+   "ms": 15000,
+   "note": "to the rocks"
+  },
+  {
+   "stay": 88,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 88.5) < 0.25 && Math.abs(P.vx) < 1",
+   "ms": 4000
+  },
+  {
+   "stay": 88,
+   "until": "mv(0).x < 90.4",
+   "ms": 12000,
+   "note": "wait rock 0"
+  },
+  {
+   "note": "onto rock 0",
+   "dir": 1,
+   "jump": 450,
+   "x": 90.6,
+   "ms": 3000
+  },
+  {
+   "ride": 0,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "ride rock 0",
+   "ride": 0,
+   "rideAt": 2.5,
+   "until": "mv(0).x > 95.4 && mv(1).x < 102.6",
+   "ms": 15000
+  },
+  {
+   "note": "to rock 1",
+   "dir": 1,
+   "jump": 450,
+   "x": 102.4,
+   "ms": 3000
+  },
+  {
+   "ride": 1,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "ride rock 1",
+   "ride": 1,
+   "rideAt": 2.5,
+   "until": "mv(1).x > 107.4 && mv(2).x < 113.6",
+   "ms": 15000
+  },
+  {
+   "note": "to rock 2",
+   "dir": 1,
+   "jump": 450,
+   "x": 113.4,
+   "ms": 3000
+  },
+  {
+   "ride": 2,
+   "until": "P.grounded",
+   "ms": 3000
+  },
+  {
+   "note": "ride rock 2",
+   "ride": 2,
+   "rideAt": 2.5,
+   "until": "mv(2).x > 117.6",
+   "ms": 12000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 130.6,
+   "ms": 10000,
+   "note": "to the stone"
+  },
+  {
+   "stay": 131,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 131.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "meow at stone 2",
+   "dir": 0,
+   "winnie": true,
+   "ms": 10000,
+   "until": "L.songstones[1].spr.frame.name === 1 && !L.songstones[1].singing"
+  },
+  {
+   "dir": 1,
+   "x": 136.6,
+   "ms": 12000
+  },
+  {
+   "note": "hop to 141",
+   "dir": 1,
+   "jump": 450,
+   "x": 140.6,
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 136.6,
+   "ms": 12000
+  },
+  {
+   "note": "hop to 141",
+   "dir": 1,
+   "jump": 450,
+   "x": 140.6,
+   "ms": 3000
+  },
+  {
+   "stay": 141,
+   "until": "P.grounded && Math.abs(P.x/48 - 141.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 142.6,
+   "ms": 12000
+  },
+  {
+   "note": "hop to 147",
+   "dir": 1,
+   "jump": 450,
+   "x": 146.6,
+   "ms": 3000
+  },
+  {
+   "stay": 147,
+   "until": "P.grounded && Math.abs(P.x/48 - 147.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "green",
+   "stay": 148,
+   "until": "P.grounded && Math.abs(P.x/48 - 148.5) < 0.2 && Math.abs(P.vx) < 1",
+   "ms": 6000
+  },
+  {
+   "dir": 0,
+   "ms": 400
+  },
+  {
+   "dir": -1,
+   "x": 146.4,
+   "ms": 12000
+  },
+  {
+   "note": "hop to 143",
+   "dir": -1,
+   "jump": 450,
+   "x": 143.4,
+   "ms": 3000
+  },
+  {
+   "stay": 143,
+   "until": "P.grounded && Math.abs(P.x/48 - 143.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": -1,
+   "x": 142.4,
+   "ms": 12000
+  },
+  {
+   "note": "hop to 137",
+   "dir": -1,
+   "jump": 450,
+   "x": 137.4,
+   "ms": 3000
+  },
+  {
+   "stay": 137,
+   "until": "P.grounded && Math.abs(P.x/48 - 137.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "red",
+   "stay": 136,
+   "until": "P.grounded && Math.abs(P.x/48 - 136.5) < 0.2 && Math.abs(P.vx) < 1",
+   "ms": 6000
+  },
+  {
+   "dir": 0,
+   "ms": 400
+  },
+  {
+   "dir": 1,
+   "x": 136.6,
+   "ms": 12000
+  },
+  {
+   "note": "hop to 141",
+   "dir": 1,
+   "jump": 450,
+   "x": 140.6,
+   "ms": 3000
+  },
+  {
+   "stay": 141,
+   "until": "P.grounded && Math.abs(P.x/48 - 141.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 142.6,
+   "ms": 12000
+  },
+  {
+   "note": "hop to 147",
+   "dir": 1,
+   "jump": 450,
+   "x": 146.6,
+   "ms": 3000
+  },
+  {
+   "stay": 147,
+   "until": "P.grounded && Math.abs(P.x/48 - 147.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 148.6,
+   "ms": 12000
+  },
+  {
+   "note": "hop to 153",
+   "dir": 1,
+   "jump": 450,
+   "x": 152.6,
+   "ms": 3000
+  },
+  {
+   "stay": 153,
+   "until": "P.grounded && Math.abs(P.x/48 - 153.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "yellow",
+   "stay": 154,
+   "until": "P.grounded && Math.abs(P.x/48 - 154.5) < 0.2 && Math.abs(P.vx) < 1",
+   "ms": 6000
+  },
+  {
+   "dir": 0,
+   "ms": 400
+  },
+  {
+   "dir": -1,
+   "x": 152.4,
+   "ms": 12000
+  },
+  {
+   "note": "hop to 149",
+   "dir": -1,
+   "jump": 450,
+   "x": 149.4,
+   "ms": 3000
+  },
+  {
+   "stay": 149,
+   "until": "P.grounded && Math.abs(P.x/48 - 149.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": -1,
+   "x": 148.4,
+   "ms": 12000
+  },
+  {
+   "note": "hop to 143",
+   "dir": -1,
+   "jump": 450,
+   "x": 143.4,
+   "ms": 3000
+  },
+  {
+   "stay": 143,
+   "until": "P.grounded && Math.abs(P.x/48 - 143.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "blue",
+   "stay": 142,
+   "until": "P.grounded && Math.abs(P.x/48 - 142.5) < 0.2 && Math.abs(P.vx) < 1",
+   "ms": 6000
+  },
+  {
+   "dir": 0,
+   "ms": 400
+  },
+  {
+   "note": "door open?",
+   "dir": 0,
+   "until": "L.doors.d2.open",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 142.6,
+   "ms": 12000
+  },
+  {
+   "note": "hop to 147",
+   "dir": 1,
+   "jump": 450,
+   "x": 146.6,
+   "ms": 3000
+  },
+  {
+   "stay": 147,
+   "until": "P.grounded && Math.abs(P.x/48 - 147.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 148.6,
+   "ms": 12000
+  },
+  {
+   "note": "hop to 153",
+   "dir": 1,
+   "jump": 450,
+   "x": 152.6,
+   "ms": 3000
+  },
+  {
+   "stay": 153,
+   "until": "P.grounded && Math.abs(P.x/48 - 153.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 160.5,
+   "ms": 8000
+  },
+  {
+   "dir": 1,
+   "x": 171.6,
+   "ms": 8000,
+   "note": "to the edge"
+  },
+  {
+   "stay": 172,
+   "until": "P.grounded && Math.abs(P.vx) < 1 && Math.abs(P.x/48 - 172.5) < 0.25",
+   "ms": 4000
+  },
+  {
+   "note": "hop to 175",
+   "dir": 1,
+   "jump": 450,
+   "x": 174.6,
+   "ms": 3000
+  },
+  {
+   "stay": 175,
+   "until": "P.grounded && Math.abs(P.x/48 - 175.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 175.6,
+   "ms": 12000
+  },
+  {
+   "note": "hop to 180",
+   "dir": 1,
+   "jump": 450,
+   "x": 179.6,
+   "ms": 3000
+  },
+  {
+   "stay": 180,
+   "until": "P.grounded && Math.abs(P.x/48 - 180.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "night eyes",
+   "dir": 0,
+   "winnie": true,
+   "ms": 6000
+  },
+  {
+   "note": "up to the hidden step",
+   "dir": 1,
+   "jump": 600,
+   "x": 181.6,
+   "ms": 3000
+  },
+  {
+   "stay": 182,
+   "until": "P.grounded && Math.abs(P.x/48 - 182.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "note": "up to the shard step",
+   "dir": 1,
+   "jump": 600,
+   "x": 183.6,
+   "ms": 3000
+  },
+  {
+   "stay": 184,
+   "until": "P.grounded && Math.abs(P.x/48 - 184.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 0,
+   "until": "L.runShards[1]",
+   "ms": 3000
+  },
+  {
+   "note": "down to platform",
+   "dir": 1,
+   "jump": 200,
+   "x": 184.6,
+   "ms": 3000
+  },
+  {
+   "stay": 185,
+   "until": "P.grounded && Math.abs(P.x/48 - 185.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 185.6,
+   "ms": 12000
+  },
+  {
+   "note": "hop to 190",
+   "dir": 1,
+   "jump": 450,
+   "x": 189.6,
+   "ms": 3000
+  },
+  {
+   "stay": 190,
+   "until": "P.grounded && Math.abs(P.x/48 - 190.5) < 0.3",
+   "ms": 3000
+  },
+  {
+   "dir": 1,
+   "x": 190.6,
+   "ms": 12000
+  },
+  {
+   "note": "to ground",
+   "dir": 1,
+   "jump": 450,
+   "land": true,
+   "ms": 3000
+  },
+  {
+   "note": "gate",
+   "dir": 1,
+   "until": "L.finished",
+   "ms": 15000
+  }
+ ]
+}

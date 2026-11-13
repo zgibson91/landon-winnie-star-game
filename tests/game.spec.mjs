@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 
-const LEVELS = ['hub', 'sun', 'arcturus', 'betelgeuse', 'mucephei', 'vvcephei'];
+const LEVELS = ['hub', 'sun', 'arcturus', 'betelgeuse', 'mucephei', 'vvcephei', 'vycma', 'uyscuti', 'stephenson'];
 const botSrc = fs.readFileSync(new URL('./bot.js', import.meta.url), 'utf8');
 
 function watchErrors(page) {
@@ -47,17 +47,17 @@ for (const id of LEVELS) {
   });
 }
 
-for (const id of ['sun', 'arcturus', 'betelgeuse', 'mucephei', 'vvcephei']) {
+for (const id of ['sun', 'arcturus', 'betelgeuse', 'mucephei', 'vvcephei', 'vycma', 'uyscuti', 'stephenson']) {
   test(`bot beats "${id}" and collects the secret shard`, async ({ page }, info) => {
     test.skip(info.project.name !== 'ipad-1180', 'bot runs once (desktop GPU timing)');
-    test.setTimeout(300000);
+    test.setTimeout(560000);
     const errors = watchErrors(page);
     const route = JSON.parse(fs.readFileSync(new URL(`./routes/${id}.json`, import.meta.url)));
     await boot(page, `&level=${id}`);
     await levelReady(page, id);
     await page.addScriptTag({ content: botSrc });
     await page.evaluate((steps) => { LW.Save.reset(); LWBot.start(steps); }, route.steps);
-    await page.waitForFunction(() => LWBot.done || LWBot.failed, null, { timeout: 280000, polling: 500 });
+    await page.waitForFunction(() => LWBot.done || LWBot.failed, null, { timeout: 540000, polling: 500 });
     const r = await page.evaluate(() => ({ failed: LWBot.failed, s: LW.state(), log: LWBot.log.slice(-6) }));
     expect(r.failed, r.log.join('\n')).toBeNull();
     expect(r.s.finished).toBe(true);

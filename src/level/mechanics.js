@@ -296,7 +296,7 @@ export class SwapOrb {
   update(dt) {
     this.t += dt; this.spr.y = this.y + Math.sin(this.t * 2.5) * 4; this.spr.rotation += dt * 0.6;
     const p = this.scene.player; if (p.dead) { this.inside = false; return; }
-    const hit = Math.abs(p.x - this.x) < 34 && Math.abs(p.body.y - this.spr.y) < 50;
+    const hit = Math.abs(p.x - this.x) < 40 && Math.abs(p.body.y - this.spr.y) < 64; // generous: orbs should be easy to touch
     if (hit && !this.inside) { if (this.to) this.scene.phase.set(this.to === 'dark'); else this.scene.phase.toggle(); this.scene.fx.burst(this.x, this.y, 0xffffff, 14); this.scene.tweens.add({ targets: this.spr, scale: inv * 1.4, duration: 100, yoyo: true }); }
     this.inside = hit;
   }

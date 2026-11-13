@@ -2,7 +2,7 @@
 
 A touch-first cartoon platformer for iPad. Landon and his calico kitten Winnie hop across ten real stars, from the Sun to a quasi-star with a black hole at its heart, collecting Star Shards and facing The Reaper at the end.
 
-**Status: 5 of 10 stars playable.** Star Station (the hub) plus the Sun, Arcturus, Betelgeuse, Mu Cephei and VV Cephei A are playable, along with the museum, closet, trophy wall, parent menu and the two hub secrets. The other five portals say "coming soon".
+**Status: 8 of 10 stars playable.** Star Station (the hub) plus the Sun, Arcturus, Betelgeuse, Mu Cephei, VV Cephei A, VY Canis Majoris, UY Scuti and Stephenson 2-18 are playable, along with the museum, closet, trophy wall, parent menu and the two hub secrets. WOH G64 and the Quasi-Star (with The Reaper) come next.
 
 | Star | New idea | Winnie | Bonus shard |
 | --- | --- | --- | --- |
@@ -11,6 +11,9 @@ A touch-first cartoon platformer for iPad. Landon and his calico kitten Winnie h
 | Betelgeuse | the star breathes: platforms and spikes pulse to the music | bell riddle | beat 2:50 |
 | Mu Cephei | light beams, mirrors to bonk or pounce, crystal caves | learns Squeeze | beat 1:50 |
 | VV Cephei A | sun blocks and moon blocks, orbs, a clock that flips sides | switches and cages | every Glimmer |
+| VY Canis Majoris | dust storms that hide the level, singing-crystal memory puzzles | learns Meow | every Glimmer |
+| UY Scuti | gravity orbs: fall up and run on the ceiling, spikes on both sides | flips upside down with you | no oops |
+| Stephenson 2-18 | the gauntlet: one section for every idea so far, then a 5-note song in a storm | everything | beat 4:00 |
 
 ## Play it locally
 
@@ -30,7 +33,7 @@ Useful URL options:
 
 | URL | What it does |
 | --- | --- |
-| `?level=sun`, `arcturus`, `betelgeuse`, `mucephei`, `vvcephei`, `hub` | Jump straight into a level (level-select cheat) |
+| `?level=sun`, `arcturus`, `betelgeuse`, `mucephei`, `vvcephei`, `vycma`, `uyscuti`, `stephenson`, `hub` | Jump straight into a level (level-select cheat) |
 | `?debug=1` | FPS and position overlay. Keys: **N**/**B** next/previous lantern, **0/1/3** load hub/Sun/Betelgeuse, **I** invincible |
 | `?debug=1&bodies=1` | Also draws the physics boxes |
 | `?nosw=1` | Skips the offline cache (handy while editing files) |
@@ -76,12 +79,13 @@ Levels live in `levels/*.json`. Each level is a list of **sections**, and each s
 ```
 .  empty       #  ground       =  one-way platform    ^  spikes     ~  plasma (hazard)
 L  sun block (solid on the light side)                D  moon block (solid on the dark side)
+v  ceiling spikes (hang down; deadly when walking upside down)
 o  Glimmer     h  hidden Glimmer (Night Eyes)          H  hidden platform (Night Eyes)
 S  secret shard   P  start   G  goal gate   C  lantern (checkpoint)   c  assist-only lantern
 w  walker enemy
 ```
 
-Objects: `flare`, `loop` (bounce arc), `mover` (add `"id"` and `"wait": true` for a lift a switch starts), `pulse` (Betelgeuse platform), `pspike`, `wind` (gusts), `lever` (star switch Winnie pounces: `opens`, `starts`, `swap`), `emitter` / `mirror` / `receiver` (light beams), `squeeze` (cat door), `swap` (sun/moon orb, `"to": "light"` or `"dark"`), `swapclock`, `sign`, `shrine` (teaches an ability), `bell`, `bellpuzzle`, `door`, `shard` (with `"hidden": true` for Night Eyes), and the hub's `portal` and `hubdoor`. Each section can carry three escalating `hints`.
+Objects: `flare`, `loop` (bounce arc), `mover` (add `"id"` and `"wait": true` for a lift a switch starts), `pulse` (Betelgeuse platform), `pspike`, `wind` (gusts), `lever` (star switch Winnie pounces: `opens`, `starts`, `swap`), `emitter` / `mirror` / `receiver` (light beams), `squeeze` (cat door), `swap` (sun/moon orb, `"to": "light"` or `"dark"`), `swapclock`, `storm` (dust storm), `songstone` + `pad` (Meow memory puzzle), `gravity` (orb, `"to": "up"` or `"down"`), `sign`, `shrine` (teaches an ability), `bell`, `bellpuzzle`, `door`, `shard` (with `"hidden": true` for Night Eyes), and the hub's `portal` and `hubdoor`. Each section can carry three escalating `hints`.
 
 The player's physics numbers are in `src/core/constants.js`. Jump height is about 3.3 tiles, and a running jump covers about 4.5 tiles.
 

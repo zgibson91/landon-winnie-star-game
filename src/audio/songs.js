@@ -46,6 +46,27 @@ export const SONGS = {
     drums: { kick: 'x.....x.x.......', snare: '....x.......x...', hat: '..x...x...x...x.' },
     voices: [{ inst: 'lead', notes: 'C5 - F5 - A5 - G5 F5 | E5 - - - A5 - C6 - | D6 - C6 - Bb5 - F5 - | G5 - - - . . . . | A5 - C6 - F6 - E6 D6 | D6 - A5 - F5 - D5 - | G5 - Bb5 - D6 - C6 Bb5 | C6 - - - E5 - G5 -' }],
   },
+  vycma: {
+    // dusty and mysterious: slow pulse, swirly bells
+    bpm: 100, bass: 'pulse', arp: 'wide', arpInst: 'marimba', arpOct: 1, padVel: 1.2,
+    chords: ['Dm', 'Bb', 'Gm', 'A', 'Dm', 'F', 'C', 'A7'],
+    drums: { kick: 'x.....x...x.....', shaker: '..o...o...o...o.', snare: '....x.......x...' },
+    voices: [{ inst: 'bell', notes: 'A5 - D6 - F6 - E6 D6 | D6 - - - Bb5 - F5 - | G5 - Bb5 - D6 - C6 Bb5 | C#6 - - - A5 - . . | A5 - D6 - F6 - A6 - | G6 - F6 - C6 - A5 - | G5 - C6 - E6 - D6 C6 | C#6 - - - E6 - A5 -' }],
+  },
+  uyscuti: {
+    // floaty and upside-down: lots of space, a gentle swing
+    bpm: 92, bass: 'slow', arp: 'updown', arpInst: 'pluck', arpOct: 2, arpEvery: 2, padVel: 1.4,
+    chords: ['Fmaj7', 'Em7', 'Dm7', 'Cmaj7', 'Bbmaj7', 'Am7', 'Gm7', 'C7'],
+    drums: { kick: 'x.......x.......', shaker: 'o.o.o.o.o.o.o.o.' },
+    voices: [{ inst: 'lead', notes: 'C6 - - - A5 - F5 - | G5 - - - E5 - C5 - | F5 - A5 - C6 - F6 - | E6 - - - . . . . | D6 - - - Bb5 - F5 - | E5 - G5 - C6 - E6 - | D6 - C6 - Bb5 - G5 - | C6 - - - - - . .' }],
+  },
+  stephenson: {
+    // the gauntlet: driving 120 bpm so the pulsing platforms stay on the beat
+    bpm: 120, bass: 'drive', arp: 'up', arpInst: 'pluck', arpOct: 1,
+    chords: ['Em', 'C', 'G', 'D', 'Em', 'C', 'Am', 'B7', 'C', 'D', 'Em', 'Em', 'Am', 'B7', 'Em', 'B7'],
+    drums: { boom: 'x...............', kick: '........x.......', snare: '....x.......x...', hat: 'x.x.x.x.x.x.x.xo' },
+    voices: [{ inst: 'lead', notes: 'E5 - G5 - B5 - - - | C6 - B5 - G5 - E5 - | D5 - G5 - B5 - D6 - | F#6 - - - D6 - A5 - | E6 - - - B5 - G5 - | C6 - - - G5 - E5 - | A5 - C6 - E6 - A5 - | D#6 - - - F#6 - B5 - | E6 - D6 - C6 - G5 - | F#6 - E6 - D6 - A5 - | B5 - - - E6 - G6 - | F#6 - E6 - B5 - - - | A5 - - - C6 - E6 - | D#6 - - - B5 - F#5 - | G5 - B5 - E6 - G6 - | F#6 - - - D#6 - - -' }],
+  },
   betelgeuse: {
     // 120 bpm: one bar = 2 s = one full star pulse. The "boom" lands on every downbeat.
     bpm: 120, bass: 'drive', arp: 'up', arpInst: 'pluck', arpOct: 1, arpEvery: 2,

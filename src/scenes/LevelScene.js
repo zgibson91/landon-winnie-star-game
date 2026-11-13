@@ -11,6 +11,7 @@ import { FX } from '../level/fx.js';
 import * as O from '../level/objects.js';
 import { HubPortal, HubDoor, CatBed } from '../level/hubObjects.js';
 import * as M from '../level/mechanics.js';
+import * as M2 from '../level/mechanics2.js';
 import { makeText } from '../ui/ui.js';
 import { STAR_BY_ID } from '../data/stars.js';
 
@@ -43,7 +44,7 @@ export class LevelScene extends Phaser.Scene {
     this.runShards = [false, false, false];
     this.objs = []; this.doors = {}; this.pounceTargets = []; this.walkers = []; this.hidden = []; this.revealables = [];
     this.portals = []; this.hubDoors = []; this.interact = null;
-    this.movers = {}; this.beams = null; this.squeezes = [];
+    this.movers = {}; this.beams = null; this.squeezes = []; this.pads = {}; this.songstones = [];
     Audio.setMusicTone && Audio.setMusicTone(false);
     this.phase = this.lv.rows.some(r => /[LD]/.test(r)) ? new M.PhaseSystem(this) : null;
 
@@ -153,6 +154,8 @@ export class LevelScene extends Phaser.Scene {
           t.setCollision(false, false, true, false);
         } else if (ch === '^') {
           layer.putTileAt(TILE_IDX.spike, c, r);
+        } else if (ch === 'v') {
+          layer.putTileAt(TILE_IDX.spikeDown, c, r);
         } else if ((ch === 'L' || ch === 'D') && this.phase) {
           layer.putTileAt(ch === 'L' ? TILE_IDX.light : TILE_IDX.dark, c, r);
           this.phase.register(c, r, ch);
@@ -221,6 +224,10 @@ export class LevelScene extends Phaser.Scene {
         case 'squeeze': this.squeezes.push(add(new M.Squeeze(this, o))); break;
         case 'swap': this.phase.orbs.push(add(new M.SwapOrb(this, o))); break;
         case 'swapclock': this.phase.clocks.push({ x0: o.x * TILE, x1: o.x2 * TILE, period: o.period || 3, t: 0 }); break;
+        case 'storm': add(new M2.DustStorm(this, o)); break;
+        case 'pad': { const pd = add(new M2.Pad(this, o)); this.pads[o.id] = pd; break; }
+        case 'songstone': this.songstones.push(add(new M2.SongStone(this, o))); break;
+        case 'gravity': add(new M2.GravityOrb(this, o)); break;
         case 'text': add({ update() {}, t: makeText(this, o.x * TILE + TILE / 2, o.y * TILE + TILE / 2, o.text, o.size || 26, { wrap: o.wrap }).setDepth(15) }); break;
         default: console.warn('unknown object', o.t);
       }
@@ -292,7 +299,7 @@ export class LevelScene extends Phaser.Scene {
     // camera look-ahead
     const want = p.facing * 90 * (Math.abs(p.vx) > 40 ? 1 : 0.4);
     this.lookX += (want - this.lookX) * Math.min(1, dt * 2.2);
-    this.cameras.main.setFollowOffset(-this.lookX, 50);
+    this.cameras.main.setFollowOffset(-this.lookX, 50 * p.g); // show more of the floor side, flipped when on the ceiling
 
     // parallax
     const cam = this.cameras.main;
@@ -326,9 +333,11 @@ export class LevelScene extends Phaser.Scene {
         const ch = rows[r][c];
         if (ch === '^' && hb.bottom > r * TILE + 22) return this.fail('spikes');
         if (ch === '~' && hb.bottom > r * TILE + 16) return this.fail('plasma');
+        if (ch === 'v' && hb.y < r * TILE + 26) return this.fail('spikes');
       }
     }
     if (p.body.body.top > this.lv.H * TILE + 60) this.fail('pit');
+    if (p.body.body.bottom < -80) this.fail('pit'); // fell up off the top (flipped gravity)
   }
 
   hasPlatformAt(x, y) {
@@ -358,7 +367,7 @@ export class LevelScene extends Phaser.Scene {
       if (best) act = { kind: 'pounce', target: best };
     }
     if (!act && Save.hasAbility('meow')) {
-      if (this.walkers.some(e => e.alive && Math.abs(e.x - p.x) < ABILITY_RANGE.meow && Math.abs(e.y - p.bottom) < 200)) act = { kind: 'meow' };
+      if (this.songstones.some(st => st.near(p)) || this.walkers.some(e => e.alive && Math.abs(e.x - p.x) < ABILITY_RANGE.meow && Math.abs(e.y - p.bottom) < 200)) act = { kind: 'meow' };
     }
     if (!act && Save.hasAbility('nightEyes')) act = { kind: 'eyes' };
     this.winnieAction = act;
@@ -408,7 +417,7 @@ export class LevelScene extends Phaser.Scene {
   }
 
   setCheckpoint(lantern) {
-    this.cp = { x: lantern.x, y: lantern.y - 40, idx: lantern.idx, section: this.lv.sectionAt(Math.floor(lantern.x / TILE)), dark: this.phase ? this.phase.dark : false };
+    this.cp = { x: lantern.x, y: lantern.y - 40, idx: lantern.idx, section: this.lv.sectionAt(Math.floor(lantern.x / TILE)), dark: this.phase ? this.phase.dark : false, g: this.player ? this.player.g : 1 };
     this.cpFails = 0; this.hintLevel = 0;
     this.game.events.emit('hint-reset');
   }
@@ -464,6 +473,7 @@ export class LevelScene extends Phaser.Scene {
     const p = this.player, b = p.body.body;
     b.enable = true; b.setAllowGravity(true);
     if (this.phase && this.phase.dark !== !!this.cp.dark) { this.phase.dark = !!this.cp.dark; this.phase.apply(true); }
+    p.setGravity(this.cp.g || 1, true);
     p.teleport(this.cp.x, this.cp.y);
     p.dead = false; p.invuln = 0.7; p.vx = 0; p.play('idle'); p.squash(0.8, 1.2);
     this.winnie.reset();
